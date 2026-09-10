@@ -1,0 +1,13 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+/* TODO: Add global styles and theme-specific CSS here */
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  /* TODO: Set default fonts and colors from theme */
+}

@@ -1,0 +1,22 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  // TODO: Return array of static paths when you add projects
+  // Example: return [{params: {slug: 'project-1'}}, {params: {slug: 'project-2'}}]
+  return [];
+}
+
+const { slug } = Astro.params;
+---
+
+<BaseLayout title="Project">
+  <div class="container mx-auto px-4 py-16">
+    <h1 class="text-4xl font-bold">Project</h1>
+    
+    <!-- TODO: Add project detail template -->
+    <p class="text-lg mt-4">
+      This will be a dynamic project page template
+    </p>
+  </div>
+</BaseLayout>
