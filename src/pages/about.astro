@@ -3,12 +3,30 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 ---
 
 <BaseLayout title="About Me">
-  <div class="container mx-auto px-4 py-16">
-    <h1 class="text-4xl font-bold">About Me</h1>
-    
-    <!-- TODO: Add bio, background, interests, etc -->
-    <p class="text-lg mt-4">
-      Placeholder for about me content
-    </p>
+  <div class="max-w-4xl mx-auto px-6 py-20 pt-32">
+    <h1 class="font-display text-5xl font-bold mb-8 text-solar">About Me</h1>
+
+    <div class="space-y-6">
+      <p class="text-lg text-void-300 font-sans">
+        Welcome. I'm a PhD student at MIT exploring the intersection of artificial intelligence and aerospace engineering.
+      </p>
+
+      <h2 class="font-sans text-3xl font-bold text-void-100 mt-12">Research Interests</h2>
+      <p class="text-void-300 font-sans">
+        My work focuses on applying machine learning and AI agent frameworks to engineering challenges, particularly in understanding and predicting atmospheric phenomena affecting aircraft safety.
+      </p>
+
+      <h2 class="font-sans text-3xl font-bold text-void-100 mt-12">Background</h2>
+      <p class="text-void-300 font-sans">
+        This portfolio documents my journey through MIT 16.S983: AI Agents for Engineering Research. Here you'll find projects, experiments, and development logs tracking my progress.
+      </p>
+
+      <!-- Placeholder for more content -->
+      <div class="mt-12 p-6 border border-solar/20 bg-solar/5">
+        <p class="text-void-400 text-sm italic font-sans">
+          More detailed biography and experience coming soon...
+        </p>
+      </div>
+    </div>
   </div>
 </BaseLayout>

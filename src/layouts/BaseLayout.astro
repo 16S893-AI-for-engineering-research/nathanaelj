@@ -1,5 +1,7 @@
 ---
 import '../styles/globals.css';
+import Header from '@components/Header.astro';
+import Footer from '@components/Footer.astro';
 
 interface Props {
   title: string;
@@ -7,6 +9,7 @@ interface Props {
 }
 
 const { title, description = "Nathanael Jenkins' portfolio for MIT 16.S983: AI Agents for Engineering Research" } = Astro.props;
+const currentPath = Astro.url.pathname;
 ---
 
 <!doctype html>
@@ -18,17 +21,28 @@ const { title, description = "Nathanael Jenkins' portfolio for MIT 16.S983: AI A
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
     <title>{title} | 16.S983 Portfolio</title>
-    <!-- TODO: Add theme meta tags, fonts, etc -->
   </head>
   <body>
-    <!-- TODO: Add Header component -->
+    <Header currentPath={currentPath} />
     <main>
       <slot />
     </main>
-    <!-- TODO: Add Footer component -->
+    <Footer />
   </body>
 </html>
 
 <style is:global>
-  /* Base layout styles to be added with theme */
+  /* Ensure body takes full height */
+  html, body {
+    height: 100%;
+  }
+
+  body {
+    display: flex;
+    flex-direction: column;
+  }
+
+  main {
+    flex: 1;
+  }
 </style>

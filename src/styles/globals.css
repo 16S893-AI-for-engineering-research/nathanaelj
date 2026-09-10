@@ -1,13 +1,179 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Sora:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
-/* TODO: Add global styles and theme-specific CSS here */
+/* ========== CSS Variables ========== */
+:root {
+  --color-solar: #ff9c1a;
+  --color-solar-light: #ffb84d;
+  --color-flame: #ff6633;
+  --color-ember: #ff3333;
+  --color-bg: #0d0a06;
+  --color-text-primary: #fef9f5;
+  --color-text-secondary: #f0e8dc;
+  --color-text-muted: #c9bfb0;
+  --color-border: rgba(255, 156, 26, 0.15);
+  --color-border-active: rgba(255, 156, 26, 0.4);
+}
 
+/* ========== Base Styles ========== */
 html {
   scroll-behavior: smooth;
+  background: var(--color-bg);
 }
 
 body {
-  /* TODO: Set default fonts and colors from theme */
+  background-color: #0d0a06;
+  color: var(--color-text-primary);
+  font-family: 'Sora', sans-serif;
+  font-weight: 400;
+  line-height: 1.6;
+  letter-spacing: 0.2px;
+}
+
+/* Remove rounded corners globally */
+* {
+  border-radius: 0 !important;
+}
+
+/* Smooth gradient overlay at page boundaries */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 200px;
+  background: radial-gradient(ellipse 120% 80% at 50% 0%, 
+    rgba(255, 156, 26, 0.1) 0%,
+    rgba(255, 156, 26, 0.04) 30%,
+    transparent 70%);
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* ========== Typography ========== */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Playfair Display', serif;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  color: var(--color-text-primary);
+}
+
+h1 {
+  @apply text-5xl md:text-7xl;
+  font-weight: 700;
+  line-height: 1.15;
+  animation: slideUp 0.8s ease-out;
+  background: linear-gradient(135deg, #ffb84d 0%, #ff9c1a 50%, #ff7a3d 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+h2 {
+  @apply text-3xl md:text-4xl;
+  font-weight: 600;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  font-family: 'Sora', sans-serif;
+  color: var(--color-text-secondary);
+}
+
+h3 {
+  @apply text-xl md:text-2xl;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  font-family: 'Sora', sans-serif;
+  color: var(--color-text-secondary);
+}
+
+p {
+  @apply text-base md:text-lg;
+  color: var(--color-text-secondary);
+  margin-bottom: 1rem;
+  font-weight: 400;
+}
+
+strong {
+  color: var(--color-solar);
+}
+
+a {
+  @apply transition-colors duration-200;
+  color: var(--color-solar);
+  border-bottom: 1px solid transparent;
+  padding-bottom: 2px;
+}
+
+a:hover {
+  color: var(--color-flame);
+  border-bottom-color: var(--color-flame);
+}
+
+/* ========== Layout ========== */
+main {
+  position: relative;
+  z-index: 1;
+}
+
+.container {
+  @apply max-w-6xl mx-auto;
+}
+
+/* ========== Animations ========== */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Staggered reveal for elements */
+[data-reveal] {
+  opacity: 0;
+  animation: slideUp 0.8s ease-out forwards;
+}
+
+[data-reveal='1'] { animation-delay: 0.1s; }
+[data-reveal='2'] { animation-delay: 0.2s; }
+[data-reveal='3'] { animation-delay: 0.3s; }
+[data-reveal='4'] { animation-delay: 0.4s; }
+[data-reveal='5'] { animation-delay: 0.5s; }
+
+/* ========== Selection ========== */
+::selection {
+  background-color: var(--color-solar);
+  color: #0d0a06;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 156, 26, 0.3);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 156, 26, 0.5);
 }

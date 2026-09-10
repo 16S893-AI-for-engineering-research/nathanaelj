@@ -4,7 +4,7 @@ import tailwind from '@astrojs/tailwind';
 
 export default defineConfig({
   site: 'https://16s893-ai-for-engineering-research.github.io',
-  base: '/nathanaelj',
+  base: process.env.DEV === 'true' ? '/' : '/nathanaelj',
   integrations: [
     react(),
     tailwind(),

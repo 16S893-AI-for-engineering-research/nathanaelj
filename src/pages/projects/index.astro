@@ -3,12 +3,68 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 ---
 
 <BaseLayout title="Projects">
-  <div class="container mx-auto px-4 py-16">
-    <h1 class="text-4xl font-bold">Projects</h1>
-    
-    <!-- TODO: Add project cards/grid -->
-    <p class="text-lg mt-4">
-      Placeholder for projects listing
-    </p>
+  <div class="max-w-6xl mx-auto px-6 py-20 pt-32">
+    <h1 class="font-display text-5xl font-bold mb-12 text-solar">Projects</h1>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <!-- Project Card Template -->
+      <div class="group relative border border-solar/30 p-8 hover:border-solar/60 transition-all duration-300 bg-solar/5 hover:bg-solar/10 overflow-hidden">
+        <!-- Accent line on hover -->
+        <div class="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-solar/0 via-solar to-solar/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+
+        <h3 class="font-sans text-2xl font-bold mb-3 text-void-100 group-hover:text-solar transition-colors">
+          Project Title
+        </h3>
+
+        <p class="text-void-400 mb-6 font-sans">
+          Description of your project goes here. Explain the problem, approach, and results.
+        </p>
+
+        <div class="flex gap-2 mb-6">
+          <span class="text-xs px-3 py-1 border border-solar/40 text-solar font-mono">
+            Tag
+          </span>
+          <span class="text-xs px-3 py-1 border border-solar/40 text-solar font-mono">
+            Tag
+          </span>
+        </div>
+
+        <a href="#" class="inline-flex items-center gap-2 text-solar font-sans font-medium group-hover:text-flame transition-colors">
+          Learn More
+          <span class="transition-transform group-hover:translate-x-1">→</span>
+        </a>
+      </div>
+
+      <!-- Project Card 2 -->
+      <div class="group relative border border-solar/30 p-8 hover:border-solar/60 transition-all duration-300 bg-solar/5 hover:bg-solar/10 overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-solar/0 via-solar to-solar/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+
+        <h3 class="font-sans text-2xl font-bold mb-3 text-void-100 group-hover:text-solar transition-colors">
+          Another Project
+        </h3>
+
+        <p class="text-void-400 mb-6 font-sans">
+          Your next project details here.
+        </p>
+
+        <div class="flex gap-2 mb-6">
+          <span class="text-xs px-3 py-1 border border-solar/40 text-solar font-mono">
+            Tag
+          </span>
+        </div>
+
+        <a href="#" class="inline-flex items-center gap-2 text-solar font-sans font-medium group-hover:text-flame transition-colors">
+          Learn More
+          <span class="transition-transform group-hover:translate-x-1">→</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Placeholder -->
+    <div class="mt-16 p-8 border border-solar/20 bg-solar/5 text-center">
+      <p class="text-void-400 text-sm font-sans">
+        Projects coming soon. Check back as this course progresses.
+      </p>
+    </div>
   </div>
 </BaseLayout>

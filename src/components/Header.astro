@@ -1,0 +1,70 @@
+---
+interface Props {
+  currentPath?: string;
+}
+
+const { currentPath = '/' } = Astro.props;
+
+const navItems = [
+  { label: 'Home', href: '/' },
+  { label: 'About', href: '/about' },
+  { label: 'Projects', href: '/projects' },
+  { label: 'Dev Log', href: '/dev-log' },
+];
+
+const isActive = (href: string) => {
+  if (href === '/' && currentPath === '/') return true;
+  if (href !== '/' && currentPath?.startsWith(href)) return true;
+  return false;
+};
+---
+
+<header class="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-void-900/80 border-b border-solar/20">
+  <nav class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+    <!-- Logo space (left empty for now) -->
+    <div class="w-12"></div>
+
+    <!-- Navigation Menu -->
+    <ul class="flex gap-8 items-center">
+      {navItems.map((item) => (
+        <li>
+          <a
+            href={item.href}
+            class={`relative font-sans text-sm font-medium tracking-wide transition-all duration-300 group ${
+              isActive(item.href)
+                ? 'text-solar-light'
+                : 'text-void-300 hover:text-solar'
+            }`}
+          >
+            {item.label}
+            {/* Underline accent */}
+            <span
+              class={`absolute bottom-0 left-0 h-0.5 bg-solar transition-all duration-300 ${
+                isActive(item.href)
+                  ? 'w-full'
+                  : 'w-0 group-hover:w-full'
+              }`}
+            ></span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+
+  <!-- Top glow effect -->
+  <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-solar/30 to-transparent"></div>
+</header>
+
+<!-- Top padding to account for fixed header -->
+<div class="h-16"></div>
+
+<style>
+  @media (prefers-reduced-motion: reduce) {
+    a {
+      transition: none;
+    }
+    span {
+      transition: none;
+    }
+  }
+</style>
