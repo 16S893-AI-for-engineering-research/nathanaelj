@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro';
 import LightningBackground from '@components/LightningBackground.astro';
+import { resolvePath } from '../lib/paths';
 ---
 
 <BaseLayout title="Nathanael Jenkins">
@@ -22,7 +23,7 @@ import LightningBackground from '@components/LightningBackground.astro';
 
       <div class="flex flex-col sm:flex-row gap-6 justify-center">
         <!-- <a
-          href="/about"
+          href={resolvePath("/about")}
           class="inline-block px-8 py-3 border-2 border-solar text-solar font-sans font-medium hover:bg-solar/10 transition-all duration-300"
           style="border-color: #ff9c1a; color: #ff9c1a;"
         >
@@ -30,7 +31,7 @@ import LightningBackground from '@components/LightningBackground.astro';
         </a> -->
 
         <a
-          href="/project"
+          href={resolvePath("/project")}
           class="inline-block px-8 py-3 bg-solar/10 text-solar font-sans font-medium border-2 border-solar hover:bg-solar/20 transition-all duration-300"
           style="border-color: #ff9c1a; color: #ff9c1a;"
         >
