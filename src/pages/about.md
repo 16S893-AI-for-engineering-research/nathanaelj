@@ -5,14 +5,14 @@ title: 'About Me'
 
 # About Me
 
-Welcome. I'm a PhD student at MIT exploring the intersection of artificial intelligence and aerospace engineering.
+Welcome. I'm a PhD student in the [MIT Aerospace Plasma Group](https://apg.mit.edu), studying aircraft lightning protection.
 
-## Research Interests
+## Where I came from
 
-My work focuses on applying machine learning and AI agent frameworks to engineering challenges, particularly in understanding and predicting atmospheric phenomena affecting aircraft safety.
+- Born: Swansea, Wales
+- Home home: Odiham, England
+- New home: MIT
 
-## Background
+## What I do
 
-This portfolio documents my journey through MIT 16.S983: AI Agents for Engineering Research. Here you'll find projects, experiments, and development logs tracking my progress.
-
-More detailed biography and experience coming soon...
+- Aircraft lightning protection research
