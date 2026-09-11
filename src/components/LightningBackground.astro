@@ -211,49 +211,20 @@
             branches: Array<Array<[number, number]>>;
           }> = [];
 
-          // Generate second return stroke (30% of strikes)
+          // Generate return strokes using the same main path
           if (hasSecondStroke) {
-            const secondPath = generateLightningPath(startX, startY, direction, pathLength, 150, 0.25);
-            const secondBranches: Array<Array<[number, number]>> = [];
-            const secondBranchCount = 3 + Math.floor(Math.random() * 3);
-            
-            for (let b = 0; b < secondBranchCount; b++) {
-              const idx = Math.floor(Math.random() * (secondPath.length * 0.6)) + Math.floor(secondPath.length * 0.2);
-              if (idx < secondPath.length) {
-                const [bx, by] = secondPath[idx];
-                const remainingHeight = canvas.height - by;
-                const branchLength = remainingHeight * (0.25 + Math.random() * 0.4);
-                const branchPath = generateBranch(bx, by, branchLength, 50, 0.3);
-                secondBranches.push(branchPath);
-              }
-            }
             returnStrokes.push({
               delay: 0.08,
-              mainPath: secondPath,
-              branches: secondBranches,
+              mainPath,
+              branches,
             });
           }
 
-          // Generate third return stroke (10% of strikes)
           if (hasThirdStroke) {
-            const thirdPath = generateLightningPath(startX, startY, direction, pathLength, 150, 0.25);
-            const thirdBranches: Array<Array<[number, number]>> = [];
-            const thirdBranchCount = 3 + Math.floor(Math.random() * 3);
-            
-            for (let b = 0; b < thirdBranchCount; b++) {
-              const idx = Math.floor(Math.random() * (thirdPath.length * 0.6)) + Math.floor(thirdPath.length * 0.2);
-              if (idx < thirdPath.length) {
-                const [bx, by] = thirdPath[idx];
-                const remainingHeight = canvas.height - by;
-                const branchLength = remainingHeight * (0.25 + Math.random() * 0.4);
-                const branchPath = generateBranch(bx, by, branchLength, 50, 0.3);
-                thirdBranches.push(branchPath);
-              }
-            }
             returnStrokes.push({
               delay: 0.16,
-              mainPath: thirdPath,
-              branches: thirdBranches,
+              mainPath,
+              branches,
             });
           }
 
