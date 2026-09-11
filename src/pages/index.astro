@@ -1,11 +1,11 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro';
-import LightningBackground from '@components/LightningBackground.tsx';
+import LightningBackground from '@components/LightningBackground.astro';
 ---
 
 <BaseLayout title="Nathanael Jenkins">
-  <LightningBackground client:only="react" />
-  <div class="min-h-screen flex items-center justify-center relative overflow-hidden px-6 pt-20">
+  <LightningBackground />
+  <div class="min-h-screen flex items-center justify-center relative overflow-hidden px-6 pt-20 z-10">
     <!-- Hero content -->
     <div class="max-w-4xl text-center z-10">
       <h1 class="text-6xl md:text-8xl font-display font-bold mb-16 pb-4 leading-tight">

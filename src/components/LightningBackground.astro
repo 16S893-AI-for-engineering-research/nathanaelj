@@ -1,0 +1,363 @@
+---
+// Lightning background component - vanilla implementation for Astro
+// No React dependency needed
+---
+
+<canvas id="lightning-bg" style={{
+  position: 'fixed',
+  inset: '0',
+  zIndex: '0',
+  pointerEvents: 'none',
+}}></canvas>
+
+<script>
+  /**
+   * Generate lightning arc using multi-scale autoregressive process
+   * Creates smooth, natural-looking lightning with macro and micro momentum
+   */
+  function generateLightningPath(
+    startX: number,
+    startY: number,
+    direction: [number, number],
+    length: number,
+    numPoints: number = 100,
+    tortuosity: number = 0.3
+  ): Array<[number, number]> {
+    const points: Array<[number, number]> = [];
+    
+    if (tortuosity === 0) {
+      // Straight line
+      for (let i = 0; i < numPoints; i++) {
+        const t = i / (numPoints - 1);
+        points.push([
+          startX + direction[0] * length * t,
+          startY + direction[1] * length * t
+        ]);
+      }
+      return points;
+    }
+
+    // Normalize direction
+    const dirLen = Math.sqrt(direction[0] * direction[0] + direction[1] * direction[1]);
+    const w = [direction[0] / dirLen, direction[1] / dirLen];
+    
+    // Perpendicular vector (rotate 90 degrees)
+    const perp = [-w[1], w[0]];
+    
+    // AR Process Parameters
+    const alpha_macro = 0.90;  // Inertia of large meanders
+    const alpha_micro = 0.15;  // Inertia of small jitter
+    const weight_macro = 0.75; // Visual dominance of large meanders
+    const weight_micro = 0.25; // Visual dominance of small jitter
+    
+    const n_seg = numPoints - 1;
+    const step_scale = 1.265 * tortuosity * length / Math.sqrt(n_seg);
+    
+    // Velocity states (transverse momentum)
+    let v_macro = 0.0;
+    let v_micro = 0.0;
+    let offset = 0.0;
+    
+    points.push([startX, startY]);
+    
+    for (let i = 1; i < numPoints; i++) {
+      // Update macro momentum
+      v_macro = alpha_macro * v_macro + (1.0 - alpha_macro) * (Math.random() - 0.5) * 2;
+      
+      // Update micro momentum
+      v_micro = alpha_micro * v_micro + (1.0 - alpha_micro) * (Math.random() - 0.5) * 2;
+      
+      // Calculate displacement
+      const dv = step_scale * (weight_macro * v_macro + weight_micro * v_micro);
+      offset += dv;
+      
+      // Position along main direction
+      const t = i / n_seg;
+      const axialDist = length * t;
+      
+      // Combine axial and perpendicular components
+      const x = startX + w[0] * axialDist + perp[0] * offset;
+      const y = startY + w[1] * axialDist + perp[1] * offset;
+      
+      points.push([x, y]);
+    }
+    
+    return points;
+  }
+
+  /**
+   * Generate a branch from a point on the main arc
+   * Branch must move downward and uses momentum-based path generation to avoid overlap
+   */
+  function generateBranch(
+    startX: number,
+    startY: number,
+    maxLength: number,
+    numPoints: number = 40,
+    tortuosity: number = 0.35
+  ): Array<[number, number]> {
+    // Branch direction: mostly downward with some horizontal variation
+    // This ensures branches move away from the main arc (which also goes downward)
+    // due to the perpendicular momentum offsets
+    const downwardComponent = Math.random() * 0.7 + 0.6; // 0.6 to 1.3 of downward
+    const horizontalComponent = (Math.random() - 0.5) * 0.8;
+    
+    const branchDir: [number, number] = [
+      horizontalComponent,
+      downwardComponent
+    ];
+    
+    // Normalize
+    const len = Math.sqrt(branchDir[0] * branchDir[0] + branchDir[1] * branchDir[1]);
+    branchDir[0] /= len;
+    branchDir[1] /= len;
+    
+    return generateLightningPath(startX, startY, branchDir, maxLength, numPoints, tortuosity);
+  }
+
+  /**
+   * Generate gaussian random number using Box-Muller transform
+   * Average of 0, standard deviation of 1
+   */
+  function gaussianRandom(mean: number = 0, stdev: number = 1): number {
+    const u1 = Math.random();
+    const u2 = Math.random();
+    const z = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+    return mean + z * stdev;
+  }
+
+  interface LightningStrike {
+    mainPath: Array<[number, number]>;
+    branches: Array<Array<[number, number]>>;
+    intensity: number;
+    createdAt: number;
+    returnStrokes: Array<{
+      delay: number;
+      mainPath: Array<[number, number]>;
+      branches: Array<Array<[number, number]>>;
+    }>;
+  }
+
+  const canvas = document.getElementById('lightning-bg') as HTMLCanvasElement;
+  if (canvas) {
+    const ctx = canvas.getContext('2d');
+    if (ctx) {
+      let strike: LightningStrike | null = null;
+      let time = 0;
+      let nextStrike = 0.5;
+
+      // Set canvas size
+      const resizeCanvas = () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      };
+      resizeCanvas();
+      window.addEventListener('resize', resizeCanvas);
+
+      let lastTime = Date.now();
+
+      const animate = () => {
+        const now = Date.now();
+        const deltaTime = (now - lastTime) / 1000;
+        lastTime = now;
+
+        time += deltaTime;
+
+        // Clear canvas
+        ctx.fillStyle = '#0d0a06';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Generate new strike
+        if (time >= nextStrike) {
+          const startX = Math.random() * canvas.width;
+          const startY = -50;
+          const endY = canvas.height + 50;
+          const pathLength = endY - startY;
+          
+          // Main lightning path direction: mostly downward
+          const direction: [number, number] = [
+            (Math.random() - 0.5) * 0.3,  // Small horizontal variation
+            1.0  // Downward
+          ];
+
+          // Generate main path with high resolution and tortuosity
+          const mainPath = generateLightningPath(startX, startY, direction, pathLength, 150, 0.25);
+
+          // Generate branches at random points along the arc
+          const branches: Array<Array<[number, number]>> = [];
+          const branchCount = 3 + Math.floor(Math.random() * 3); // 3-5 branches
+          
+          for (let b = 0; b < branchCount; b++) {
+            // Pick random point along the arc (skip the first 20% and last 20%)
+            const idx = Math.floor(Math.random() * (mainPath.length * 0.6)) + Math.floor(mainPath.length * 0.2);
+            
+            if (idx < mainPath.length) {
+              const [bx, by] = mainPath[idx];
+              const remainingHeight = canvas.height - by;
+              const branchLength = remainingHeight * (0.25 + Math.random() * 0.4);
+              
+              // Generate branch that goes downward
+              const branchPath = generateBranch(bx, by, branchLength, 50, 0.3);
+              branches.push(branchPath);
+            }
+          }
+
+          // Determine if this strike has additional return strokes
+          const hasSecondStroke = Math.random() < 0.3;
+          const hasThirdStroke = Math.random() < 0.1;
+          const returnStrokes: Array<{
+            delay: number;
+            mainPath: Array<[number, number]>;
+            branches: Array<Array<[number, number]>>;
+          }> = [];
+
+          // Generate second return stroke (30% of strikes)
+          if (hasSecondStroke) {
+            const secondPath = generateLightningPath(startX, startY, direction, pathLength, 150, 0.25);
+            const secondBranches: Array<Array<[number, number]>> = [];
+            const secondBranchCount = 3 + Math.floor(Math.random() * 3);
+            
+            for (let b = 0; b < secondBranchCount; b++) {
+              const idx = Math.floor(Math.random() * (secondPath.length * 0.6)) + Math.floor(secondPath.length * 0.2);
+              if (idx < secondPath.length) {
+                const [bx, by] = secondPath[idx];
+                const remainingHeight = canvas.height - by;
+                const branchLength = remainingHeight * (0.25 + Math.random() * 0.4);
+                const branchPath = generateBranch(bx, by, branchLength, 50, 0.3);
+                secondBranches.push(branchPath);
+              }
+            }
+            returnStrokes.push({
+              delay: 0.08,
+              mainPath: secondPath,
+              branches: secondBranches,
+            });
+          }
+
+          // Generate third return stroke (10% of strikes)
+          if (hasThirdStroke) {
+            const thirdPath = generateLightningPath(startX, startY, direction, pathLength, 150, 0.25);
+            const thirdBranches: Array<Array<[number, number]>> = [];
+            const thirdBranchCount = 3 + Math.floor(Math.random() * 3);
+            
+            for (let b = 0; b < thirdBranchCount; b++) {
+              const idx = Math.floor(Math.random() * (thirdPath.length * 0.6)) + Math.floor(thirdPath.length * 0.2);
+              if (idx < thirdPath.length) {
+                const [bx, by] = thirdPath[idx];
+                const remainingHeight = canvas.height - by;
+                const branchLength = remainingHeight * (0.25 + Math.random() * 0.4);
+                const branchPath = generateBranch(bx, by, branchLength, 50, 0.3);
+                thirdBranches.push(branchPath);
+              }
+            }
+            returnStrokes.push({
+              delay: 0.16,
+              mainPath: thirdPath,
+              branches: thirdBranches,
+            });
+          }
+
+          strike = {
+            mainPath,
+            branches,
+            intensity: 1,
+            createdAt: time,
+            returnStrokes,
+          };
+
+          // Next strike with gaussian distribution (average 0.5s)
+          nextStrike = time + Math.max(0.1, gaussianRandom(0.5, 0.15));
+        }
+
+        // Draw strike
+        if (strike) {
+          const age = time - strike.createdAt;
+          const initialFlashDuration = 0.08;
+          const fadeDuration = 0.3;
+          const totalDuration = initialFlashDuration + fadeDuration;
+
+          if (age < totalDuration) {
+            // Calculate intensity: bright flash, then gradual fade
+            if (age < initialFlashDuration) {
+              strike.intensity = 1;
+            } else {
+              strike.intensity = 1 - ((age - initialFlashDuration) / fadeDuration);
+            }
+
+            const drawStrike = (mainPath: Array<[number, number]>, branches: Array<Array<[number, number]>>, intensity: number) => {
+              // Blue glow
+              ctx.strokeStyle = `rgba(80, 150, 255, ${intensity * 0.3})`;
+              ctx.lineWidth = 10;
+              ctx.lineCap = 'round';
+              ctx.lineJoin = 'round';
+
+              ctx.beginPath();
+              ctx.moveTo(mainPath[0][0], mainPath[0][1]);
+              for (const [x, y] of mainPath) {
+                ctx.lineTo(x, y);
+              }
+              ctx.stroke();
+
+              for (const branch of branches) {
+                ctx.beginPath();
+                ctx.moveTo(branch[0][0], branch[0][1]);
+                for (const [x, y] of branch) {
+                  ctx.lineTo(x, y);
+                }
+                ctx.stroke();
+              }
+
+              // White core
+              ctx.strokeStyle = `rgba(255, 255, 255, ${intensity * 0.9})`;
+              ctx.lineWidth = 2;
+
+              ctx.beginPath();
+              ctx.moveTo(mainPath[0][0], mainPath[0][1]);
+              for (const [x, y] of mainPath) {
+                ctx.lineTo(x, y);
+              }
+              ctx.stroke();
+
+              for (const branch of branches) {
+                ctx.beginPath();
+                ctx.moveTo(branch[0][0], branch[0][1]);
+                for (const [x, y] of branch) {
+                  ctx.lineTo(x, y);
+                }
+                ctx.stroke();
+              }
+            };
+
+            // Draw main stroke
+            drawStrike(strike.mainPath, strike.branches, strike.intensity);
+
+            // Draw return strokes
+            for (const returnStroke of strike.returnStrokes) {
+              const returnAge = age - returnStroke.delay;
+              if (returnAge > 0 && returnAge < totalDuration) {
+                let returnIntensity = 0;
+                if (returnAge < initialFlashDuration) {
+                  returnIntensity = 1;
+                } else {
+                  returnIntensity = 1 - ((returnAge - initialFlashDuration) / fadeDuration);
+                }
+                drawStrike(returnStroke.mainPath, returnStroke.branches, returnIntensity);
+              }
+            }
+          } else {
+            strike = null;
+          }
+        }
+
+        requestAnimationFrame(animate);
+      };
+
+      requestAnimationFrame(animate);
+
+      // Cleanup
+      window.addEventListener('beforeunload', () => {
+        window.removeEventListener('resize', resizeCanvas);
+      });
+    }
+  }
+</script>
