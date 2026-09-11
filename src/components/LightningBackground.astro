@@ -335,6 +335,64 @@
       window.addEventListener('beforeunload', () => {
         window.removeEventListener('resize', resizeCanvas);
       });
+
+      // Easter Egg 1: Targeted Lightning Strike
+      document.addEventListener('click', (e) => {
+        const target = e.target as HTMLElement;
+        // Don't trigger if clicking header, footer, links, or the aircraft trigger
+        if (target.closest('header') || target.closest('footer') || target.closest('a') || target.id === 'aircraft-trigger') {
+          return;
+        }
+
+        // Get exact coordinates relative to the canvas, accounting for scaling
+        const rect = canvas.getBoundingClientRect();
+        const scaleX = canvas.width / rect.width;
+        const scaleY = canvas.height / rect.height;
+        
+        const mouseX = (e.clientX - rect.left) * scaleX;
+        const mouseY = (e.clientY - rect.top) * scaleY;
+        
+        // Start exactly at the cursor
+        const startX = mouseX;
+        const startY = mouseY;
+        
+        // End at the top of the screen, with some horizontal spread
+        const endX = startX + (Math.random() - 0.5) * canvas.width * 0.5;
+        const endY = -50;
+        
+        const dx = endX - startX;
+        const dy = endY - startY;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        const direction: [number, number] = [dx/dist, dy/dist];
+
+        // Generate path upwards from cursor to top
+        const mainPath = generateLightningPath(startX, startY, direction, dist, 100, 0.2);
+
+        const branches: Array<Array<[number, number]>> = [];
+        const branchCount = 1 + Math.floor(Math.random() * 2);
+        
+        for (let b = 0; b < branchCount; b++) {
+          const idx = Math.floor(Math.random() * (mainPath.length * 0.5)) + Math.floor(mainPath.length * 0.2);
+          if (idx < mainPath.length) {
+            const [bx, by] = mainPath[idx];
+            const branchLength = dist * 0.3 * Math.random();
+            const branchPath = generateBranch(bx, by, branchLength, 30, 0.3);
+            branches.push(branchPath);
+          }
+        }
+        
+        // Immediately trigger this strike
+        strike = {
+          mainPath,
+          branches,
+          intensity: 1.5, // Extra bright
+          createdAt: time,
+          returnStrokes: [{ delay: 0.1, mainPath, branches }] // One snappy return stroke
+        };
+        
+        // Delay the next random strike
+        nextStrike = time + 1.0;
+      });
     }
   }
 </script>

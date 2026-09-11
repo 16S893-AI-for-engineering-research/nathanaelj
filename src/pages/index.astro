@@ -14,7 +14,7 @@ import { resolvePath } from '../lib/paths';
       </h1>
 
       <p class="text-xl md:text-2xl text-void-200 mb-8 font-light font-sans">
-        Developing new simulation techniques for aircraft lightning protection
+        Developing new simulation techniques for <span id="aircraft-trigger">aircraft</span> lightning protection
       </p>
 
       <p class="text-base md:text-lg text-void-400 max-w-2xl mx-auto mb-16 leading-relaxed font-sans">
@@ -42,6 +42,34 @@ import { resolvePath } from '../lib/paths';
 
 
   </div>
-
-
 </BaseLayout>
+
+<script>
+  // Easter Egg 3: Airplane Flyby
+  const trigger = document.getElementById('aircraft-trigger');
+  trigger?.addEventListener('click', () => {
+    const plane = document.createElement('div');
+    plane.textContent = '✈️';
+    plane.style.position = 'fixed';
+    plane.style.fontSize = '3rem';
+    plane.style.top = '50%';
+    plane.style.left = '-100px';
+    plane.style.zIndex = '9999';
+    plane.style.pointerEvents = 'none'; // Don't block clicks
+    plane.style.transition = 'all 2.5s ease-in';
+    plane.style.transform = 'rotate(40deg)';
+    document.body.appendChild(plane);
+    
+    // Force a browser reflow so the transition actually animates
+    plane.offsetHeight;
+    
+    // Animate across the screen and slightly upwards
+    plane.style.left = '110vw';
+    plane.style.transform = 'translateY(-200px) rotate(40deg)';
+    
+    // Clean up the DOM after animation finishes
+    setTimeout(() => {
+      plane.remove();
+    }, 2500);
+  });
+</script>

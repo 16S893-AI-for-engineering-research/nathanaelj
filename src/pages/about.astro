@@ -1,0 +1,334 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+// Import images so Astro processes & fingerprints them correctly
+import imgHeadshot         from '../images/Headshot.jpeg';
+import imgPeeking          from '../images/Hiking_Peeking_from_side_of_hut.jpeg';
+import imgHalfMarathon     from '../images/Running_half_marathon.jpeg';
+import imgFamily           from '../images/Family_in_Odiham.jpeg';
+import imgRunSunset        from '../images/Boston_running_sunset_with_Jacob.jpeg';
+import imgBabyNat          from '../images/Baby_Nat.jpeg';
+import imgPainting         from '../images/Childhood_Nat_painting.jpeg';
+import imgHikeCovered      from '../images/Hiking_with_face_covering.jpeg';
+---
+
+<BaseLayout title="About Me">
+
+  <!-- ===== HERO ===== -->
+  <section class="relative max-w-5xl mx-auto px-6 pt-16 pb-12 flex flex-col md:flex-row gap-12 items-start">
+
+    <!-- Polaroid headshot, tilted left -->
+    <div class="polaroid polaroid--left shrink-0 self-center md:self-start mt-4" data-reveal="1">
+      <img src={imgHeadshot.src} alt="Nathanael Jenkins" class="polaroid__img" />
+      <p class="polaroid__caption">— hi, that's me</p>
+    </div>
+
+    <!-- Intro text -->
+    <div class="flex-1" data-reveal="2">
+      <h1 class="mb-4">About Me</h1>
+      <!-- Stat pills -->
+      <div class="flex flex-wrap gap-3 mt-8">
+        {[
+          { emoji: '⚡', label: 'Aircraft lightning' },
+          { emoji: '🏴󠁧󠁢󠁷󠁬󠁳󠁿', label: 'Welsh soul' },
+          { emoji: '🎓', label: 'Imperial → MIT' },
+          { emoji: '🥛', label: 'Milk devotee' },
+          { emoji: '✝️', label: 'Christian' },
+        ].map(({ emoji, label }) => (
+          <span class="stat-pill">{emoji}&ensp;{label}</span>
+        ))}
+        <a href="https://apg.mit.edu" target="_blank" rel="noopener noreferrer" class="stat-pill" style="text-decoration:none;">🔬&ensp;MIT Aerospace Plasma Group</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider" />
+
+  <!-- ===== ORIGIN STORY ===== -->
+  <section class="max-w-5xl mx-auto px-6 py-12 grid md:grid-cols-2 gap-12 items-center">
+
+    <div data-reveal="1">
+      <h2 class="section-label">Origin story</h2>
+      <p>
+        Born in <strong>Swansea, Wales</strong> — I'm a Welshman at heart, even if my family
+        home eventually settled in <strong>Odiham, Hampshire</strong> (England, regrettably).
+      </p>
+      <p>
+        Studied <strong>Aeronautical Engineering at Imperial College London</strong>, where I 
+        once confidently told a friend: <em class="text-solar">"If I ever do a PhD, kill me."</em>
+      </p>
+      <p>
+        Then I came to MIT as an exchange student in 2023, fell head-over-heels for the 
+        research, and… here we are. Nobody killed me.
+      </p>
+    </div>
+
+    <!-- Two stacked polaroids -->
+    <div class="relative h-72 md:h-80" data-reveal="2">
+      <div class="polaroid polaroid--right absolute top-0 left-8">
+        <img src={imgBabyNat.src} alt="Baby Nat" class="polaroid__img" />
+        <p class="polaroid__caption">where it all began</p>
+      </div>
+      <div class="polaroid polaroid--left absolute bottom-0 right-4">
+        <img src={imgPainting.src} alt="Childhood Nat painting" class="polaroid__img" />
+        <p class="polaroid__caption">future engineer</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider" />
+
+  <!-- ===== RESEARCH ===== -->
+  <section class="max-w-5xl mx-auto px-6 py-12">
+    <h2 class="section-label" data-reveal="1">Work stuff</h2>
+
+    <div class="grid md:grid-cols-3 gap-6 mt-6">
+      {[
+        {
+          icon: '⚡',
+          title: 'PhD Topic',
+          body: 'Developing new simulation techniques for aircraft lightning protection in the MIT Aerospace Plasma Group.',
+          link: { label: 'See more →', href: 'http://localhost:5173/Projects/PhD' },
+        },
+        {
+          icon: '🛡️',
+          title: 'Industry',
+          body: 'Interned at MBDA Missile Systems (2021) and The Boeing Company (2026). I like making things go boom.',
+        },
+        {
+          icon: '🏠',
+          title: 'Campus life',
+          body: 'Graduate Resident Advisor in New Vassar, an undergraduate dorm at MIT. Like being an older brother to 36 twenty-somethings.',
+        },
+      ].map(({ icon, title, body, link }, i) => (
+        <div class="research-card" data-reveal={String(i + 1)}>
+          <span class="text-3xl mb-3 block">{icon}</span>
+          <h3 class="text-solar font-semibold text-lg mb-2">{title}</h3>
+          <p class="text-void-300 text-sm leading-relaxed mb-0">{body}</p>
+          {link && (
+            <a href={link.href} target="_blank" rel="noopener noreferrer"
+               class="text-solar text-sm mt-3 inline-block">{link.label}</a>
+          )}
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <div class="section-divider" />
+
+  <!-- ===== OUTSIDE THE LAB ===== -->
+  <section class="max-w-5xl mx-auto px-6 py-12">
+    <h2 class="section-label" data-reveal="1">Outside the lab</h2>
+
+    <div class="mt-8 space-y-16">
+
+      <!-- Running row -->
+      <div class="flex flex-col md:flex-row gap-10 items-center">
+        <div class="shrink-0" data-reveal="1">
+          <div class="polaroid polaroid--neg4">
+            <img src={imgHalfMarathon.src} alt="Half marathon, Massachusetts" class="polaroid__img" />
+            <p class="polaroid__caption">half marathon, MA</p>
+          </div>
+        </div>
+        <div class="shrink-0 hidden md:block" style="margin-top:1.5rem;" data-reveal="2">
+          <div class="polaroid polaroid--pos2">
+            <img src={imgRunSunset.src} alt="Running sunset Boston" class="polaroid__img" />
+            <p class="polaroid__caption">sunset miles, Boston</p>
+          </div>
+        </div>
+        <div data-reveal="3">
+          <h3 class="text-solar font-semibold text-xl mb-2">🏃 Running &amp; exploring</h3>
+          <p class="text-void-300 mb-0">
+            Running, hiking, and paddle-boarding are some of my favorite ways to touch grass (and water). I lead the <strong><a href="https://mitoc.mit.edu" target="_blank" rel="noopener noreferrer">MIT Outing Club</a> paddle-boarding program</strong> — and yes, I have fallen in.
+          </p>
+        </div>
+      </div>
+
+      <!-- Hiking row (reversed) -->
+      <div class="flex flex-col md:flex-row-reverse gap-10 items-center">
+        <div class="shrink-0" data-reveal="1">
+          <div class="polaroid polaroid--pos3">
+            <img src={imgPeeking.src} alt="Peeking from mountain hut" class="polaroid__img" />
+            <p class="polaroid__caption">woke up here once</p>
+          </div>
+        </div>
+        <div class="shrink-0 hidden md:block" style="margin-bottom:1rem;" data-reveal="2">
+          <div class="polaroid polaroid--neg2">
+            <img src={imgHikeCovered.src} alt="Hiking with face covering" class="polaroid__img" />
+            <p class="polaroid__caption">stylish, I know</p>
+          </div>
+        </div>
+        <div data-reveal="3">
+          <h3 class="text-solar font-semibold text-xl mb-2">⛰️ Mountains</h3>
+          <p class="text-void-300 mb-0">
+            On a good hiking trip, you don't come back the same day. On a great one, 
+            you sleep at the summit and question your life choices at 4 am. Type II fun is the best kind of fun.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="section-divider" />
+
+  <!-- ===== FAITH & PEOPLE ===== -->
+  <section class="max-w-5xl mx-auto px-6 py-12 grid md:grid-cols-2 gap-12 items-center">
+
+    <div data-reveal="1">
+      <h2 class="section-label">Faith &amp; people</h2>
+      <p>
+        My faith is the most important thing in my life — it shapes everything I think and do.
+        I'm a member of <strong><a href="https://trinitycambridge.com" target="_blank" rel="noopener noreferrer">Trinity Cambridge Church</a></strong> and the 
+        <strong>MIT Graduate Christian Fellowship</strong>.
+      </p>
+    </div>
+
+    <div class="mx-auto" data-reveal="2">
+    <div class="polaroid polaroid--neg2 mx-auto">
+      <img src={imgFamily.src} alt="Family in Odiham" class="polaroid__img" />
+      <p class="polaroid__caption">my family, back home</p>
+    </div>
+    </div>
+  </section>
+
+  <div class="section-divider" />
+
+  <!-- ===== MILK ===== -->
+  <section class="max-w-5xl mx-auto px-6 py-16 text-center" data-reveal="1">
+    <a href="https://www.gotmilk.com/" target="_blank" rel="noopener noreferrer" class="milk-banner" style="display:block;text-decoration:none;">
+      <p class="milk-emoji">🥛</p>
+      <h2 class="text-4xl md:text-5xl font-display font-bold text-white mb-4" style="background:none;-webkit-text-fill-color:white;">
+        I love milk.
+      </h2>
+      <p class="text-void-200 text-lg max-w-xl mx-auto mb-2">
+        A gallon every few days. Low fat, of course. 
+        <br />It is, objectively, the best drink.
+      </p>
+      <p class="text-void-400 text-sm">
+        (Faith first. But milk is a very close second among worldly things.)
+      </p>
+    </a>
+  </section>
+
+</BaseLayout>
+
+<style>
+  /* ── Section label ── */
+  .section-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--color-solar);
+    margin-bottom: 0.5rem;
+    margin-top: 0;
+  }
+
+  /* ── Divider ── */
+  .section-divider {
+    max-width: 64rem;
+    margin: 0 auto;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(255,156,26,0.25), transparent);
+  }
+
+  /* ── Polaroid ── */
+  .polaroid {
+    display: inline-block;
+    background: #faf7f2;
+    padding: 8px 8px 28px 8px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.45), 0 1px 4px rgba(0,0,0,0.3);
+    transform-origin: center center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    max-width: 200px;
+  }
+
+  .polaroid:hover {
+    transform: rotate(0deg) scale(1.04) !important;
+    box-shadow: 0 8px 36px rgba(0,0,0,0.55), 0 0 18px rgba(255,156,26,0.18);
+    z-index: 10;
+    position: relative;
+  }
+
+  .polaroid--left   { transform: rotate(-3deg); }
+  .polaroid--right  { transform: rotate(2.5deg); }
+  .polaroid--neg4   { transform: rotate(-4deg); }
+  .polaroid--pos2   { transform: rotate(2deg); }
+  .polaroid--pos3   { transform: rotate(3.5deg); }
+  .polaroid--neg2   { transform: rotate(-2deg); }
+
+  .polaroid__img {
+    display: block;
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    object-position: top center;
+  }
+
+  .polaroid__caption {
+    text-align: center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.6rem;
+    color: #6b5e4e;
+    margin: 6px 0 0;
+    line-height: 1.3;
+  }
+
+  /* ── Stat pills ── */
+  .stat-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.3rem 0.75rem;
+    border: 1px solid rgba(255,156,26,0.3);
+    background: rgba(255,156,26,0.06);
+    color: var(--color-text-secondary);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
+
+  /* ── Research cards ── */
+  .research-card {
+    padding: 1.5rem;
+    border: 1px solid rgba(255,156,26,0.15);
+    background: rgba(255,156,26,0.03);
+    transition: border-color 0.2s, background 0.2s;
+  }
+
+  .research-card:hover {
+    border-color: rgba(255,156,26,0.4);
+    background: rgba(255,156,26,0.07);
+  }
+
+  /* ── Milk banner ── */
+  .milk-banner {
+    padding: 3rem 2rem;
+    border: 1px solid rgba(255,255,255,0.12);
+    background: rgba(255,255,255,0.04);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .milk-banner::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 50%,
+      rgba(255,255,255,0.06) 0%,
+      transparent 70%);
+    pointer-events: none;
+  }
+
+  .milk-emoji {
+    font-size: 3.5rem;
+    margin: 0 0 0.75rem;
+    line-height: 1;
+  }
+
+  /* Override global p margin inside milk banner */
+  .milk-banner p {
+    margin-bottom: 0.5rem;
+  }
+</style>
