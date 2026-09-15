@@ -1,0 +1,78 @@
+---
+/**
+ * Search / filter / sort toolbar for the dev-log index.
+ *
+ * Rendered server-side and progressively enhanced: with JS off the controls are
+ * simply inert (and the reset button is hidden), while the full list stays
+ * readable below.
+ */
+import type { ModelStyle } from '@lib/devlog';
+import DevLogIcon from './DevLogIcon.astro';
+
+interface Props {
+  models: ModelStyle[];
+  total: number;
+}
+
+const { models, total } = Astro.props;
+
+const sortOptions = [
+  { value: 'date-desc', label: 'Date · newest first' },
+  { value: 'date-asc', label: 'Date · oldest first' },
+  { value: 'cost-desc', label: 'Cost · highest first' },
+  { value: 'cost-asc', label: 'Cost · lowest first' },
+];
+---
+
+<form class="dl-toolbar" id="dl-toolbar" role="search" aria-label="Filter dev log entries" novalidate>
+  <div class="grid gap-3 md:grid-cols-12">
+    <!-- Keyword search -->
+    <div class="dl-field md:col-span-5">
+      <label class="dl-label" for="dl-search">Search</label>
+      <div class="dl-search" id="dl-search-wrap">
+        <span class="dl-search__icon"><DevLogIcon name="search" size={14} /></span>
+        <input
+          type="search"
+          id="dl-search"
+          class="dl-input"
+          placeholder="Keywords, tools, models…"
+          autocomplete="off"
+          spellcheck="false"
+        />
+        <button type="button" class="dl-search__clear" id="dl-search-clear" aria-label="Clear search">
+          <DevLogIcon name="close" size={12} />
+        </button>
+      </div>
+    </div>
+
+    <!-- Model filter -->
+    <div class="dl-field md:col-span-3">
+      <label class="dl-label" for="dl-model">Model</label>
+      <select id="dl-model" class="dl-select">
+        <option value="">All models</option>
+        {models.map((model) => <option value={model.id}>{model.label}</option>)}
+      </select>
+    </div>
+
+    <!-- Sort -->
+    <div class="dl-field md:col-span-4">
+      <label class="dl-label" for="dl-sort">Sort by</label>
+      <select id="dl-sort" class="dl-select">
+        {sortOptions.map((option) => <option value={option.value}>{option.label}</option>)}
+      </select>
+    </div>
+  </div>
+
+  <div class="dl-toolbar__meta">
+    <p class="dl-result-count" id="dl-count" aria-live="polite">
+      Showing <b>{total}</b> of <b>{total}</b> {total === 1 ? 'entry' : 'entries'}
+    </p>
+    <button type="button" class="dl-reset" id="dl-reset" hidden>Reset filters</button>
+  </div>
+</form>
+
+<style>
+  #dl-toolbar input[type='search']::-webkit-search-cancel-button {
+    display: none;
+  }
+</style>

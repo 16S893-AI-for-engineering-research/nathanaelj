@@ -1,0 +1,30 @@
+---
+/**
+ * A single model badge. Colour comes from `getModelStyle`, which pins hues for
+ * known models and deterministically hashes anything new into a curated palette
+ * — so future agents are colour-coded automatically.
+ */
+import { getModelStyle } from '@lib/devlog';
+
+interface Props {
+  model: string;
+  size?: 'sm' | 'lg';
+  /** Show the vendor family (e.g. "Anthropic") in the tooltip. */
+  title?: boolean;
+}
+
+const { model, size = 'sm', title = true } = Astro.props;
+const style = getModelStyle(model);
+const tooltip = title
+  ? style.family
+    ? `${style.label} · ${style.family}`
+    : style.label
+  : undefined;
+---
+
+<span
+  class={`dl-model${size === 'lg' ? ' dl-model--lg' : ''}`}
+  style={style.cssVars}
+  title={tooltip}
+  data-model={style.id}
+>{style.label}</span>

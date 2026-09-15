@@ -1,0 +1,90 @@
+---
+/**
+ * The full body of a dev-log entry. Deliberately layout-agnostic so the exact
+ * same markup powers both the modal on /dev-log and the standalone
+ * /dev-log/<slug> page — one source of truth for entry presentation.
+ */
+import type { DevLogEntry } from '@lib/devlog';
+import { formatCost, formatCount, formatDateLong, renderInline } from '@lib/devlog';
+import DevLogIcon from './DevLogIcon.astro';
+import ModelBadge from './ModelBadge.astro';
+
+interface Props {
+  entry: DevLogEntry;
+  /** Heading level for the title, so each context keeps a valid outline. */
+  headingLevel?: 'h1' | 'h2';
+  /** Id applied to the title element (used as the modal's aria-labelledby). */
+  titleId?: string;
+}
+
+const { entry, headingLevel = 'h2', titleId } = Astro.props;
+const { metrics, description } = entry;
+
+const metricCells = [
+  { icon: 'user' as const, label: 'User messages', value: formatCount(metrics.userMessages) },
+  { icon: 'bot' as const, label: 'Assistant messages', value: formatCount(metrics.assistantMessages) },
+  { icon: 'tool' as const, label: 'Tool calls', value: formatCount(metrics.toolCalls) },
+  { icon: 'cost' as const, label: 'Total cost', value: formatCost(metrics.totalCostUsd), cost: true },
+];
+
+const sections = [
+  { key: 'changes', title: 'Key changes', items: description.keyChanges },
+  { key: 'successes', title: 'Agent successes', items: description.agentSuccesses },
+  { key: 'failures', title: 'Agent failures', items: description.agentFailures },
+].filter((section) => section.items.length > 0);
+
+const Title = headingLevel;
+---
+
+<article class="dl-detail">
+  <header>
+    <p class="dl-eyebrow" style="margin-bottom:0.5rem;">
+      <span class="inline-flex items-center gap-1.5 align-middle">
+        <DevLogIcon name="calendar" size={11} />
+        {formatDateLong(entry.date)}
+      </span>
+    </p>
+
+    <Title class="dl-detail__title" id={titleId} style="background:none;-webkit-text-fill-color:currentColor;">
+      {entry.title}
+    </Title>
+
+    <p class="dl-detail__summary">{entry.summary}</p>
+
+    {entry.models.length > 0 && (
+      <div class="dl-legend" style="margin-top:1.1rem;">
+        <span class="dl-legend__title">Models</span>
+        {entry.models.map((model) => <ModelBadge model={model} size="lg" />)}
+      </div>
+    )}
+  </header>
+
+  <!-- Session metrics -->
+  <div class="dl-detail__meta">
+    {metricCells.map((cell) => (
+      <div class={`dl-detail__metric${cell.cost ? ' dl-detail__metric--cost' : ''}`}>
+        <div class="dl-detail__metric-value">{cell.value}</div>
+        <p class="dl-detail__metric-label">
+          <span class="inline-flex items-center gap-1 align-middle">
+            <DevLogIcon name={cell.icon} size={10} />
+            {cell.label}
+          </span>
+        </p>
+      </div>
+    ))}
+  </div>
+
+  <!-- Description: key changes / successes / failures -->
+  {sections.map((section) => (
+    <section class={`dl-section dl-section--${section.key}`}>
+      <div class="dl-section__head">
+        <span class="dl-section__marker"></span>
+        <h3 class="dl-section__title">{section.title}</h3>
+        <span class="dl-section__count">{section.items.length}</span>
+      </div>
+      <ul class="dl-bullets">
+        {section.items.map((item) => <li set:html={renderInline(item)} />)}
+      </ul>
+    </section>
+  ))}
+</article>

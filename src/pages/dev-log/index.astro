@@ -1,0 +1,275 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import '@styles/devlog.css';
+
+import { devLogEntries } from '@data/devlog';
+import {
+  collectModels,
+  computeTotals,
+  formatCost,
+  sortByDateDesc,
+} from '@lib/devlog';
+
+import EntryCard from '@components/devlog/EntryCard.astro';
+import FilterToolbar from '@components/devlog/FilterToolbar.astro';
+import ModelBadge from '@components/devlog/ModelBadge.astro';
+
+const entries = sortByDateDesc(devLogEntries);
+const models = collectModels(entries);
+const totals = computeTotals(entries);
+
+const stats = [
+  { value: String(totals.entries), label: 'Entries' },
+  { value: totals.userMessages.toLocaleString('en-GB'), label: 'User messages' },
+  { value: totals.assistantMessages.toLocaleString('en-GB'), label: 'Assistant messages' },
+  { value: totals.toolCalls.toLocaleString('en-GB'), label: 'Tool calls' },
+  { value: formatCost(totals.totalCostUsd), label: 'Total spend' },
+];
+---
+
+<BaseLayout
+  title="Dev Log"
+  description="A log of my work throughout this class."
+>
+  <div class="max-w-5xl mx-auto px-6 pt-16 pb-24">
+
+    <!-- ===== Header ===== -->
+    <header data-reveal="1">
+      <h1 class="mb-4">Development Log</h1>
+      <p class="text-void-300 max-w-2xl">
+        A log of my work throughout this class. Click an entry to read it in full.
+      </p>
+    </header>
+
+    <!-- ===== Aggregate stats ===== -->
+    <section class="mt-10" data-reveal="2" aria-label="Cumulative statistics">
+      <div class="dl-stats">
+        {stats.map((stat) => (
+          <div class="dl-stat">
+            <div class="dl-stat__value">{stat.value}</div>
+            <p class="dl-stat__label">{stat.label}</p>
+          </div>
+        ))}
+      </div>
+      {totals.partial && (
+        <!-- <p class="dl-result-count" style="margin-top:0.6rem;">
+          Totals exclude entries with untracked metrics (shown as “—”).
+        </p>-->
+      )}
+    </section>
+
+    <!-- ===== Model legend ===== -->
+    {models.length > 0 && (
+      <section class="mt-6 dl-legend" data-reveal="3" aria-label="Models used">
+        <span class="dl-legend__title">Agents used</span>
+        {models.map((model) => <ModelBadge model={model.id} />)}
+      </section>
+    )}
+
+    <div class="dl-divider my-10"></div>
+
+    <!-- ===== Toolbar ===== -->
+    <div data-reveal="3">
+      <FilterToolbar models={models} total={entries.length} />
+    </div>
+
+    <!-- ===== Entry list ===== -->
+    <ul class="dl-list" id="dl-list">
+      {entries.map((entry, index) => <EntryCard entry={entry} index={index} />)}
+    </ul>
+
+    <!-- ===== Empty state ===== -->
+    <div class="dl-empty mt-8" id="dl-empty" hidden>
+      <div class="dl-empty__icon">🔍</div>
+      <h2 class="text-lg" style="margin-top:0;">No entries match those filters</h2>
+      <p class="text-void-400 text-sm mb-0">
+        Try a broader keyword, or
+        <button type="button" class="underline text-solar" id="dl-empty-reset" style="background:none;border:none;cursor:pointer;padding:0;">reset everything</button>.
+      </p>
+    </div>
+
+  </div>
+</BaseLayout>
+
+<script is:inline>
+  /**
+   * Dev-log index controller.
+   *
+   * Responsibilities:
+   *   1. Keyword search + model filter + sort over the pre-rendered cards.
+   *   2. URL sync (`?q=&model=&sort=`) so any filtered view is shareable and the
+   *      browser back button behaves as users expect.
+   *
+   * Entry cards are plain links to the standalone entry pages — no modal, no
+   * client-side routing. No framework, no hydration cost — the DOM is already
+   * correct on first paint.
+   */
+  (() => {
+    const list = document.getElementById('dl-list');
+    const toolbar = document.getElementById('dl-toolbar');
+    if (!list || !toolbar) return;
+
+    const cards = /** @type {HTMLElement[]} */ ([...list.querySelectorAll('[data-entry-card]')]);
+    const searchInput = /** @type {HTMLInputElement} */ (document.getElementById('dl-search'));
+    const searchWrap = document.getElementById('dl-search-wrap');
+    const searchClear = document.getElementById('dl-search-clear');
+    const modelSelect = /** @type {HTMLSelectElement} */ (document.getElementById('dl-model'));
+    const sortSelect = /** @type {HTMLSelectElement} */ (document.getElementById('dl-sort'));
+    const countEl = document.getElementById('dl-count');
+    const resetBtn = document.getElementById('dl-reset');
+    const emptyEl = document.getElementById('dl-empty');
+    const emptyReset = document.getElementById('dl-empty-reset');
+
+    const DEFAULT_SORT = 'date-desc';
+
+    /* ---------------- Filtering & sorting ---------------- */
+
+    const parseCost = (card) => {
+      const raw = card.dataset.cost;
+      return raw === undefined || raw === '' ? null : Number(raw);
+    };
+
+    /** Tokenised AND search: every term must appear somewhere in the entry. */
+    const matchesQuery = (card, terms) => {
+      if (terms.length === 0) return true;
+      const haystack = card.dataset.search || '';
+      return terms.every((term) => haystack.includes(term));
+    };
+
+    const matchesModel = (card, model) =>
+      !model || (card.dataset.models || '').split('|').includes(model);
+
+    const byDate = (dir) => (a, b) => {
+      const da = a.dataset.date || '';
+      const db = b.dataset.date || '';
+      return dir === 'asc' ? da.localeCompare(db) : db.localeCompare(da);
+    };
+
+    /**
+     * Cost sort. Untracked costs always sink to the bottom in both directions —
+     * treating "unknown" as $0 would misleadingly rank it as the cheapest run.
+     * Equal costs fall back to newest-first for a stable, sensible order.
+     */
+    const byCost = (dir) => (a, b) => {
+      const ca = parseCost(a);
+      const cb = parseCost(b);
+      if (ca === null || cb === null) {
+        if (ca === null && cb === null) return byDate('desc')(a, b);
+        return ca === null ? 1 : -1;
+      }
+      if (ca !== cb) return dir === 'asc' ? ca - cb : cb - ca;
+      return byDate('desc')(a, b);
+    };
+
+    const comparators = {
+      'date-desc': byDate('desc'),
+      'date-asc': byDate('asc'),
+      'cost-desc': byCost('desc'),
+      'cost-asc': byCost('asc'),
+    };
+
+    function isFiltered() {
+      return Boolean(
+        searchInput.value.trim() || modelSelect.value || sortSelect.value !== DEFAULT_SORT
+      );
+    }
+
+    function apply({ updateUrl = true } = {}) {
+      const terms = searchInput.value.trim().toLowerCase().split(/\s+/).filter(Boolean);
+      const model = modelSelect.value;
+
+      const matched = [];
+      for (const card of cards) {
+        const visible = matchesQuery(card, terms) && matchesModel(card, model);
+        card.hidden = !visible;
+        // Keep hidden cards out of the tab order entirely.
+        const link = card.querySelector('[data-entry-link]');
+        if (link) link.tabIndex = visible ? 0 : -1;
+        if (visible) matched.push(card);
+      }
+
+      const compare = comparators[sortSelect.value] || comparators[DEFAULT_SORT];
+      matched.sort(compare);
+      // Re-appending in order is cheap here and keeps CSS `:nth-child` honest.
+      matched.forEach((card) => list.appendChild(card));
+
+      if (countEl) {
+        countEl.innerHTML =
+          `Showing <b>${matched.length}</b> of <b>${cards.length}</b> ` +
+          (cards.length === 1 ? 'entry' : 'entries');
+      }
+      if (emptyEl) emptyEl.hidden = matched.length !== 0;
+      if (resetBtn) resetBtn.hidden = !isFiltered();
+      if (searchWrap) searchWrap.dataset.filled = String(Boolean(searchInput.value));
+
+      if (updateUrl) writeUrl();
+    }
+
+    /* ---------------- URL state ---------------- */
+
+    function writeUrl() {
+      const params = new URLSearchParams();
+      if (searchInput.value.trim()) params.set('q', searchInput.value.trim());
+      if (modelSelect.value) params.set('model', modelSelect.value);
+      if (sortSelect.value !== DEFAULT_SORT) params.set('sort', sortSelect.value);
+
+      const query = params.toString();
+      const target = location.pathname + (query ? `?${query}` : '');
+      history.replaceState(history.state, '', target);
+    }
+
+    function readUrl() {
+      const params = new URLSearchParams(location.search);
+      searchInput.value = params.get('q') || '';
+      const model = params.get('model') || '';
+      if ([...modelSelect.options].some((option) => option.value === model)) {
+        modelSelect.value = model;
+      }
+      const sort = params.get('sort') || DEFAULT_SORT;
+      if (comparators[sort]) sortSelect.value = sort;
+    }
+
+    /* ---------------- Wiring ---------------- */
+
+    let debounce;
+    searchInput.addEventListener('input', () => {
+      clearTimeout(debounce);
+      debounce = window.setTimeout(() => apply(), 120);
+    });
+    searchClear?.addEventListener('click', () => {
+      searchInput.value = '';
+      searchInput.focus();
+      apply();
+    });
+    [modelSelect, sortSelect].forEach((control) =>
+      control.addEventListener('change', () => apply())
+    );
+
+    function resetAll() {
+      searchInput.value = '';
+      modelSelect.value = '';
+      sortSelect.value = DEFAULT_SORT;
+      apply();
+    }
+    resetBtn?.addEventListener('click', resetAll);
+    emptyReset?.addEventListener('click', resetAll);
+
+    // Never submit — this is a live filter, not a round trip.
+    toolbar.addEventListener('submit', (event) => event.preventDefault());
+
+    document.addEventListener('keydown', (event) => {
+      // "/" focuses search, the way developers expect.
+      if (event.key === '/' && document.activeElement !== searchInput) {
+        const tag = (document.activeElement?.tagName || '').toLowerCase();
+        if (tag !== 'input' && tag !== 'select' && tag !== 'textarea') {
+          event.preventDefault();
+          searchInput.focus();
+        }
+      }
+    });
+
+    // Restore state from the URL.
+    readUrl();
+    apply({ updateUrl: false });
+  })();
+</script>

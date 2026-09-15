@@ -1,0 +1,87 @@
+---
+/**
+ * Summary card for one dev-log entry.
+ *
+ * The whole card is a stretched anchor pointing at the standalone entry page, so
+ * it works with JS disabled, supports middle-click / "open in new tab", and is
+ * keyboard reachable. `DevLogFilters` intercepts plain left-clicks to open the
+ * modal instead — progressive enhancement, not a JS-only widget.
+ */
+import type { DevLogEntry } from '@lib/devlog';
+import {
+  buildSearchIndex,
+  formatCost,
+  formatCount,
+  formatDate,
+} from '@lib/devlog';
+import { resolvePath } from '@lib/paths';
+import DevLogIcon from './DevLogIcon.astro';
+import ModelBadge from './ModelBadge.astro';
+
+interface Props {
+  entry: DevLogEntry;
+  index: number;
+}
+
+const { entry, index } = Astro.props;
+const { metrics } = entry;
+
+const metricItems = [
+  { icon: 'user' as const, label: 'user messages', value: formatCount(metrics.userMessages), short: 'user' },
+  { icon: 'bot' as const, label: 'assistant messages', value: formatCount(metrics.assistantMessages), short: 'assistant' },
+  { icon: 'tool' as const, label: 'tool calls', value: formatCount(metrics.toolCalls), short: 'tools' },
+];
+---
+
+<li
+  class="dl-card"
+  data-entry-card
+  data-slug={entry.slug}
+  data-date={entry.date}
+  data-cost={metrics.totalCostUsd ?? ''}
+  data-models={entry.models.join('|')}
+  data-search={buildSearchIndex(entry)}
+  data-reveal={String(Math.min(index + 1, 5))}
+>
+  <a
+    class="dl-card__trigger"
+    href={resolvePath(`/dev-log/${entry.slug}`)}
+    data-entry-link
+    aria-label={`Open dev log entry: ${entry.title}, ${formatDate(entry.date)}`}
+  >{entry.title}</a>
+
+  <div class="dl-card__body">
+    <div class="dl-card__head">
+      <h2 class="dl-card__title">{entry.title}</h2>
+      <span class="dl-card__date">{formatDate(entry.date)}</span>
+    </div>
+
+    <p class="dl-card__summary">{entry.summary}</p>
+
+    <div class="dl-card__foot">
+      <div class="dl-metrics">
+        {metricItems.map((item) => (
+          <span class="dl-metric" title={`${item.value} ${item.label}`}>
+            <DevLogIcon name={item.icon} />
+            <b>{item.value}</b>
+            <span class="hidden sm:inline">{item.short}</span>
+          </span>
+        ))}
+        <span class="dl-metric dl-metric--cost" title="Total session cost (USD)">
+          <DevLogIcon name="cost" />
+          <b>{formatCost(metrics.totalCostUsd)}</b>
+        </span>
+      </div>
+
+      {entry.models.length > 0 && (
+        <div class="dl-card__models">
+          {entry.models.map((model) => <ModelBadge model={model} />)}
+        </div>
+      )}
+    </div>
+
+    <span class="dl-card__cue" aria-hidden="true">
+      Read entry <DevLogIcon name="arrow" size={12} />
+    </span>
+  </div>
+</li>

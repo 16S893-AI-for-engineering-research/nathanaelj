@@ -1,0 +1,151 @@
+---
+import type { GetStaticPaths } from 'astro';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import '@styles/devlog.css';
+
+import { devLogEntries } from '@data/devlog';
+import { formatDate, sortByDateDesc } from '@lib/devlog';
+import { resolvePath } from '@lib/paths';
+
+import EntryDetail from '@components/devlog/EntryDetail.astro';
+import DevLogIcon from '@components/devlog/DevLogIcon.astro';
+
+/**
+ * Standalone page per entry. Gives every entry a real, crawlable, shareable URL
+ * and doubles as the no-JS fallback for the modal on the index page.
+ */
+export const getStaticPaths: GetStaticPaths = () => {
+  const entries = sortByDateDesc(devLogEntries);
+  return entries.map((entry, index) => ({
+    params: { slug: entry.slug },
+    props: {
+      entry,
+      // Newer = previous in the descending list.
+      newer: entries[index - 1] ?? null,
+      older: entries[index + 1] ?? null,
+    },
+  }));
+};
+
+const { entry, newer, older } = Astro.props;
+---
+
+<BaseLayout title={`${entry.title} · Dev Log`} description={entry.summary}>
+  <div class="max-w-3xl mx-auto px-6 pt-16 pb-24">
+
+    <!-- Breadcrumb -->
+    <nav class="mb-8" aria-label="Breadcrumb" data-reveal="1">
+      <a
+        href={resolvePath('/dev-log')}
+        class="dl-permalink inline-flex items-center gap-1.5"
+        style="border-bottom:none;"
+      >
+        <span aria-hidden="true">←</span> All dev log entries
+      </a>
+    </nav>
+
+    <div data-reveal="2">
+      <EntryDetail entry={entry} headingLevel="h1" />
+    </div>
+
+    <div class="dl-divider my-12"></div>
+
+    <!-- Prev / next -->
+    <nav class="grid gap-3 sm:grid-cols-2" aria-label="Adjacent entries" data-reveal="3">
+      {newer ? (
+        <a href={resolvePath(`/dev-log/${newer.slug}`)} class="dl-adjacent" style="border-bottom:none;">
+          <span class="dl-adjacent__label">← Newer entry</span>
+          <span class="dl-adjacent__title">{newer.title}</span>
+          <span class="dl-adjacent__date">{formatDate(newer.date)}</span>
+        </a>
+      ) : (
+        <span class="dl-adjacent dl-adjacent--empty">
+          <span class="dl-adjacent__label">Newer entry</span>
+          <span class="dl-adjacent__title">This is the latest</span>
+        </span>
+      )}
+
+      {older ? (
+        <a
+          href={resolvePath(`/dev-log/${older.slug}`)}
+          class="dl-adjacent dl-adjacent--right"
+          style="border-bottom:none;"
+        >
+          <span class="dl-adjacent__label">Older entry →</span>
+          <span class="dl-adjacent__title">{older.title}</span>
+          <span class="dl-adjacent__date">{formatDate(older.date)}</span>
+        </a>
+      ) : (
+        <span class="dl-adjacent dl-adjacent--right dl-adjacent--empty">
+          <span class="dl-adjacent__label">Older entry</span>
+          <span class="dl-adjacent__title">Start of the log</span>
+        </span>
+      )}
+    </nav>
+
+    <p class="mt-10" style="text-align:center;">
+      <a
+        href={resolvePath('/dev-log')}
+        class="dl-permalink inline-flex items-center gap-1.5"
+        style="border-bottom:none;"
+      >
+        Back to the log <DevLogIcon name="arrow" size={12} />
+      </a>
+    </p>
+  </div>
+</BaseLayout>
+
+<style>
+  .dl-adjacent {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    padding: 1rem 1.1rem;
+    border: 1px solid rgba(255, 156, 26, 0.15);
+    background: rgba(255, 156, 26, 0.03);
+    transition: border-color 0.2s, background 0.2s, transform 0.2s;
+  }
+
+  a.dl-adjacent:hover {
+    border-color: rgba(255, 156, 26, 0.4);
+    background: rgba(255, 156, 26, 0.07);
+    transform: translateY(-2px);
+  }
+
+  .dl-adjacent--right {
+    text-align: right;
+  }
+
+  .dl-adjacent--empty {
+    opacity: 0.4;
+  }
+
+  .dl-adjacent__label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-solar);
+  }
+
+  .dl-adjacent__title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    color: var(--color-text-primary);
+    line-height: 1.35;
+  }
+
+  .dl-adjacent__date {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.62rem;
+    color: var(--color-text-muted);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .dl-adjacent,
+    a.dl-adjacent:hover {
+      transition: none;
+      transform: none;
+    }
+  }
+</style>

@@ -1,0 +1,59 @@
+---
+/**
+ * Tiny inline icon set for the dev log. Kept as inline SVG (no runtime, no
+ * network request) and sized/coloured by the surrounding CSS via currentColor.
+ */
+interface Props {
+  name: 'user' | 'bot' | 'tool' | 'cost' | 'search' | 'close' | 'arrow' | 'calendar' | 'model';
+  size?: number;
+  class?: string;
+}
+
+const { name, size = 13, class: className } = Astro.props;
+
+const paths: Record<Props['name'], string> = {
+  user: 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm0 2c-4 0-7 2.2-7 5v1h14v-1c0-2.8-3-5-7-5Z',
+  bot: 'M12 2v2.2M7 7h10a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2Zm2.2 4.5v1.8m5.6-1.8v1.8M9.5 15h5',
+  tool: 'M14.7 6.3a4 4 0 0 1-5.4 5.4L4 17v3h3l5.3-5.3a4 4 0 0 1 5.4-5.4l-2.5 2.5 1.6 1.6 2.5-2.5a4 4 0 0 0-4.6-4.6Z',
+  cost: 'M12 3v18M8 7.5h5.5a2.5 2.5 0 0 1 0 5h-3a2.5 2.5 0 0 0 0 5H16',
+  search: 'M10.5 4a6.5 6.5 0 1 1 0 13 6.5 6.5 0 0 1 0-13Zm5 11.5L20 20',
+  close: 'M6 6l12 12M18 6L6 18',
+  arrow: 'M4 12h15m-6-6 6 6-6 6',
+  calendar: 'M7 3v3m10-3v3M4 8h16M5 5h14a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z',
+  model: 'M12 3 4 7.5v9L12 21l8-4.5v-9L12 3Zm0 0v18m8-13.5-8 4.5-8-4.5',
+};
+
+// Filled glyphs read better at small sizes; the rest are stroked.
+const filled = new Set(['user', 'tool']);
+const d = paths[name];
+---
+
+{filled.has(name) ? (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    aria-hidden="true"
+    class={className}
+  >
+    <path d={d} />
+  </svg>
+) : (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="1.7"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+    class={className}
+  >
+    <path d={d} />
+  </svg>
+)}
