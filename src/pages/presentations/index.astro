@@ -1,0 +1,41 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import '@styles/presentations.css';
+
+import { presentations } from '@data/presentations';
+import { sortByDateDesc } from '@lib/presentations';
+
+import PresentationCard from '@components/presentations/PresentationCard.astro';
+
+const decks = sortByDateDesc(presentations);
+---
+
+<BaseLayout
+  title="Presentations"
+  description="Presentations I've given for this class."
+>
+  <div class="max-w-5xl mx-auto px-6 pt-16 pb-24">
+
+    <!-- ===== Header ===== -->
+    <header data-reveal="1">
+      <h1 class="mb-4">Presentations</h1>
+      <p class="text-void-300 max-w-2xl">
+        Slide decks I've presented for this class. Click one to open it full-screen.
+      </p>
+    </header>
+
+    <!-- ===== Deck list ===== -->
+    {decks.length > 0 ? (
+      <ul class="pv-list" data-reveal="2">
+        {decks.map((deck, index) => <PresentationCard presentation={deck} index={index} />)}
+      </ul>
+    ) : (
+      <div class="pv-empty mt-8" data-reveal="2">
+        <div class="pv-empty__icon">🎞️</div>
+        <h2 class="text-lg" style="margin-top:0;">No presentations yet</h2>
+        <p class="text-void-400 text-sm mb-0">Check back once the project is underway.</p>
+      </div>
+    )}
+
+  </div>
+</BaseLayout>

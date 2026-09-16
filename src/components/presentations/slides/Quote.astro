@@ -1,0 +1,21 @@
+---
+import Slide from '../Slide.astro';
+import type { PresentationSlide } from '@lib/presentations';
+
+interface Props {
+  slide: Extract<PresentationSlide, { layout: 'quote' }>;
+  index: number;
+  total: number;
+  chrome?: boolean;
+}
+
+const { slide, index, total, chrome } = Astro.props;
+---
+
+<Slide index={index} total={total} chrome={chrome} label="Quote">
+  <div class="pv-quote">
+    <div class="pv-quote__mark" aria-hidden="true">&ldquo;</div>
+    <p class="pv-quote__text">{slide.quote}</p>
+    {slide.attribution && <div class="pv-quote__attribution">{slide.attribution}</div>}
+  </div>
+</Slide>

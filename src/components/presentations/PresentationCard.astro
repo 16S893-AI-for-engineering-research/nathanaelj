@@ -1,0 +1,54 @@
+---
+/**
+ * Summary card for one presentation.
+ *
+ * The whole card is a stretched anchor pointing at the deck route, mirroring
+ * `EntryCard.astro` in the dev log. The "preview" is not a screenshot — it's
+ * the deck's real first slide, rendered at card scale via the CSS container
+ * query in `presentations.css`, so it can never drift out of sync with the
+ * actual deck.
+ */
+import type { Presentation } from '@lib/presentations';
+import { formatDate } from '@lib/presentations';
+import { resolvePath } from '@lib/paths';
+import { LAYOUTS } from '@components/presentations/slides/index.ts';
+
+interface Props {
+  presentation: Presentation;
+  index: number;
+}
+
+const { presentation, index } = Astro.props;
+const firstSlide = presentation.slides[0];
+const FirstSlide = firstSlide ? LAYOUTS[firstSlide.layout] : null;
+---
+
+<li class="pv-card" data-reveal={String(Math.min(index + 1, 5))}>
+  <!-- Stretched, deliberately empty trigger: its accessible name comes from
+       `aria-label`, so it carries no text nodes that could become visible when
+       the global `a:hover` colour rule kicks in. -->
+  <a
+    class="pv-card__trigger"
+    href={resolvePath(`/presentations/${presentation.slug}`)}
+    aria-label={`Present: ${presentation.title}, ${formatDate(presentation.date)}`}
+  ></a>
+
+  <div class="pv-card__preview" aria-hidden="true">
+    {FirstSlide && (
+      <FirstSlide slide={firstSlide} index={1} total={presentation.slides.length} chrome={false} />
+    )}
+  </div>
+
+  <div class="pv-card__body">
+    <div class="pv-card__head">
+      <h2 class="pv-card__title">{presentation.title}</h2>
+      <span class="pv-card__date">{formatDate(presentation.date)}</span>
+    </div>
+
+    <p class="pv-card__summary">{presentation.summary}</p>
+
+    <span class="pv-card__cue" aria-hidden="true">
+      {presentation.slides.length} slide{presentation.slides.length === 1 ? '' : 's'} · Present →
+    </span>
+  </div>
+</li>

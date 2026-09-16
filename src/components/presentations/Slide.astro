@@ -1,0 +1,37 @@
+---
+/**
+ * Base chrome for one presentation slide.
+ *
+ * Unlike a typical slide-deck implementation (fixed 1920×1080 canvas +
+ * JS-driven `transform: scale()`), this uses a CSS container query: `.pv-slide`
+ * declares `container-type: inline-size`, and every layout component sizes its
+ * type in `cqw` (a percentage of the slide's own width). That means the exact
+ * same markup renders correctly at any size — a 220px card thumbnail or a
+ * full-viewport deck — with zero JavaScript and zero duplicated markup.
+ */
+interface Props {
+  index: number;
+  total: number;
+  /** Full deck view: show the slide number + progress bar. Card preview: omit them. */
+  chrome?: boolean;
+  label?: string;
+}
+
+const { index, total, chrome = true, label } = Astro.props;
+const pct = total > 0 ? (index / total) * 100 : 0;
+const pad = (n: number) => String(n).padStart(2, '0');
+---
+
+<section class="pv-slide" data-label={label} data-chrome={chrome ? 'true' : 'false'}>
+  <div class="pv-slide__canvas">
+    <slot />
+  </div>
+  {chrome && (
+    <>
+      <div class="pv-slide__num">{pad(index)} / {pad(total)}</div>
+      <div class="pv-slide__bar" aria-hidden="true">
+        <div style={`width:${pct}%`}></div>
+      </div>
+    </>
+  )}
+</section>

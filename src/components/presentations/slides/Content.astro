@@ -1,0 +1,24 @@
+---
+import Slide from '../Slide.astro';
+import type { PresentationSlide } from '@lib/presentations';
+
+interface Props {
+  slide: Extract<PresentationSlide, { layout: 'content' }>;
+  index: number;
+  total: number;
+  chrome?: boolean;
+}
+
+const { slide, index, total, chrome = true } = Astro.props;
+const Title = chrome ? 'h2' : 'div';
+---
+
+<Slide index={index} total={total} chrome={chrome} label="Content">
+  <div class="pv-content">
+    {slide.kicker && <div class="pv-kicker">{slide.kicker}</div>}
+    <Title class="pv-content__title">{slide.title}</Title>
+    <ul class="pv-content__bullets">
+      {slide.bullets.map((bullet) => <li>{bullet}</li>)}
+    </ul>
+  </div>
+</Slide>

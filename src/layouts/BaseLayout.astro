@@ -7,9 +7,15 @@ import { resolvePath } from '../lib/paths';
 interface Props {
   title: string;
   description?: string;
+  /**
+   * Site chrome (header + footer + top page glow). Set `false` for immersive
+   * views that own the entire viewport — e.g. the presentation deck viewer,
+   * which must cover the fixed header and supplies its own exit control.
+   */
+  chrome?: boolean;
 }
 
-const { title, description = "Nathanael Jenkins' portfolio for MIT 16.S983: AI Agents for Engineering Research" } = Astro.props;
+const { title, description = "Nathanael Jenkins' portfolio for MIT 16.S983: AI Agents for Engineering Research", chrome = true } = Astro.props;
 const currentPath = Astro.url.pathname;
 ---
 
@@ -23,12 +29,12 @@ const currentPath = Astro.url.pathname;
     <meta name="description" content={description} />
     <title>{title} | 16.S983 Portfolio</title>
   </head>
-  <body>
-    <Header currentPath={currentPath} />
+  <body class={chrome ? undefined : 'is-immersive'}>
+    {chrome && <Header currentPath={currentPath} />}
     <main>
       <slot />
     </main>
-    <Footer />
+    {chrome && <Footer />}
   </body>
 </html>
 
@@ -45,5 +51,21 @@ const currentPath = Astro.url.pathname;
 
   main {
     flex: 1;
+  }
+
+  /* Immersive mode (chrome={false}): the page content is the whole viewport.
+     Drop the page-top glow overlay (it sits above `main`) and the scrollbars,
+     and clear `main`'s stacking context so nothing can paint over the view. */
+  body.is-immersive::before {
+    display: none;
+  }
+
+  body.is-immersive,
+  html:has(body.is-immersive) {
+    overflow: hidden;
+  }
+
+  body.is-immersive main {
+    z-index: auto;
   }
 </style>

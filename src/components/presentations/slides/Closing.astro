@@ -1,0 +1,22 @@
+---
+import Slide from '../Slide.astro';
+import type { PresentationSlide } from '@lib/presentations';
+
+interface Props {
+  slide: Extract<PresentationSlide, { layout: 'closing' }>;
+  index: number;
+  total: number;
+  chrome?: boolean;
+}
+
+const { slide, index, total, chrome = true } = Astro.props;
+const Title = chrome ? 'h2' : 'div';
+---
+
+<Slide index={index} total={total} chrome={chrome} label="Closing">
+  <div class="pv-closing">
+    {slide.kicker && <div class="pv-kicker">{slide.kicker}</div>}
+    <Title class="pv-closing__title">{slide.title}</Title>
+    <p class="pv-closing__body">{slide.body}</p>
+  </div>
+</Slide>

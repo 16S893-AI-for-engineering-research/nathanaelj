@@ -1,0 +1,24 @@
+---
+import Slide from '../Slide.astro';
+import type { PresentationSlide } from '@lib/presentations';
+
+interface Props {
+  slide: Extract<PresentationSlide, { layout: 'cover' }>;
+  index: number;
+  total: number;
+  chrome?: boolean;
+}
+
+const { slide, index, total, chrome = true } = Astro.props;
+// Card previews (`chrome=false`) are decorative — render the title as a div
+// so the page's real heading outline isn't duplicated once per card.
+const Title = chrome ? 'h1' : 'div';
+---
+
+<Slide index={index} total={total} chrome={chrome} label="Cover">
+  <div class="pv-cover">
+    {slide.kicker && <div class="pv-kicker">{slide.kicker}</div>}
+    <Title class="pv-cover__title">{slide.title}</Title>
+    {slide.subtitle && <p class="pv-cover__subtitle">{slide.subtitle}</p>}
+  </div>
+</Slide>
