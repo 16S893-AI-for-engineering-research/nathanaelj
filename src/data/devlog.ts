@@ -110,7 +110,37 @@ export const devLogEntries: DevLogEntry[] = [
       agentFailures: [
         'These larger agents actually went too far \'above and beyond\', adding features that I did not ask for that **over-complicated** the page and had to be removed',
         'My wifi cut out a couple of times, interrupting our conversations',
-        'Again, it took several attempts for the agent to understand and fix a relatively simple **padding issue**'
+        'Again, it took several attempts for the agent to understand and fix a relatively simple **padding issue**',
+      ],
+    },
+  },
+
+
+  {
+    slug: 'create-presentations',
+    title: 'Presentation Slides Feature',
+    date: '2026-09-16',
+    summary:
+      'Added a presentation slides feature, inspired by the class-repo',
+    models: ['opus-5', 'sonnet-5'],
+    metrics: {
+      userMessages: 2,
+      assistantMessages: 62,
+      toolCalls: 103,
+      totalCostUsd: 3.0136,
+    },
+    description: {
+      keyChanges: [
+        'Added `Presentations` page and presentation slide tools based on `class-repo`',
+        'Fixed issue with presentation slides not being visible',
+        'Created placeholder presentation',
+      ],
+      agentSuccesses: [
+        'Read and implemented a similar tool to the one in `class-repo` very quickly, with only two user messages (one initial message, and one to highlight issues that needed fixing)',
+        'Was able to reproduce/ maintain **consistent formatting** with the rest of the site',
+      ],
+      agentFailures: [
+        'Took a **long time** to respond to prompts, making it hard to interrupt with guidance/ pointers to help the agent solve issues faster',
       ],
     },
   },
