@@ -1,0 +1,274 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { resolvePath } from '../../lib/paths';
+import '../../styles/project.css';
+---
+
+<BaseLayout
+  title="Background · Project"
+  description="Foundational research on aircraft lightning protection, plasma streamer physics, and simulation bottlenecks."
+>
+  <div class="max-w-4xl mx-auto px-6 pt-16 pb-24">
+
+    <!-- ===== Navigation Breadcrumb ===== -->
+    <nav class="mb-10" aria-label="Breadcrumb" data-reveal="1">
+      <a
+        href={resolvePath('/project')}
+        class="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-solar hover:text-solar-light transition-colors"
+        style="border-bottom:none;"
+      >
+        <span aria-hidden="true">←</span> Back to Project Timeline
+      </a>
+    </nav>
+
+    <!-- ===== Header ===== -->
+    <header class="project-detail-header" data-reveal="1">
+      <h1 class="text-4xl md:text-6xl font-display font-bold leading-[1.25] pb-3 mb-2">
+        Project Background
+      </h1>
+
+      <p class="text-solar-light text-xl font-sans font-light max-w-3xl leading-relaxed mb-3">
+        Aircraft Lightning Physics &amp; The Simulation Bottleneck
+      </p>
+
+      <time class="font-mono text-xs uppercase tracking-widest text-void-400 block">
+        February 2025
+      </time>
+    </header>
+
+    <!-- ===== Content Sections ===== -->
+    <article class="space-y-12 mt-10" data-reveal="2">
+
+      <!-- Section 1 -->
+      <section>
+        <h2 class="text-2xl md:text-3xl font-display font-bold text-void-100 mb-4">
+          1. The Physics of Lightning Attachment
+        </h2>
+        <p>
+          Lightning attachment to an aircraft in flight is a dynamic, multi-stage electro-physical process. It begins when an ambient thundercloud electric field induces leader streamers at high-curvature extremities—such as the radome, wingtips, engine nacelles, and empennage.
+        </p>
+        <p>
+          As the bi-directional leader propagates, intense electric currents (frequently exceeding <strong>100 to 200 kA</strong> with rise times on the order of microseconds) deposit massive thermal, electromagnetic, and mechanical energy into the airframe skin.
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-8">
+          <div class="border border-solar/20 bg-void-950 p-4">
+            <span class="font-mono text-xs text-solar block mb-1">01 / PEAK CURRENT</span>
+            <span class="font-display text-2xl font-bold text-white block">200 kA</span>
+            <p class="text-void-400 text-xs mt-2 mb-0">Severe strike component A test standard</p>
+          </div>
+          <div class="border border-solar/20 bg-void-950 p-4">
+            <span class="font-mono text-xs text-solar block mb-1">02 / ARC TEMPERATURE</span>
+            <span class="font-display text-2xl font-bold text-white block">30,000 K</span>
+            <p class="text-void-400 text-xs mt-2 mb-0">Local thermal plasma core temperature</p>
+          </div>
+          <div class="border border-solar/20 bg-void-950 p-4">
+            <span class="font-mono text-xs text-solar block mb-1">03 / STRIKE FREQUENCY</span>
+            <span class="font-display text-2xl font-bold text-white block">~1 / yr</span>
+            <p class="text-void-400 text-xs mt-2 mb-0">Per active commercial airliner</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 2: Interactive Sandbox Graphic Demonstration -->
+      <section>
+        <h2 class="text-2xl md:text-3xl font-display font-bold text-void-100 mb-4">
+          2. Interactive Sandbox: Streamer &amp; Field Visualization
+        </h2>
+        <p>
+          This sub-page format is completely open-ended: you can embed custom WebGL shaders, interactive HTML5 canvases, Three.js 3D models, animated SVGs, or external data feeds directly into the document.
+        </p>
+
+        <!-- Live interactive canvas container demonstrating complex graphics -->
+        <div class="project-sandbox-frame">
+          <div class="project-sandbox-frame__header">
+            <span>Interactive Plasma Field Sim (Canvas Embedding)</span>
+            <span class="text-void-400 font-mono text-[10px]">CLICK OR DRAG ON VIEWPORT</span>
+          </div>
+
+          <div class="relative w-full h-64 md:h-80 bg-void-950 overflow-hidden cursor-crosshair">
+            <canvas id="plasma-canvas" class="w-full h-full block"></canvas>
+            
+            <div class="absolute bottom-3 left-3 font-mono text-[10px] text-solar/80 pointer-events-none bg-void-900/80 px-2 py-1 border border-solar/20">
+              POTENTIAL FIELD: <span id="telemetry-readout">IDLE · MOVE CURSOR TO DISCHARGE</span>
+            </div>
+          </div>
+          <p class="text-void-400 text-xs font-mono mt-3 mb-0">
+            ▲ Interactive demonstration embedding: click or drag inside the viewport to generate dielectric discharge paths.
+          </p>
+        </div>
+      </section>
+
+      <!-- Section 3 -->
+      <section>
+        <h2 class="text-2xl md:text-3xl font-display font-bold text-void-100 mb-4">
+          3. The Computational Bottleneck
+        </h2>
+        <p>
+          Simulating plasma-structure interaction requires solving coupled systems: Maxwell's equations for the electromagnetic field, Navier-Stokes with electromagnetic source terms for plasma gas dynamics, and heat conduction/structural mechanics for the material response.
+        </p>
+        <p>
+          The vast disparity in spatial scales (sub-millimeter arc attachment root vs. tens-of-meters airframe) and temporal scales (nanosecond ionization waves vs. millisecond continuous currents) makes end-to-end direct numerical simulation computationally intractable for routine engineering design cycles.
+        </p>
+      </section>
+
+      <!-- Section 4 -->
+      <section>
+        <h2 class="text-2xl md:text-3xl font-display font-bold text-void-100 mb-4">
+          4. Motivation for AI-Driven Methods
+        </h2>
+        <p>
+          Rather than relying solely on monolithic PDE solvers, we can harness intelligent AI agent architectures that:
+        </p>
+        <ul class="list-none space-y-3 pl-0 my-4 text-void-200">
+          <li class="flex items-start gap-3">
+            <span class="text-solar font-mono text-sm">01 //</span>
+            <span><strong>Intelligently adapt domain discretization:</strong> Agents dynamically refine grid resolution specifically in regions exhibiting high dielectric breakdown risk.</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="text-solar font-mono text-sm">02 //</span>
+            <span><strong>Surrogate acceleration:</strong> Physics-informed neural operators (PINOs) approximate expensive field solves in milliseconds.</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="text-solar font-mono text-sm">03 //</span>
+            <span><strong>Autonomous validation:</strong> Automated agent verification against historical wind tunnel and lightning strike flight telemetry.</span>
+          </li>
+        </ul>
+      </section>
+
+    </article>
+
+    <!-- ===== Navigation to Next Milestone ===== -->
+    <div class="mt-16 pt-8 border-t border-solar/20" data-reveal="4">
+      <div class="grid sm:grid-cols-2 gap-4">
+        <a href={resolvePath('/project')} class="project-nav-adjacent">
+          <span class="font-mono text-[10px] uppercase tracking-wider text-void-400">Timeline</span>
+          <span class="font-sans font-medium text-void-200 mt-1">← Return to All Milestones</span>
+        </a>
+
+        <a href={resolvePath('/project/proposal')} class="project-nav-adjacent text-right">
+          <span class="font-mono text-[10px] uppercase tracking-wider text-solar">Next Milestone // 02</span>
+          <span class="font-sans font-medium text-solar-light mt-1">Project Proposal →</span>
+        </a>
+      </div>
+    </div>
+
+  </div>
+</BaseLayout>
+
+<!-- Interactive Canvas Simulation Script -->
+<script is:inline>
+  (function initPlasmaCanvas() {
+    const canvas = document.getElementById('plasma-canvas');
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let width, height;
+    function resize() {
+      width = canvas.width = canvas.parentElement.clientWidth;
+      height = canvas.height = canvas.parentElement.clientHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    const telemetry = document.getElementById('telemetry-readout');
+    const arcs = [];
+
+    function createLightning(x1, y1, x2, y2, displacement, iterations) {
+      if (iterations <= 0) {
+        arcs.push({ x1, y1, x2, y2, alpha: 1.0, color: '#ffb84d' });
+        return;
+      }
+      const midX = (x1 + x2) / 2 + (Math.random() - 0.5) * displacement;
+      const midY = (y1 + y2) / 2 + (Math.random() - 0.5) * displacement;
+      createLightning(x1, y1, midX, midY, displacement / 1.8, iterations - 1);
+      createLightning(midX, midY, x2, y2, displacement / 1.8, iterations - 1);
+
+      // Occasional branch
+      if (Math.random() < 0.25) {
+        const branchX = midX + (Math.random() - 0.5) * displacement * 1.5;
+        const branchY = midY + (Math.random() - 0.5) * displacement * 1.5;
+        createLightning(midX, midY, branchX, branchY, displacement / 2.2, iterations - 2);
+      }
+    }
+
+    function triggerStrike(targetX, targetY) {
+      const startX = width * (0.2 + Math.random() * 0.6);
+      const startY = 10;
+      createLightning(startX, startY, targetX, targetY, 70, 5);
+      if (telemetry) {
+        telemetry.textContent = `ATTACHMENT: (${Math.round(targetX)}, ${Math.round(targetY)}) · E_FIELD: 3.2 MV/m`;
+      }
+    }
+
+    // Auto idle strike every 3 seconds
+    let idleInterval = setInterval(() => {
+      triggerStrike(width * (0.3 + Math.random() * 0.4), height * 0.7);
+    }, 2800);
+
+    canvas.addEventListener('pointerdown', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      triggerStrike(x, y);
+    });
+
+    canvas.addEventListener('pointermove', (e) => {
+      if (e.buttons === 1) {
+        const rect = canvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        if (Math.random() < 0.3) {
+          triggerStrike(x, y);
+        }
+      }
+    });
+
+    function render() {
+      // Gentle fade for trail effect
+      ctx.fillStyle = 'rgba(13, 10, 6, 0.25)';
+      ctx.fillRect(0, 0, width, height);
+
+      // Draw faint background grid
+      ctx.strokeStyle = 'rgba(255, 156, 26, 0.05)';
+      ctx.lineWidth = 1;
+      const gridSize = 30;
+      for (let x = 0; x < width; x += gridSize) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, height);
+        ctx.stroke();
+      }
+      for (let y = 0; y < height; y += gridSize) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(width, y);
+        ctx.stroke();
+      }
+
+      // Render active arcs
+      for (let i = arcs.length - 1; i >= 0; i--) {
+        const arc = arcs[i];
+        ctx.strokeStyle = `rgba(255, 184, 77, ${arc.alpha})`;
+        ctx.lineWidth = 1.8;
+        ctx.shadowColor = '#ff9c1a';
+        ctx.shadowBlur = 8;
+        ctx.beginPath();
+        ctx.moveTo(arc.x1, arc.y1);
+        ctx.lineTo(arc.x2, arc.y2);
+        ctx.stroke();
+
+        arc.alpha -= 0.04;
+        if (arc.alpha <= 0) {
+          arcs.splice(i, 1);
+        }
+      }
+      ctx.shadowBlur = 0;
+
+      requestAnimationFrame(render);
+    }
+    render();
+  })();
+</script>
