@@ -12,70 +12,105 @@ import type { DevLogEntry } from '@lib/devlog';
  */
 export const devLogEntries: DevLogEntry[] = [
   {
-    slug: 'portfolio-setup-complete',
-    title: 'Portfolio Setup Complete',
+    slug: 'portfolio-setup',
+    title: 'Portfolio Setup',
     date: '2026-09-10',
     summary:
-      'Bootstrapped the portfolio in Astro + Tailwind with a custom lightning animation and three hidden easter eggs.',
-    models: ['claude-haiku', 'claude-sonnet'],
+      'Created this portfolio site using Astro + Tailwind with a custom lightning animation.',
+    models: ['haiku-4.5'],
     metrics: {
-      // Session predates structured metric tracking — placeholders until recovered.
-      userMessages: null,
-      assistantMessages: null,
-      toolCalls: null,
-      totalCostUsd: null,
+      userMessages: 20,
+      assistantMessages: 224,
+      toolCalls: 194,
+      totalCostUsd: 4.307,
     },
     description: {
       keyChanges: [
-        'Scaffolded the site with **Astro** and styled it with **Tailwind CSS**, choosing static generation with islands for the few interactive pieces.',
-        'Built a bespoke **lightning animation** for the homepage hero, driven by a hand-rolled branching geometry routine.',
-        'Laid out the core routes — Home, About Me, Project and Dev Log — on a shared `BaseLayout` with a fixed header and footer.',
-        'Defined the sunrise/sunset "solar" theme (solar, flame, ember, void ramps) in `tailwind.config.mjs`.',
-        'Hid **three easter eggs** across the site for anyone curious enough to click around.',
-        'Wired up **GitHub Actions** to build and deploy to GitHub Pages on every push to `main`.',
+        'Scaffolded the site with **Astro** and styled it with **Tailwind CSS**',
+        'Created `Home`, `About`, `Project`, and `Dev-log` pages',
+        'Added custom **lightning animation** to the homepage',
+        'Defined sunrise-inspired theme using **Tailwind CSS**',
       ],
       agentSuccesses: [
-        'Gave genuinely useful, well-reasoned advice comparing **Astro** against other frameworks for a content-first portfolio.',
-        'Scaffolded the project structure and boilerplate quickly — almost certainly faster than doing it by hand.',
-        'Handled the Tailwind theme configuration and repetitive component wiring cleanly once the direction was set.',
+        'Initially had **good advice** on which framework(s) to use',
+        'Followed instructions to implement a **lightweight site** using Astro',
       ],
       agentFailures: [
-        'Went off the rails and started generating **7+ unprompted markdown files** of setup/next-steps/debugging/troubleshooting notes. Had to interrupt it manually to regain control.',
-        'Struggled with frontend fundamentals — repeatedly confused **margins and padding**, needing several corrections for basic spacing.',
-        'Could not work out the **geometry for the lightning model**; I ended up handing it research code as a reference to get a usable result.',
-        'Overall a net speed-up, but littered with silly mistakes — though my prompting was fairly low-effort here, which surely did not help.',
+        'Had a weird moment where it decided to start making several (>7) markdown files with **developer notes** about setup/ next steps/ debugging/ troubleshooting, all **unprompted**. Had to stop it manually to get things under control.',
+        'Models (I used Haiku mostly, with a brief adventure into Sonnet) struggled to understand some basic fundamentals of frontend design, particularly getting confused several times by **margins and padding**.',
+        'Also struggled a lot with **geometry** for the lightning model, and reverted to giving it some research code for inspiration.',
+        'Probably faster than I could\'ve managed myself, but the models made several **silly mistakes** (although I also didn\'t put much thought into my prompting and definitely could have improved that too).',
       ],
     },
   },
+
+
+  {
+    slug: 'portfolio-setup-completion',
+    title: 'Adding Content',
+    date: '2026-09-11',
+    summary:
+      'Fixed formatting issues, implemented 3 easter eggs, and added content to the About page.',
+    models: ['haiku-4.5', 'sonnet-5', 'gemini-3.1-pro', 'sonnet-4.6'],
+    metrics: {
+      userMessages: 36,
+      assistantMessages: 309,
+      toolCalls: 271,
+      totalCostUsd: 7.757,
+    },
+    description: {
+      keyChanges: [
+        'Fixed issues with the **lightning animation** on the homepage',
+        'Fixed **formatting issues** with scrolling and layout',
+        'Attempted to move pages into **markdown** for easy editing. Went back on that change after realizing it limited my control over the pages',
+        'Fixed an issue with link paths in dev vs production modes, so that links work in dev and build',
+        'Added three **easter eggs** (airplane cursor, lightning strike to cursor, and aircraft fly-by) using `gemini-3-1-pro` model',
+        'Added content to the `About` page',
+      ],
+      agentSuccesses: [
+        '(Eventually) solved formatting issues',
+        'Helped brainstorm, and then implement, **easter eggs**',
+        'Correctly implemented my idea for **markdown** pages, even though it was a bad idea on my part',
+        'Constructed a good `About` page based on a one-paragraph description and some uploaded photos',
+      ],
+      agentFailures: [
+        'Agents remained somewhat confused about formatting, especially **margins and padding**',
+        'Implementing the targeted lightning strike easter egg took a long time because of margin/ padding confusion',
+        'Writing on the `About` page had a **snarky tone** that I had to adjust manually'
+      ],
+    },
+  },
+
+
   {
     slug: 'dev-log-restructure',
     title: 'Dev Log Restructure',
     date: '2026-09-15',
     summary:
-      'Rebuilt the dev log as a searchable, sortable, data-driven index with per-entry detail pages and modals.',
-    models: ['claude-opus-4.6'],
+      'Rebuilt the dev log to include metrics on agent calls and individual pages for each entry.',
+    models: ['opus-5', 'sonnet-5'],
     metrics: {
-      userMessages: 1,
-      assistantMessages: null,
-      toolCalls: null,
-      totalCostUsd: null,
+      userMessages: 7,
+      assistantMessages: 126,
+      toolCalls: 140,
+      totalCostUsd: 4.3257,
     },
     description: {
       keyChanges: [
-        'Replaced the single hand-written dev-log page with a typed data layer in `src/data/devlog.ts` plus domain helpers in `src/lib/devlog.ts`.',
-        'Added a summary list view showing title, date, one-line summary, user/assistant message counts, tool calls, total cost and models used.',
-        'Each entry opens in an accessible **modal** (focus trap, `Esc` to close, scroll lock) with a matching standalone page at `/dev-log/<slug>` for deep links and no-JS fallback.',
+        'Replaced the single hand-written dev-log page with a typed data layer in `src/data/devlog.ts`',
+        'Added a summary list view including agent call statistics',
+        'Added sorting/ filtering capabilities, and individual pages for each entry',
         'Restructured entry content into three sections: **key changes**, **agent successes** and **agent failures**.',
-        'Introduced an automatic **model colour-coding** scheme — pinned hues for known models, deterministic hashing into a curated palette for any new agent.',
-        'Built a **search + filter toolbar**: keyword search, date range, model filter, and sorting by date (either direction) or total cost.',
       ],
       agentSuccesses: [
-        'Read the existing codebase first and matched the established solar theme, `resolvePath` link handling and component conventions without being told.',
-        'Designed the colour-assignment scheme to be genuinely future-proof rather than hardcoding a lookup table.',
-        'Handled progressive enhancement properly — the list, detail pages and filters all degrade gracefully without JavaScript.',
+        '`claude-opus-5` and `claude-sonnet-5` are **much more capable** than smaller models (`claude-haiku-4-5`), requiring only a few user messages',
+        'Implemented **sorting and filtering** logic quickly',
+        'Created a single `devlog.ts` file that makes it easy to add dev-log entries',
       ],
       agentFailures: [
-        '_Placeholder — to be filled in after reviewing the result._',
+        'These larger agents actually went too far \'above and beyond\', adding features that I did not ask for that **over-complicated** the page and had to be removed',
+        'My wifi cut out a couple of times, interrupting our conversations',
+        'Again, it took several attempts for the agent to understand and fix a relatively simple **padding issue**'
       ],
     },
   },
