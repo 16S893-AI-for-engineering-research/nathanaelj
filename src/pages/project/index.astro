@@ -1,0 +1,61 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { projectMilestones } from '../../data/project';
+import TimelineCard from '../../components/project/TimelineCard.astro';
+import { resolvePath } from '../../lib/paths';
+import '../../styles/project.css';
+---
+
+<BaseLayout
+  title="Project Timeline"
+  description="Chronological research roadmap and project milestones for MIT 16.S983: AI Agents for Engineering Research."
+>
+  <div class="max-w-4xl mx-auto px-6 pt-16 pb-24">
+
+    <!-- ===== Header Section ===== -->
+    <header class="mb-14" data-reveal="1">
+      <h1 class="text-5xl md:text-7xl mb-4 pb-2 leading-tight">
+        Project Timeline
+      </h1>
+
+      <p class="text-solar-light text-xl md:text-2xl font-sans font-light max-w-3xl leading-relaxed mb-3">
+        Implementing Computational Models for Aircraft Lightning Zoning
+      </p>
+
+      <p class="text-void-400 text-sm font-sans">
+        Click on milestones to explore more.
+      </p>
+    </header>
+
+    <!-- ===== Vertical Timeline ===== -->
+    <div class="project-timeline">
+      {projectMilestones.map((milestone, index) => (
+        <TimelineCard milestone={milestone} index={index} />
+      ))}
+
+      <!-- Upcoming Stage Slot -->
+      <div class="timeline-item opacity-75" data-reveal="3">
+        <div class="timeline-node-container" aria-hidden="true">
+          <div class="timeline-node !border-solar/40 !bg-void-950">
+            <div class="timeline-node__inner !bg-solar/30"></div>
+          </div>
+        </div>
+
+        <div class="project-card project-card--future">
+          <div class="project-card__header">
+            <time class="project-card__date !text-void-400">In Development</time>
+          </div>
+
+          <h2 class="project-card__title !text-void-300 !text-2xl">
+            Implementation &amp; Benchmarking
+          </h2>
+
+          <p class="text-void-400 text-sm leading-relaxed mb-0">
+            Future updates will document agent execution logs, surrogate model training curves, and validation comparisons against experimental plasma attachment test data.
+          </p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</BaseLayout>

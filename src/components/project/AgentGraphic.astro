@@ -1,0 +1,176 @@
+---
+interface Props {
+  class?: string;
+}
+
+const { class: className = '' } = Astro.props;
+---
+
+<div class={`agent-viewport relative overflow-hidden bg-void-950 border border-solar/20 select-none ${className}`}>
+  <!-- Subtle technical grid background -->
+  <div class="absolute inset-0 bg-agent-grid opacity-25 pointer-events-none"></div>
+
+  <!-- Ambient glow behind orchestrator -->
+  <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-44 h-44 bg-solar/15 blur-3xl pointer-events-none"></div>
+
+  <!-- SVG Agent Orchestration Topology -->
+  <svg
+    viewBox="0 0 520 220"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    class="w-full h-full relative z-10"
+    preserveAspectRatio="xMidYMid meet"
+  >
+    <defs>
+      <linearGradient id="agentLinkGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="#ffb84d" />
+        <stop offset="100%" stop-color="#ff6633" />
+      </linearGradient>
+
+      <filter id="nodeGlow" x="-30%" y="-30%" width="160%" height="160%">
+        <feGaussianBlur stdDeviation="3" result="blur" />
+        <feMerge>
+          <feMergeNode in="blur" />
+          <feMergeNode in="SourceGraphic" />
+        </feMerge>
+      </filter>
+    </defs>
+
+    <!-- Background circuit bus / tracks -->
+    <path d="M 80,110 L 160,110" stroke="rgba(255, 156, 26, 0.25)" stroke-width="1.5" stroke-dasharray="3 3" />
+    <path d="M 360,110 L 440,110" stroke="rgba(255, 156, 26, 0.25)" stroke-width="1.5" stroke-dasharray="3 3" />
+
+    <!-- Directed connections between Central Orchestrator (260, 110) and satellites -->
+    <!-- Link: Input -> Orchestrator -->
+    <path d="M 110,110 L 220,110" stroke="rgba(255, 156, 26, 0.4)" stroke-width="1.5" />
+    <!-- Link: Orchestrator -> Solver (Top Left) -->
+    <path d="M 240,95 L 180,55" stroke="rgba(255, 156, 26, 0.45)" stroke-width="1.5" />
+    <!-- Link: Orchestrator -> Surrogate (Top Right) -->
+    <path d="M 280,95 L 340,55" stroke="rgba(255, 156, 26, 0.45)" stroke-width="1.5" />
+    <!-- Link: Orchestrator -> Evaluator (Bottom Right) -->
+    <path d="M 280,125 L 340,165" stroke="rgba(255, 156, 26, 0.45)" stroke-width="1.5" />
+    <!-- Link: Orchestrator -> Mesh Agent (Bottom Left) -->
+    <path d="M 240,125 L 180,165" stroke="rgba(255, 156, 26, 0.45)" stroke-width="1.5" />
+
+    <!-- Feedback loop curve -->
+    <path
+      d="M 365,165 C 410,165 425,110 375,65"
+      stroke="#ff9c1a"
+      stroke-width="1"
+      stroke-dasharray="4 4"
+      opacity="0.6"
+      fill="none"
+    />
+
+    <!-- Animated Data Pulses along links -->
+    <circle cx="0" cy="0" r="2.5" fill="#fff5e0" filter="url(#nodeGlow)">
+      <animateMotion
+        path="M 110,110 L 245,110"
+        dur="2.4s"
+        repeatCount="indefinite"
+      />
+    </circle>
+    <circle cx="0" cy="0" r="2" fill="#ffb84d" filter="url(#nodeGlow)">
+      <animateMotion
+        path="M 260,110 L 340,55"
+        dur="2.8s"
+        repeatCount="indefinite"
+      />
+    </circle>
+    <circle cx="0" cy="0" r="2" fill="#ff6633" filter="url(#nodeGlow)">
+      <animateMotion
+        path="M 260,110 L 180,165"
+        dur="3.2s"
+        repeatCount="indefinite"
+      />
+    </circle>
+    <circle cx="0" cy="0" r="2" fill="#ffd580" filter="url(#nodeGlow)">
+      <animateMotion
+        path="M 340,165 L 260,110"
+        dur="3s"
+        repeatCount="indefinite"
+      />
+    </circle>
+
+    <!-- Satellite Nodes -->
+    <!-- Node 1: Mesh / Input (Left) -->
+    <g transform="translate(100, 110)">
+      <rect x="-24" y="-12" width="48" height="24" fill="#140f0a" stroke="rgba(255, 156, 26, 0.5)" stroke-width="1" />
+      <text x="0" y="3" text-anchor="middle" fill="#f0e8dc" font-family="'IBM Plex Mono', monospace" font-size="7.5" letter-spacing="0.5">TELEMETRY</text>
+    </g>
+
+    <!-- Node 2: Solver Agent (Top-Left) -->
+    <g transform="translate(165, 45)">
+      <rect x="-30" y="-12" width="60" height="24" fill="#140f0a" stroke="rgba(255, 156, 26, 0.5)" stroke-width="1" />
+      <text x="0" y="3" text-anchor="middle" fill="#ffd580" font-family="'IBM Plex Mono', monospace" font-size="7.5" letter-spacing="0.5">PDE SOLVER</text>
+    </g>
+
+    <!-- Node 3: Surrogate Agent (Top-Right) -->
+    <g transform="translate(355, 45)">
+      <rect x="-30" y="-12" width="60" height="24" fill="#140f0a" stroke="rgba(255, 156, 26, 0.5)" stroke-width="1" />
+      <text x="0" y="3" text-anchor="middle" fill="#ffd580" font-family="'IBM Plex Mono', monospace" font-size="7.5" letter-spacing="0.5">SURROGATE</text>
+    </g>
+
+    <!-- Node 4: Mesh Agent (Bottom-Left) -->
+    <g transform="translate(165, 175)">
+      <rect x="-30" y="-12" width="60" height="24" fill="#140f0a" stroke="rgba(255, 156, 26, 0.5)" stroke-width="1" />
+      <text x="0" y="3" text-anchor="middle" fill="#f0e8dc" font-family="'IBM Plex Mono', monospace" font-size="7.5" letter-spacing="0.5">ADAPT MESH</text>
+    </g>
+
+    <!-- Node 5: Evaluator Agent (Bottom-Right) -->
+    <g transform="translate(355, 175)">
+      <rect x="-30" y="-12" width="60" height="24" fill="#140f0a" stroke="rgba(255, 156, 26, 0.5)" stroke-width="1" />
+      <text x="0" y="3" text-anchor="middle" fill="#ff9c1a" font-family="'IBM Plex Mono', monospace" font-size="7.5" letter-spacing="0.5">VALIDATOR</text>
+    </g>
+
+    <!-- Central Node: Orchestrator Core -->
+    <g transform="translate(260, 110)">
+      <!-- Outer spinning radar dashed ring -->
+      <circle cx="0" cy="0" r="30" stroke="rgba(255, 156, 26, 0.4)" stroke-width="1" stroke-dasharray="4 4" class="agent-radar-ring" />
+      <!-- Diamond base -->
+      <polygon points="0,-20 20,0 0,20 -20,0" fill="#1a1208" stroke="#ff9c1a" stroke-width="1.5" filter="url(#nodeGlow)" />
+      <!-- Inner core dot -->
+      <circle cx="0" cy="0" r="4" fill="#fff5e0" />
+      <text x="0" y="32" text-anchor="middle" fill="#ffb84d" font-family="'IBM Plex Mono', monospace" font-size="8" font-weight="600" letter-spacing="1">ORCHESTRATOR</text>
+    </g>
+
+    <!-- Header telemetry -->
+    <text x="35" y="25" fill="#ffb84d" font-family="'IBM Plex Mono', monospace" font-size="8" letter-spacing="1.5" opacity="0.8">AGENT ARCHITECTURE :: WORKFLOW GRAPH</text>
+    <text x="35" y="200" fill="#a8a890" font-family="'IBM Plex Mono', monospace" font-size="8" letter-spacing="1">NODES: 5 AGENTS  ·  LATENCY: OPTIMIZED</text>
+    <text x="485" y="200" text-anchor="end" fill="#ff9c1a" font-family="'IBM Plex Mono', monospace" font-size="8" letter-spacing="1">STATE: CONVERGED [✓]</text>
+  </svg>
+
+  <!-- Corner HUD brackets -->
+  <div class="absolute top-1.5 left-1.5 w-2.5 h-2.5 border-t border-l border-solar/60 pointer-events-none"></div>
+  <div class="absolute top-1.5 right-1.5 w-2.5 h-2.5 border-t border-r border-solar/60 pointer-events-none"></div>
+  <div class="absolute bottom-1.5 left-1.5 w-2.5 h-2.5 border-b border-l border-solar/60 pointer-events-none"></div>
+  <div class="absolute bottom-1.5 right-1.5 w-2.5 h-2.5 border-b border-r border-solar/60 pointer-events-none"></div>
+</div>
+
+<style>
+  .agent-viewport {
+    min-height: 160px;
+    background: radial-gradient(circle at 50% 50%, #171109 0%, #0d0a06 100%);
+  }
+
+  .bg-agent-grid {
+    background-image: 
+      linear-gradient(to right, rgba(255, 156, 26, 0.08) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 156, 26, 0.08) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+
+  .agent-radar-ring {
+    transform-origin: 0 0;
+    animation: agentRotate 18s linear infinite;
+  }
+
+  @keyframes agentRotate {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+</style>

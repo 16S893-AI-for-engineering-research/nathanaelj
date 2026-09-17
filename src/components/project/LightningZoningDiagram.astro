@@ -1,0 +1,534 @@
+---
+/**
+ * LightningZoningDiagram.astro
+ * Refined, high-fidelity aircraft lightning zoning diagram.
+ * Shows top-down commercial jet planform with standardized lightning zones:
+ * - Zone 1A: Radome, engine inlet cowls, wingtips, horizontal/vertical tail tips
+ * - Zone 1B: Rear 5cm of wingtips (detail view), empennage trailing edges, tailcone
+ * - Zone 1C: Cockpit canopy and mid engine nacelle
+ * - Zone 2A: Fuselage, wing/tail root fairing extensions, aft engine cowls, inboard tip transitions
+ * - Zone 2B: Rear 5cm trailing edge of Zone 2A tip regions (detail view)
+ * - Zone 3: Bulk wings and tailplane surfaces (conduction only)
+ */
+---
+
+<div class="lightning-zoning-container bg-void-950 border border-solar/30 my-8 overflow-hidden">
+  <!-- Minimal Header & Zone Selector -->
+  <div class="p-3 sm:p-4 bg-void-900/90 border-b border-solar/20 flex flex-wrap items-center justify-between gap-3">
+    <div class="flex items-center gap-2">
+      <span class="w-2 h-2 rounded-full bg-solar"></span>
+      <span class="font-mono text-xs font-semibold text-solar uppercase tracking-wider">
+        Zoning Map // 3 Zones (6 Sub-Zones)
+      </span>
+    </div>
+
+    <!-- Quick Zone Toggles -->
+    <div class="flex flex-wrap gap-1.5 font-mono text-xs">
+      <button type="button" class="z-toggle-btn active-all px-2.5 py-1 border transition-all cursor-pointer" data-filter="ALL">
+        All
+      </button>
+      <button type="button" class="z-toggle-btn px-2.5 py-1 border transition-all cursor-pointer" data-filter="1A" style="--btn-accent: #f43f5e;">
+        1A
+      </button>
+      <button type="button" class="z-toggle-btn px-2.5 py-1 border transition-all cursor-pointer" data-filter="1B" style="--btn-accent: #b91c1c;">
+        1B
+      </button>
+      <button type="button" class="z-toggle-btn px-2.5 py-1 border transition-all cursor-pointer" data-filter="1C" style="--btn-accent: #f97316;">
+        1C
+      </button>
+      <button type="button" class="z-toggle-btn px-2.5 py-1 border transition-all cursor-pointer" data-filter="2A" style="--btn-accent: #eab308;">
+        2A
+      </button>
+      <button type="button" class="z-toggle-btn px-2.5 py-1 border transition-all cursor-pointer" data-filter="2B" style="--btn-accent: #b45309;">
+        2B
+      </button>
+      <button type="button" class="z-toggle-btn px-2.5 py-1 border transition-all cursor-pointer" data-filter="3" style="--btn-accent: #38bdf8;">
+        3
+      </button>
+    </div>
+  </div>
+
+  <!-- Diagrams Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-12 gap-0 border-b border-solar/20">
+
+    <!-- Left (8 cols): Full Aircraft Planform -->
+    <div class="md:col-span-7 lg:col-span-8 p-4 sm:p-6 bg-[#070503] flex flex-col items-center justify-center border-b md:border-b-0 md:border-r border-solar/20">
+      <div class="w-full flex justify-between items-center mb-2 font-mono text-[10px] text-void-400">
+        <span>AIRCRAFT PLANFORM (TOP VIEW)</span>
+        <span class="text-solar/70">HOVER / CLICK ZONES</span>
+      </div>
+
+      <!-- Realistic Airliner Planform (Symmetrical, high-aspect swept wing) -->
+      <svg
+        id="full-aircraft-svg"
+        viewBox="0 0 600 620"
+        class="w-full max-w-[480px] h-auto"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <defs>
+          <filter id="highlightGlow" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="3" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
+
+        <!-- Centerline -->
+        <line x1="300" y1="20" x2="300" y2="600" stroke="rgba(255,156,26,0.12)" stroke-dasharray="4 4" stroke-width="1" />
+
+        <!-- ==================== WINGS ==================== -->
+        <!-- Bulk Wing (Zone 3) -->
+        <g class="z-elem z-3" data-zone="3">
+          <!-- Left Wing Bulk -->
+          <path
+            d="M 260 260
+               L 88 348
+               L 88 375
+               L 205 385
+               L 260 380
+               Z"
+            fill="#38bdf8"
+            fill-opacity="0.8"
+            stroke="#38bdf8"
+            stroke-width="1.2"
+          />
+          <!-- Right Wing Bulk -->
+          <path
+            d="M 340 260
+               L 512 348
+               L 512 375
+               L 395 385
+               L 340 380
+               Z"
+            fill="#38bdf8"
+            fill-opacity="0.8"
+            stroke="#38bdf8"
+            stroke-width="1.2"
+          />
+        </g>
+
+        <!-- Wing Inboard Tip Transition (Zone 2A) -->
+        <g class="z-elem z-2A" data-zone="2A">
+          <!-- Left Inboard Tip -->
+          <path
+            d="M 88 348
+               L 52 362
+               L 52 384
+               L 88 375
+               Z"
+            fill="#eab308"
+            fill-opacity="0.85"
+            stroke="#eab308"
+            stroke-width="1.2"
+          />
+          <!-- Right Inboard Tip -->
+          <path
+            d="M 512 348
+               L 548 362
+               L 548 384
+               L 512 375
+               Z"
+            fill="#eab308"
+            fill-opacity="0.85"
+            stroke="#eab308"
+            stroke-width="1.2"
+          />
+        </g>
+
+        <!-- Wing Outer Tip (Zone 1A) -->
+        <g class="z-elem z-1A" data-zone="1A">
+          <!-- Left Outermost Tip -->
+          <path
+            d="M 52 362
+               L 25 372
+               L 25 388
+               L 52 384
+               Z"
+            fill="#f43f5e"
+            fill-opacity="0.9"
+            stroke="#fff"
+            stroke-width="1.2"
+          />
+          <!-- Right Outermost Tip -->
+          <path
+            d="M 548 362
+               L 575 372
+               L 575 388
+               L 548 384
+               Z"
+            fill="#f43f5e"
+            fill-opacity="0.9"
+            stroke="#fff"
+            stroke-width="1.2"
+          />
+        </g>
+
+        <!-- Detail Box Indicator on Left Wingtip -->
+        <rect
+          x="18"
+          y="355"
+          width="78"
+          height="38"
+          fill="none"
+          stroke="#ff9c1a"
+          stroke-width="1.2"
+          stroke-dasharray="3 3"
+        />
+        <text x="20" y="350" fill="#ffb84d" font-family="'IBM Plex Mono', monospace" font-size="8" font-weight="bold">
+          DETAIL VIEW ↗
+        </text>
+
+        <!-- ==================== HORIZONTAL STABILIZERS ==================== -->
+        <!-- Bulk Stabilizers (Zone 3) -->
+        <g class="z-elem z-3" data-zone="3">
+          <!-- Left -->
+          <path
+            d="M 275 515
+               L 205 548
+               L 205 565
+               L 278 555
+               Z"
+            fill="#38bdf8"
+            fill-opacity="0.8"
+            stroke="#38bdf8"
+            stroke-width="1"
+          />
+          <!-- Right -->
+          <path
+            d="M 325 515
+               L 395 548
+               L 395 565
+               L 322 555
+               Z"
+            fill="#38bdf8"
+            fill-opacity="0.8"
+            stroke="#38bdf8"
+            stroke-width="1"
+          />
+        </g>
+
+        <!-- Tailplane Inboard Tip Transition (Zone 2A) -->
+        <g class="z-elem z-2A" data-zone="2A">
+          <!-- Left -->
+          <path d="M 205 548 L 185 556 L 185 570 L 205 565 Z" fill="#eab308" fill-opacity="0.85" stroke="#eab308" stroke-width="1" />
+          <!-- Right -->
+          <path d="M 395 548 L 415 556 L 415 570 L 395 565 Z" fill="#eab308" fill-opacity="0.85" stroke="#eab308" stroke-width="1" />
+        </g>
+
+        <!-- Tailplane Outer Tips (Zone 1A) -->
+        <g class="z-elem z-1A" data-zone="1A">
+          <!-- Left -->
+          <path d="M 185 556 L 170 562 L 170 573 L 185 570 Z" fill="#f43f5e" fill-opacity="0.9" stroke="#fff" stroke-width="1" />
+          <!-- Right -->
+          <path d="M 415 556 L 430 562 L 430 573 L 415 570 Z" fill="#f43f5e" fill-opacity="0.9" stroke="#fff" stroke-width="1" />
+        </g>
+
+        <!-- ==================== FUSELAGE ==================== -->
+        <!-- Main Fuselage + Wing & Tail Root Extensions (Zone 2A) -->
+        <g class="z-elem z-2A" data-zone="2A">
+          <!-- Fuselage tube -->
+          <path
+            d="M 276 96
+               L 276 505
+               L 290 575
+               L 310 575
+               L 324 505
+               L 324 96
+               Z"
+            fill="#eab308"
+            fill-opacity="0.85"
+            stroke="#eab308"
+            stroke-width="1.2"
+          />
+
+          <!-- 0.5m Wing Root Extensions -->
+          <path
+            d="M 276 250
+               L 248 262
+               L 248 375
+               L 276 375
+               Z"
+            fill="#eab308"
+            fill-opacity="0.85"
+            stroke="#eab308"
+            stroke-width="1.2"
+          />
+          <path
+            d="M 324 250
+               L 352 262
+               L 352 375
+               L 324 375
+               Z"
+            fill="#eab308"
+            fill-opacity="0.85"
+            stroke="#eab308"
+            stroke-width="1.2"
+          />
+
+          <!-- Tail Root Extensions -->
+          <path
+            d="M 276 505
+               L 260 515
+               L 260 550
+               L 290 575
+               L 310 575
+               L 340 550
+               L 340 515
+               L 324 505
+               Z"
+            fill="#eab308"
+            fill-opacity="0.85"
+            stroke="#eab308"
+            stroke-width="1.2"
+          />
+        </g>
+
+        <!-- Tailcone Tip (Zone 1B) -->
+        <g class="z-elem z-1B" data-zone="1B">
+          <path d="M 290 575 L 297 594 L 303 594 L 310 575 Z" fill="#b91c1c" fill-opacity="0.95" stroke="#f43f5e" stroke-width="1" />
+        </g>
+
+        <!-- Cockpit Canopy Region (Zone 1C) -->
+        <g class="z-elem z-1C" data-zone="1C">
+          <path
+            d="M 278 65
+               C 278 65 288 65 300 65
+               C 312 65 322 65 322 65
+               L 324 96
+               L 276 96
+               Z"
+            fill="#f97316"
+            fill-opacity="0.9"
+            stroke="#f97316"
+            stroke-width="1.2"
+          />
+        </g>
+
+        <!-- Nose Radome (Zone 1A) -->
+        <g class="z-elem z-1A" data-zone="1A">
+          <path
+            d="M 278 65
+               C 278 38 290 24 300 24
+               C 310 24 322 38 322 65
+               Z"
+            fill="#f43f5e"
+            fill-opacity="0.95"
+            stroke="#fff"
+            stroke-width="1.2"
+          />
+        </g>
+
+        <!-- ==================== ENGINES ==================== -->
+        <!-- Left Engine -->
+        <g class="z-elem z-1A" data-zone="1A">
+          <!-- Inlet Cowl (1A) -->
+          <path d="M 195 265 C 195 260 218 260 218 265 L 218 280 L 195 280 Z" fill="#f43f5e" fill-opacity="0.9" stroke="#fff" stroke-width="1" />
+        </g>
+        <g class="z-elem z-1C" data-zone="1C">
+          <!-- Mid Cowl (1C) -->
+          <rect x="195" y="280" width="23" height="22" fill="#f97316" fill-opacity="0.9" stroke="#f97316" stroke-width="1" />
+        </g>
+        <g class="z-elem z-2A" data-zone="2A">
+          <!-- Aft Cowl (2A) -->
+          <path d="M 195 302 L 218 302 L 214 324 L 199 324 Z" fill="#eab308" fill-opacity="0.85" stroke="#eab308" stroke-width="1" />
+        </g>
+
+        <!-- Right Engine -->
+        <g class="z-elem z-1A" data-zone="1A">
+          <path d="M 382 265 C 382 260 405 260 405 265 L 405 280 L 382 280 Z" fill="#f43f5e" fill-opacity="0.9" stroke="#fff" stroke-width="1" />
+        </g>
+        <g class="z-elem z-1C" data-zone="1C">
+          <rect x="382" y="280" width="23" height="22" fill="#f97316" fill-opacity="0.9" stroke="#f97316" stroke-width="1" />
+        </g>
+        <g class="z-elem z-2A" data-zone="2A">
+          <path d="M 382 302 L 405 302 L 401 324 L 386 324 Z" fill="#eab308" fill-opacity="0.85" stroke="#eab308" stroke-width="1" />
+        </g>
+
+        <!-- Aircraft Contour Line -->
+        <path
+          d="M 300 24
+             C 310 24 322 38 322 65
+             L 324 505
+             L 310 575
+             L 303 594
+             L 297 594
+             L 290 575
+             L 276 505
+             L 276 65
+             C 276 38 290 24 300 24 Z"
+          fill="none"
+          stroke="rgba(255,255,255,0.3)"
+          stroke-width="1"
+        />
+      </svg>
+    </div>
+
+    <!-- Right (4-5 cols): Wingtip Planform Detail View & Quick Legend -->
+    <div class="md:col-span-5 lg:col-span-4 p-4 sm:p-5 bg-void-950 flex flex-col justify-between">
+
+      <!-- Wingtip Callout Container -->
+      <div class="border border-solar/30 bg-void-900/90 p-3.5 mb-4">
+        <div class="flex items-center justify-between border-b border-solar/20 pb-1.5 mb-2.5 font-mono text-[11px]">
+          <span class="text-solar font-bold">DETAIL VIEW: WINGTIP</span>
+          <span class="text-void-400 text-[10px]">OUTBOARD TIP</span>
+        </div>
+
+        <!-- Wingtip Vector Graphic -->
+        <svg
+          id="wingtip-detail-svg"
+          viewBox="0 0 320 180"
+          class="w-full h-auto bg-[#070503] border border-solar/20"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <!-- Zone 3 (Inboard Bulk) -->
+          <g class="z-elem z-3" data-zone="3">
+            <path d="M 210 35 L 310 25 L 310 155 L 210 155 Z" fill="#38bdf8" fill-opacity="0.8" stroke="#38bdf8" stroke-width="1.2" />
+            <text x="245" y="95" fill="#fff" font-family="'IBM Plex Mono', monospace" font-size="10" font-weight="bold">3</text>
+          </g>
+
+          <!-- Zone 2A (Swept Inboard) -->
+          <g class="z-elem z-2A" data-zone="2A">
+            <path d="M 115 45 L 210 35 L 210 138 L 115 138 Z" fill="#eab308" fill-opacity="0.85" stroke="#eab308" stroke-width="1.2" />
+            <text x="155" y="95" fill="#000" font-family="'IBM Plex Mono', monospace" font-size="10" font-weight="bold">2A</text>
+          </g>
+
+          <!-- Zone 2B (Trailing Edge 5cm of 2A) -->
+          <g class="z-elem z-2B" data-zone="2B">
+            <path d="M 115 138 L 210 138 L 210 155 L 115 155 Z" fill="#b45309" fill-opacity="0.95" stroke="#fbbf24" stroke-width="1.2" />
+            <text x="150" y="150" fill="#fff" font-family="'IBM Plex Mono', monospace" font-size="8.5" font-weight="bold">2B (TE)</text>
+          </g>
+
+          <!-- Zone 1A (Outer Tip Body) -->
+          <g class="z-elem z-1A" data-zone="1A">
+            <path d="M 30 65 C 30 52 60 48 115 45 L 115 138 L 48 138 C 33 125 30 90 30 65 Z" fill="#f43f5e" fill-opacity="0.9" stroke="#fff" stroke-width="1.2" />
+            <text x="65" y="95" fill="#fff" font-family="'IBM Plex Mono', monospace" font-size="10" font-weight="bold">1A</text>
+          </g>
+
+          <!-- Zone 1B (Trailing Edge 5cm of 1A) -->
+          <g class="z-elem z-1B" data-zone="1B">
+            <path d="M 48 138 L 115 138 L 115 155 L 54 155 C 50 148 49 142 48 138 Z" fill="#b91c1c" fill-opacity="0.95" stroke="#f43f5e" stroke-width="1.2" />
+            <text x="62" y="150" fill="#fff" font-family="'IBM Plex Mono', monospace" font-size="8.5" font-weight="bold">1B (TE)</text>
+          </g>
+
+          <!-- Minimal Annotations -->
+          <text x="100" y="20" fill="#8f7e6f" font-family="'IBM Plex Mono', monospace" font-size="8">▲ LEADING EDGE</text>
+          <text x="100" y="172" fill="#8f7e6f" font-family="'IBM Plex Mono', monospace" font-size="8">▼ TRAILING EDGE</text>
+          <text x="8" y="105" fill="#ff9c1a" font-family="'IBM Plex Mono', monospace" font-size="8" transform="rotate(-90 10 105)">◄ TIP</text>
+        </svg>
+      </div>
+
+      <!-- Concise Zone Summary Table (Less text, essential facts) -->
+      <div class="space-y-1.5 text-[11px] font-mono">
+        <div class="flex items-center justify-between p-1.5 bg-void-900/60 border-l-2 border-[#f43f5e]">
+          <span class="text-white font-bold">1A: Initial Attachment</span>
+          <span class="text-void-400">Low hang-on</span>
+        </div>
+        <div class="flex items-center justify-between p-1.5 bg-void-900/60 border-l-2 border-[#b91c1c]">
+          <span class="text-white font-bold">1B: Initial Attachment</span>
+          <span class="text-void-400">High hang-on (TE)</span>
+        </div>
+        <div class="flex items-center justify-between p-1.5 bg-void-900/60 border-l-2 border-[#f97316]">
+          <span class="text-white font-bold">1C: Transition</span>
+          <span class="text-void-400">Cockpit &amp; mid cowl</span>
+        </div>
+        <div class="flex items-center justify-between p-1.5 bg-void-900/60 border-l-2 border-[#eab308]">
+          <span class="text-white font-bold">2A: Swept Stroke</span>
+          <span class="text-void-400">Low hang-on</span>
+        </div>
+        <div class="flex items-center justify-between p-1.5 bg-void-900/60 border-l-2 border-[#b45309]">
+          <span class="text-white font-bold">2B: Swept Stroke</span>
+          <span class="text-void-400">High hang-on (TE)</span>
+        </div>
+        <div class="flex items-center justify-between p-1.5 bg-void-900/60 border-l-2 border-[#38bdf8]">
+          <span class="text-white font-bold">3: Conduction Only</span>
+          <span class="text-void-400">Bulk wings &amp; tail</span>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<style>
+  .z-toggle-btn {
+    border-color: rgba(255, 156, 26, 0.2);
+    background: rgba(18, 13, 8, 0.85);
+    color: #c4b5a5;
+  }
+  .z-toggle-btn:hover {
+    border-color: var(--btn-accent, #ff9c1a);
+    color: #fff;
+  }
+  .z-toggle-btn.active-filter {
+    border-color: var(--btn-accent, #ff9c1a);
+    background: rgba(255, 156, 26, 0.15);
+    color: #fff;
+    box-shadow: 0 0 10px var(--btn-accent, #ff9c1a);
+  }
+
+  .z-elem {
+    transition: opacity 0.2s ease, filter 0.2s ease;
+    cursor: pointer;
+  }
+  .z-elem:hover {
+    filter: url(#highlightGlow);
+  }
+  .z-elem.dimmed {
+    opacity: 0.15;
+  }
+  .z-elem.highlighted {
+    opacity: 1;
+    filter: drop-shadow(0 0 5px currentColor);
+  }
+</style>
+
+<script is:inline>
+  (function initZoningToggles() {
+    const buttons = document.querySelectorAll('.z-toggle-btn');
+    const elements = document.querySelectorAll('.z-elem');
+    let activeFilter = 'ALL';
+
+    function setFilter(filter) {
+      activeFilter = filter;
+
+      buttons.forEach(btn => {
+        if (btn.getAttribute('data-filter') === filter) {
+          btn.classList.add('active-filter');
+        } else {
+          btn.classList.remove('active-filter');
+        }
+      });
+
+      elements.forEach(el => {
+        const zone = el.getAttribute('data-zone');
+        if (filter === 'ALL' || zone === filter) {
+          el.classList.remove('dimmed');
+          if (filter !== 'ALL') el.classList.add('highlighted');
+          else el.classList.remove('highlighted');
+        } else {
+          el.classList.add('dimmed');
+          el.classList.remove('highlighted');
+        }
+      });
+    }
+
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const f = btn.getAttribute('data-filter');
+        setFilter(activeFilter === f && f !== 'ALL' ? 'ALL' : f);
+      });
+    });
+
+    elements.forEach(el => {
+      el.addEventListener('click', () => {
+        const z = el.getAttribute('data-zone');
+        setFilter(activeFilter === z ? 'ALL' : z);
+      });
+    });
+  })();
+</script>
