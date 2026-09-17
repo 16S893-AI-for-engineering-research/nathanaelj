@@ -152,12 +152,12 @@ export const devLogEntries: DevLogEntry[] = [
     date: '2026-09-17',
     summary:
       'Added two new skills',
-    models: ['opus-5', 'sonnet-5'],
+    models: ['gemini-3.6-flash', 'gpt-5-nano', 'gpt-5'],
     metrics: {
-      userMessages: 2,
-      assistantMessages: 62,
-      toolCalls: 103,
-      totalCostUsd: 3.0136,
+      userMessages: 15,
+      assistantMessages: 90,
+      toolCalls: 75,
+      totalCostUsd: 0.7796,
     },
     description: {
       keyChanges: [
@@ -172,6 +172,36 @@ export const devLogEntries: DevLogEntry[] = [
       agentFailures: [
         'The first attempt at the bash script for printing session info had an error. `GPT-5 Nano` was unable to fix it, and `GPT-5` also struggled substantially',
         'Even providing an example Python script did not help the agent solve the scripting issue',
+        'The `pi-sessions` skill was also created without frontmatter at first. I should have provided more context for `GPT-5 Nano`'
+      ],
+    },
+  },
+
+
+  {
+    slug: 'start-project-content',
+    title: 'Initial Project Content',
+    date: '2026-09-17',
+    summary:
+      'Started adding project content',
+    models: ['gemini-3.8-flash'],
+    metrics: {
+      userMessages: 5,
+      assistantMessages: 84,
+      toolCalls: 79,
+      totalCostUsd: 3.1278,
+    },
+    description: {
+      keyChanges: [
+        'Created **project timeline** page and first placeholder pages',
+        'Implemented project background page and proposal page',
+      ],
+      agentSuccesses: [
+        'Created a **well-formatted** timeline',
+        'ANIMATIONS'
+      ],
+      agentFailures: [
+        '...',
       ],
     },
   },

@@ -24,4 +24,4 @@ Notes:
 - Requires jq to be installed.
 - The script looks for session log files (.json and .jsonl) under: ~/.pi/agent/sessions/--<abs-repo-path-with-slashes-as-dashes>--.
 - It supports JSONL logs by streaming and summarizing per file.
-- Reopen command: pi open-session --name "<session-name>"
+- Reopen command: pi --session "<session-name>"
