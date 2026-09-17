@@ -15,10 +15,10 @@ export const projectMilestones: ProjectMilestone[] = [
   {
     number: 1,
     title: 'Background',
-    tagline: 'Aircraft Lightning Physics & Simulation Challenges',
-    date: 'February 2025',
+    tagline: 'Aircraft Lightning Zoning',
+    date: 'September 2026',
     summary:
-      'Foundational physics of lightning attachment to aircraft, limitations of conventional finite-element simulations, and the motivation for new computational paradigms in plasma-structure interaction.',
+      'Aircraft lightning attachment physics, zoning, and novel simulation tools. A primer for my project proposal.',
     slug: '/project/background',
     stage: 'Phase 01',
     status: 'completed',
@@ -27,13 +27,12 @@ export const projectMilestones: ProjectMilestone[] = [
   {
     number: 2,
     title: 'Proposal',
-    tagline: 'Autonomous AI Agents for High-Fidelity Plasma Modeling',
-    date: 'February 2025',
+    tagline: 'Implementing Computational Models for Aircraft Lightning Zoning',
+    date: 'September 2026',
     summary:
-      'A multi-agent framework orchestrating mesh generation, boundary condition calibration, surrogate model training, and validation against experimental lightning strike telemetry.',
+      '',
     slug: '/project/proposal',
     stage: 'Phase 02',
     status: 'completed',
-    graphicType: 'agent',
   },
 ];
