@@ -144,4 +144,35 @@ export const devLogEntries: DevLogEntry[] = [
       ],
     },
   },
+
+
+  {
+    slug: 'add-skill',
+    title: 'Skilling Up',
+    date: '2026-09-17',
+    summary:
+      'Added two new skills',
+    models: ['opus-5', 'sonnet-5'],
+    metrics: {
+      userMessages: 2,
+      assistantMessages: 62,
+      toolCalls: 103,
+      totalCostUsd: 3.0136,
+    },
+    description: {
+      keyChanges: [
+        'Added the `new-page` skill to provide guidance when creating new pages for this site',
+        'Created a new **script** to print a summary of recent pi sessions, and created a `pi-sessions` skill to run it',
+        'Also created and populated `AGENTS.md` to provide clearer guidance to models',
+        'Removed `Presentations` from the header, since I don\'t need slides for the project proposal',
+      ],
+      agentSuccesses: [
+        'Correctly formatted and implemented the **skills**',
+      ],
+      agentFailures: [
+        'The first attempt at the bash script for printing session info had an error. `GPT-5 Nano` was unable to fix it, and `GPT-5` also struggled substantially',
+        'Even providing an example Python script did not help the agent solve the scripting issue',
+      ],
+    },
+  },
 ];
