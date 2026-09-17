@@ -1,0 +1,402 @@
+/* ==========================================================================
+   Project Timeline & Milestone Pages Styling
+   Aerospace-inspired, unconventional solar-void aesthetic
+   ========================================================================== */
+
+/* ---------- Timeline Container & Rail ---------- */
+
+.project-timeline {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2.75rem;
+}
+
+/* Vertical glowing laser spine running down the timeline */
+.project-timeline::before {
+  content: '';
+  position: absolute;
+  top: 1rem;
+  bottom: 1rem;
+  left: 1.25rem;
+  width: 2px;
+  background: linear-gradient(
+    to bottom,
+    var(--color-solar) 0%,
+    rgba(255, 102, 51, 0.7) 40%,
+    rgba(255, 156, 26, 0.4) 80%,
+    rgba(255, 156, 26, 0.1) 100%
+  );
+  box-shadow: 0 0 12px rgba(255, 156, 26, 0.35);
+  pointer-events: none;
+}
+
+@media (min-width: 768px) {
+  .project-timeline::before {
+    left: 2.25rem;
+  }
+}
+
+/* ---------- Timeline Node (Geometric Rail Marker) ---------- */
+
+.timeline-node-container {
+  position: absolute;
+  left: 1.25rem;
+  top: 1.75rem;
+  transform: translateX(-50%);
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (min-width: 768px) {
+  .timeline-node-container {
+    left: 2.25rem;
+  }
+}
+
+.timeline-node {
+  width: 28px;
+  height: 28px;
+  background: #120d08;
+  border: 1.5px solid var(--color-solar);
+  box-shadow: 0 0 14px rgba(255, 156, 26, 0.45);
+  transform: rotate(45deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.timeline-node__inner {
+  width: 10px;
+  height: 10px;
+  background: var(--color-solar-light);
+  transform: rotate(0deg);
+  transition: background 0.3s, transform 0.3s;
+}
+
+.timeline-item:hover .timeline-node {
+  border-color: #ffecc7;
+  background: #2a1b0c;
+  box-shadow: 0 0 24px rgba(255, 156, 26, 0.8), 0 0 8px #ff7a3d;
+  transform: rotate(135deg) scale(1.15);
+}
+
+.timeline-item:hover .timeline-node__inner {
+  background: #fff;
+  transform: scale(1.2);
+}
+
+/* ---------- Timeline Item Row ---------- */
+
+.timeline-item {
+  position: relative;
+  padding-left: 3.25rem;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 768px) {
+  .timeline-item {
+    padding-left: 5.5rem;
+  }
+}
+
+/* Horizontal connecting circuit trace from spine to card */
+.timeline-item::after {
+  content: '';
+  position: absolute;
+  top: 2.6rem;
+  left: 1.25rem;
+  width: 2rem;
+  height: 1px;
+  background: linear-gradient(to right, var(--color-solar), rgba(255, 156, 26, 0.2));
+  pointer-events: none;
+}
+
+@media (min-width: 768px) {
+  .timeline-item::after {
+    left: 2.25rem;
+    width: 3.25rem;
+  }
+}
+
+/* ---------- Timeline Card ---------- */
+
+.project-card {
+  position: relative;
+  border: 1px solid rgba(255, 156, 26, 0.2);
+  background: rgba(16, 12, 8, 0.85);
+  backdrop-filter: blur(8px);
+  padding: 1.75rem 2rem;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+}
+
+/* Left accent bar */
+.project-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(to bottom, var(--color-solar), var(--color-flame));
+  opacity: 0.4;
+  transition: opacity 0.3s, width 0.3s;
+}
+
+.timeline-item:hover .project-card {
+  border-color: rgba(255, 156, 26, 0.5);
+  background: rgba(24, 18, 12, 0.95);
+  transform: translateY(-3px);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6), 0 0 28px rgba(255, 156, 26, 0.12);
+}
+
+.timeline-item:hover .project-card::before {
+  opacity: 1;
+  width: 4px;
+}
+
+/* Stretched card trigger */
+.project-card__trigger {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 20;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.project-card__trigger:focus-visible {
+  outline: 2px solid var(--color-solar);
+  outline-offset: -2px;
+}
+
+/* Watermark numeral inside the card corner */
+.project-card__watermark {
+  position: absolute;
+  right: 1.5rem;
+  top: 0.5rem;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 5rem;
+  line-height: 1;
+  font-weight: 700;
+  color: rgba(255, 156, 26, 0.05);
+  pointer-events: none;
+  user-select: none;
+  transition: color 0.3s, transform 0.3s;
+}
+
+.timeline-item:hover .project-card__watermark {
+  color: rgba(255, 156, 26, 0.12);
+  transform: translateY(-2px);
+}
+
+/* Corner HUD crosshairs on the card */
+.card-hud-corner {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  pointer-events: none;
+  transition: border-color 0.3s;
+}
+
+.card-hud-corner--tl {
+  top: 0;
+  left: 0;
+  border-top: 1px solid var(--color-solar);
+  border-left: 1px solid var(--color-solar);
+}
+
+.card-hud-corner--tr {
+  top: 0;
+  right: 0;
+  border-top: 1px solid var(--color-solar);
+  border-right: 1px solid var(--color-solar);
+}
+
+.card-hud-corner--bl {
+  bottom: 0;
+  left: 0;
+  border-bottom: 1px solid var(--color-solar);
+  border-left: 1px solid var(--color-solar);
+}
+
+.card-hud-corner--br {
+  bottom: 0;
+  right: 0;
+  border-bottom: 1px solid var(--color-solar);
+  border-right: 1px solid var(--color-solar);
+}
+
+/* Card typography & metadata */
+.project-card__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.project-card__stage {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-solar);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.project-card__date {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.project-card__title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.85rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0.25rem 0 0.5rem;
+  color: var(--color-text-primary);
+  transition: color 0.2s;
+}
+
+.timeline-item:hover .project-card__title {
+  color: var(--color-solar-light);
+}
+
+.project-card__tagline {
+  font-family: 'Sora', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--color-solar-light);
+  margin-bottom: 0.85rem;
+}
+
+.project-card__summary {
+  font-size: 0.92rem;
+  line-height: 1.65;
+  color: var(--color-text-muted);
+  margin-bottom: 1.25rem;
+}
+
+/* Action cue */
+.project-card__cue {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-solar);
+  font-weight: 600;
+  margin-top: 1rem;
+  transition: color 0.2s, transform 0.2s;
+}
+
+.project-card__cue-arrow {
+  transition: transform 0.2s ease-out;
+}
+
+.timeline-item:hover .project-card__cue {
+  color: var(--color-solar-light);
+}
+
+.timeline-item:hover .project-card__cue-arrow {
+  transform: translateX(4px);
+}
+
+/* Upcoming / Future placeholder milestone */
+.project-card--future {
+  border: 1px dashed rgba(255, 156, 26, 0.25);
+  background: rgba(16, 12, 8, 0.4);
+}
+
+.project-card--future:hover {
+  border-color: rgba(255, 156, 26, 0.35);
+  background: rgba(16, 12, 8, 0.6);
+  transform: none;
+  box-shadow: none;
+}
+
+/* ---------- Sub-Page Layout Elements ---------- */
+
+.project-detail-header {
+  border-bottom: 1px solid rgba(255, 156, 26, 0.18);
+  padding-bottom: 2rem;
+  margin-bottom: 2.5rem;
+}
+
+.project-detail-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  align-items: center;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin-top: 1.25rem;
+}
+
+.project-callout {
+  border-left: 3px solid var(--color-solar);
+  background: rgba(255, 156, 26, 0.04);
+  padding: 1.5rem 1.75rem;
+  margin: 2rem 0;
+  border-top: 1px solid rgba(255, 156, 26, 0.1);
+  border-bottom: 1px solid rgba(255, 156, 26, 0.1);
+  border-right: 1px solid rgba(255, 156, 26, 0.1);
+}
+
+.project-sandbox-frame {
+  position: relative;
+  background: #0d0a06;
+  border: 1px solid rgba(255, 156, 26, 0.25);
+  padding: 1.5rem;
+  margin: 2.5rem 0;
+}
+
+.project-sandbox-frame__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 156, 26, 0.15);
+  padding-bottom: 0.75rem;
+  margin-bottom: 1.25rem;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-solar);
+}
+
+.project-nav-adjacent {
+  display: flex;
+  flex-direction: column;
+  padding: 1.25rem;
+  border: 1px solid rgba(255, 156, 26, 0.18);
+  background: rgba(255, 156, 26, 0.03);
+  text-decoration: none !important;
+  transition: all 0.2s;
+}
+
+.project-nav-adjacent:hover {
+  border-color: rgba(255, 156, 26, 0.45);
+  background: rgba(255, 156, 26, 0.08);
+  transform: translateY(-2px);
+}

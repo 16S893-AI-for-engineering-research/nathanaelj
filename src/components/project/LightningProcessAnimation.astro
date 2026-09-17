@@ -1,0 +1,599 @@
+---
+/**
+ * LightningProcessAnimation.astro
+ * Minimalist, physics-based simulation of aircraft-triggered lightning:
+ * 1. Initial attachment: upward tail leader + downward nose leader
+ * 2. Swept stroke: aircraft advances forward, nose arc sweeps aft, tail arc stretches into wake
+ * 3. Conducted current: current flows through the whole airframe, including unattached wings
+ *
+ * Streamlined design: "Less is more", clean controls, minimal text, authentic silhouette.
+ */
+---
+
+<div class="lightning-sim-container relative bg-void-950 border border-solar/30 my-8 overflow-hidden">
+  <!-- Clean Step Switcher Bar -->
+  <div class="flex flex-wrap items-center justify-between gap-3 px-4 py-3 bg-void-900/90 border-b border-solar/20">
+    <!-- Step tabs -->
+    <div class="flex items-center gap-1 font-mono text-xs" role="tablist">
+      <button
+        type="button"
+        id="sim-step-btn-1"
+        class="sim-step-btn px-3 py-1.5 border transition-all text-xs font-mono font-medium active-step"
+        data-step="1"
+      >
+        1. Initial Attachment
+      </button>
+      <button
+        type="button"
+        id="sim-step-btn-2"
+        class="sim-step-btn px-3 py-1.5 border transition-all text-xs font-mono font-medium"
+        data-step="2"
+      >
+        2. Swept Stroke
+      </button>
+      <button
+        type="button"
+        id="sim-step-btn-3"
+        class="sim-step-btn px-3 py-1.5 border transition-all text-xs font-mono font-medium"
+        data-step="3"
+      >
+        3. Conducted Current
+      </button>
+    </div>
+
+    <!-- Playback Controls -->
+    <div class="flex items-center gap-2 font-mono text-xs">
+      <button
+        type="button"
+        id="sim-btn-restart"
+        class="p-1.5 text-solar hover:text-white transition-colors"
+        title="Restart from beginning"
+        aria-label="Restart"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+        </svg>
+      </button>
+
+      <button
+        type="button"
+        id="sim-btn-play"
+        class="px-2.5 py-1 bg-solar/20 border border-solar text-solar-light hover:bg-solar/30 hover:text-white transition-colors flex items-center gap-1 font-semibold"
+        title="Play / Pause"
+      >
+        <span id="sim-play-icon">⏸</span>
+        <span id="sim-play-label">Pause</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Animation Canvas -->
+  <div class="relative w-full h-64 sm:h-80 md:h-96 bg-[#070503] overflow-hidden">
+    <canvas id="lightning-sim-canvas" class="w-full h-full block cursor-pointer"></canvas>
+
+    <!-- Progress Scrubber -->
+    <div class="absolute top-0 left-0 right-0 h-0.5 bg-void-800">
+      <div id="sim-progress-bar" class="h-full bg-solar transition-all duration-75" style="width: 0%;"></div>
+    </div>
+
+    <!-- Step 3 Overlay Callout -->
+    <div
+      id="conducted-callout"
+      class="absolute bottom-4 right-4 max-w-xs pointer-events-none font-sans text-xs bg-void-950/95 border border-solar p-3 shadow-xl transition-all duration-300 opacity-0 translate-y-2"
+    >
+      <div class="flex items-center gap-1.5 text-solar font-mono font-bold text-[11px] mb-1">
+        <span>⚡ CONDUCTED CURRENT</span>
+      </div>
+      <p class="text-void-200 text-[11px] leading-relaxed mb-0">
+        Parts of the aircraft that do not experience direct attachment (e.g. wings and cabin structure) still conduct high amounts of current during the strike.
+      </p>
+    </div>
+  </div>
+
+  <!-- Concise Bullet Points Bar (Less is more: 2 bullets per step) -->
+  <div class="px-5 py-3.5 bg-void-900/90 border-t border-solar/20">
+    <div id="sim-bullets-1" class="sim-bullet-pane">
+      <ul class="flex flex-col sm:flex-row gap-2 sm:gap-6 text-xs text-void-200 list-none p-0 m-0">
+        <li class="flex items-start gap-2">
+          <span class="text-solar font-mono font-bold shrink-0">•</span>
+          <span><strong>Tail leader:</strong> A positive leader initiates upwards from the tailplane into the ambient field.</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="text-solar font-mono font-bold shrink-0">•</span>
+          <span><strong>Nose leader:</strong> A negative leader simultaneously initiates downwards from the nose radome.</span>
+        </li>
+      </ul>
+    </div>
+
+    <div id="sim-bullets-2" class="sim-bullet-pane hidden">
+      <ul class="flex flex-col sm:flex-row gap-2 sm:gap-6 text-xs text-void-200 list-none p-0 m-0">
+        <li class="flex items-start gap-2">
+          <span class="text-solar font-mono font-bold shrink-0">•</span>
+          <span><strong>Fuselage sweep:</strong> As the aircraft moves forward, the nose arc sweeps aft across the fuselage skin.</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="text-solar font-mono font-bold shrink-0">•</span>
+          <span><strong>Tail stretch:</strong> Anchored to the trailing edge, the tail arc stretches backward into the wake.</span>
+        </li>
+      </ul>
+    </div>
+
+    <div id="sim-bullets-3" class="sim-bullet-pane hidden">
+      <ul class="flex flex-col sm:flex-row gap-2 sm:gap-6 text-xs text-void-200 list-none p-0 m-0">
+        <li class="flex items-start gap-2">
+          <span class="text-solar font-mono font-bold shrink-0">•</span>
+          <span><strong>High-current path:</strong> Massive stroke current surges through the conductive airframe between attachment roots.</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="text-solar font-mono font-bold shrink-0">•</span>
+          <span><strong>Indirect risk:</strong> Internal conduction induces severe electromagnetic transients in wiring and avionics.</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<style>
+  .sim-step-btn {
+    border-color: rgba(255, 156, 26, 0.2);
+    background: rgba(13, 10, 6, 0.6);
+    color: #9c8e80;
+  }
+  .sim-step-btn:hover {
+    border-color: rgba(255, 156, 26, 0.5);
+    color: #ffb84d;
+  }
+  .sim-step-btn.active-step {
+    border-color: #ff9c1a;
+    background: rgba(255, 156, 26, 0.15);
+    color: #ffecc7;
+  }
+</style>
+
+<script is:inline>
+  (function initLightningSim() {
+    const canvas = document.getElementById('lightning-sim-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const progressBar = document.getElementById('sim-progress-bar');
+    const conductedCallout = document.getElementById('conducted-callout');
+    const btnPlay = document.getElementById('sim-btn-play');
+    const playIcon = document.getElementById('sim-play-icon');
+    const playLabel = document.getElementById('sim-play-label');
+    const btnRestart = document.getElementById('sim-btn-restart');
+
+    const stepBtns = [
+      document.getElementById('sim-step-btn-1'),
+      document.getElementById('sim-step-btn-2'),
+      document.getElementById('sim-step-btn-3')
+    ];
+
+    const bulletPanes = [
+      document.getElementById('sim-bullets-1'),
+      document.getElementById('sim-bullets-2'),
+      document.getElementById('sim-bullets-3')
+    ];
+
+    let currentStep = 1;
+    let isPlaying = true;
+    let stepTime = 0.0;
+    const STEP_DURATIONS = {
+      1: 3.5,
+      2: 4.5,
+      3: 3.8
+    };
+
+    let width = 0;
+    let height = 0;
+    let dpr = 1;
+
+    function resize() {
+      const rect = canvas.parentElement.getBoundingClientRect();
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      width = rect.width;
+      height = rect.height;
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    function setStep(stepNum, resetTime = true) {
+      currentStep = Math.max(1, Math.min(3, stepNum));
+      if (resetTime) stepTime = 0.0;
+
+      stepBtns.forEach((btn, idx) => {
+        if (idx + 1 === currentStep) btn.classList.add('active-step');
+        else btn.classList.remove('active-step');
+      });
+
+      bulletPanes.forEach((pane, idx) => {
+        if (idx + 1 === currentStep) pane.classList.remove('hidden');
+        else pane.classList.add('hidden');
+      });
+
+      if (currentStep === 3) {
+        conductedCallout.classList.remove('opacity-0', 'translate-y-2');
+        conductedCallout.classList.add('opacity-100', 'translate-y-0');
+      } else {
+        conductedCallout.classList.remove('opacity-100', 'translate-y-0');
+        conductedCallout.classList.add('opacity-0', 'translate-y-2');
+      }
+    }
+
+    stepBtns.forEach((btn, idx) => {
+      btn.addEventListener('click', () => setStep(idx + 1, true));
+    });
+
+    function togglePlay() {
+      isPlaying = !isPlaying;
+      playIcon.textContent = isPlaying ? '⏸' : '▶';
+      playLabel.textContent = isPlaying ? 'Pause' : 'Play';
+    }
+
+    btnPlay.addEventListener('click', togglePlay);
+    canvas.addEventListener('click', togglePlay);
+    btnRestart.addEventListener('click', () => {
+      setStep(1, true);
+      isPlaying = true;
+      playIcon.textContent = '⏸';
+      playLabel.textContent = 'Pause';
+    });
+
+    // -------------------------------------------------------------------------
+    // Accurate Commercial Jet Side Silhouette (Standard Proportions)
+    // Modeled around origin (0, 0), length ~ 300 units
+    // -------------------------------------------------------------------------
+    function drawAirplane(x, y, scale, glow = 0) {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.scale(scale, scale);
+
+      // Conduction aura (Step 3)
+      if (glow > 0) {
+        ctx.save();
+        ctx.shadowColor = '#ff9c1a';
+        ctx.shadowBlur = 18 * glow;
+        ctx.strokeStyle = `rgba(255, 184, 77, ${0.45 * glow})`;
+        ctx.lineWidth = 6;
+        ctx.stroke(fuselagePath);
+        ctx.stroke(finPath);
+        ctx.stroke(wingPath);
+        ctx.restore();
+      }
+
+      // Fuselage
+      ctx.fillStyle = glow > 0 ? '#22160a' : '#140f0a';
+      ctx.strokeStyle = glow > 0 ? '#ffb84d' : '#8f6d40';
+      ctx.lineWidth = 1.6;
+      ctx.fill(fuselagePath);
+      ctx.stroke(fuselagePath);
+
+      // Vertical Tail Fin
+      ctx.fillStyle = glow > 0 ? '#2a1a0c' : '#18120b';
+      ctx.strokeStyle = glow > 0 ? '#ffb84d' : '#8f6d40';
+      ctx.lineWidth = 1.6;
+      ctx.fill(finPath);
+      ctx.stroke(finPath);
+
+      // Horizontal Tail
+      ctx.fillStyle = '#1c150e';
+      ctx.strokeStyle = '#755833';
+      ctx.lineWidth = 1.2;
+      ctx.fill(hTailPath);
+      ctx.stroke(hTailPath);
+
+      // Wing (swept low wing profile)
+      ctx.fillStyle = glow > 0 ? '#2e1c0d' : '#15100a';
+      ctx.strokeStyle = glow > 0 ? '#ffb84d' : '#8f6d40';
+      ctx.lineWidth = 1.6;
+      ctx.fill(wingPath);
+      ctx.stroke(wingPath);
+
+      // Engine Nacelle
+      ctx.fillStyle = '#1e160e';
+      ctx.strokeStyle = '#755833';
+      ctx.lineWidth = 1.4;
+      ctx.fill(enginePath);
+      ctx.stroke(enginePath);
+
+      // Cockpit windows
+      ctx.fillStyle = glow > 0 ? '#ffecc7' : 'rgba(255, 184, 77, 0.7)';
+      ctx.fill(cockpitPath);
+
+      // Internal current streamlines (Step 3 only)
+      if (glow > 0) {
+        ctx.save();
+        ctx.lineWidth = 1.8;
+        ctx.setLineDash([5, 5]);
+        ctx.lineDashOffset = -((Date.now() / 45) % 20);
+
+        // Core spine current path
+        ctx.strokeStyle = `rgba(255, 235, 180, ${0.9 * glow})`;
+        ctx.beginPath();
+        ctx.moveTo(140, -1);
+        ctx.lineTo(20, -5);
+        ctx.lineTo(-90, -5);
+        ctx.lineTo(-125, -74);
+        ctx.stroke();
+
+        // Wing conduction branch
+        ctx.strokeStyle = `rgba(255, 156, 26, ${0.85 * glow})`;
+        ctx.beginPath();
+        ctx.moveTo(25, 2);
+        ctx.lineTo(-10, 28);
+        ctx.lineTo(-35, 48);
+        ctx.stroke();
+
+        ctx.restore();
+      }
+
+      ctx.restore();
+    }
+
+    // Path2D geometries
+    const fuselagePath = new Path2D();
+    fuselagePath.moveTo(148, 0); // nose tip
+    fuselagePath.bezierCurveTo(148, -10, 130, -14, 85, -14); // upper nose
+    fuselagePath.lineTo(-85, -14); // fuselage crown
+    fuselagePath.bezierCurveTo(-110, -14, -135, -8, -146, -3); // aft upsweep
+    fuselagePath.lineTo(-152, 0); // tail cone tip
+    fuselagePath.bezierCurveTo(-135, 8, -110, 14, -85, 14); // aft lower
+    fuselagePath.lineTo(85, 14); // lower keel
+    fuselagePath.bezierCurveTo(130, 14, 148, 10, 148, 0); // lower nose
+    fuselagePath.closePath();
+
+    const finPath = new Path2D();
+    finPath.moveTo(-92, -14);
+    finPath.lineTo(-125, -76); // fin leading edge
+    finPath.lineTo(-142, -76); // fin tip cap
+    finPath.lineTo(-146, -3);  // rudder trailing edge
+    finPath.closePath();
+
+    const hTailPath = new Path2D();
+    hTailPath.moveTo(-120, -2);
+    hTailPath.lineTo(-146, -18);
+    hTailPath.lineTo(-154, -18);
+    hTailPath.lineTo(-144, 0);
+    hTailPath.closePath();
+
+    const wingPath = new Path2D();
+    wingPath.moveTo(32, 6);
+    wingPath.lineTo(-24, 48); // wingtip leading edge
+    wingPath.lineTo(-44, 48); // wingtip
+    wingPath.lineTo(-4, 10);  // wing trailing edge
+    wingPath.closePath();
+
+    const enginePath = new Path2D();
+    enginePath.moveTo(28, 28);
+    enginePath.lineTo(28, 44);
+    enginePath.lineTo(-12, 44);
+    enginePath.lineTo(-12, 28);
+    enginePath.closePath();
+
+    const cockpitPath = new Path2D();
+    cockpitPath.moveTo(130, -7);
+    cockpitPath.lineTo(116, -12);
+    cockpitPath.lineTo(102, -12);
+    cockpitPath.lineTo(112, -7);
+    cockpitPath.closePath();
+
+    // -------------------------------------------------------------------------
+    // Physics-Based Leader Path Generator (Iterative Displaced Walk)
+    // -------------------------------------------------------------------------
+    function createLeaderPath(x1, y1, x2, y2, displace, segments = 8, seed = 1) {
+      const pts = [{ x: x1, y: y1 }];
+      const dx = (x2 - x1) / segments;
+      const dy = (y2 - y1) / segments;
+      let cx = x1;
+      let cy = y1;
+
+      for (let i = 1; i < segments; i++) {
+        cx += dx;
+        cy += dy;
+        const norm = (Math.sin(i * 3.7 + seed) * 0.6 + Math.cos(i * 7.1 + seed * 2) * 0.4);
+        pts.push({
+          x: cx + norm * displace,
+          y: cy + (Math.sin(i * 2.3 + seed) * displace * 0.3)
+        });
+      }
+      pts.push({ x: x2, y: y2 });
+      return pts;
+    }
+
+    // -------------------------------------------------------------------------
+    // Animation Loop
+    // -------------------------------------------------------------------------
+    let lastTime = performance.now();
+
+    function animate(now) {
+      const dt = Math.min((now - lastTime) / 1000, 0.1);
+      lastTime = now;
+
+      if (isPlaying) {
+        stepTime += dt;
+        if (stepTime >= STEP_DURATIONS[currentStep]) {
+          stepTime = 0.0;
+          setStep(currentStep === 3 ? 1 : currentStep + 1, true);
+        }
+      }
+
+      // Scrubber
+      const frac = Math.min(1.0, stepTime / STEP_DURATIONS[currentStep]);
+      progressBar.style.width = `${((currentStep - 1 + frac) / 3) * 100}%`;
+
+      // Clear Canvas
+      ctx.fillStyle = '#070503';
+      ctx.fillRect(0, 0, width, height);
+
+      // Subtle atmospheric grid
+      ctx.strokeStyle = 'rgba(255, 156, 26, 0.03)';
+      ctx.lineWidth = 1;
+      for (let x = 0; x < width; x += 40) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, height);
+        ctx.stroke();
+      }
+
+      const scale = Math.min(width / 500, height / 280) * 0.95;
+
+      // -----------------------------------------------------------------------
+      // Step 1: Initial Attachment
+      // -----------------------------------------------------------------------
+      if (currentStep === 1) {
+        const tFrac = Math.min(1.0, stepTime / STEP_DURATIONS[1]);
+        const px = width * 0.5;
+        const py = height * 0.52;
+
+        const tailX = px - 130 * scale;
+        const tailY = py - 76 * scale;
+        const noseX = px + 148 * scale;
+        const noseY = py;
+
+        drawAirplane(px, py, scale, 0);
+
+        const grow = Math.min(1.0, tFrac / 0.8);
+        const tailTargetY = 10;
+        const noseTargetY = height - 10;
+
+        const curTailY = tailY - (tailY - tailTargetY) * grow;
+        const curNoseY = noseY + (noseTargetY - noseY) * grow;
+
+        // Tail upward leader
+        const tailPts = createLeaderPath(tailX, tailY, tailX + 5, curTailY, 14 * scale, 9, 42);
+        ctx.save();
+        ctx.strokeStyle = grow >= 1.0 ? '#ffffff' : '#ffb84d';
+        ctx.shadowColor = '#ff9c1a';
+        ctx.shadowBlur = grow >= 1.0 ? 20 : 8;
+        ctx.lineWidth = grow >= 1.0 ? 3 : 1.8;
+        ctx.beginPath();
+        tailPts.forEach((p, i) => i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y));
+        ctx.stroke();
+        ctx.restore();
+
+        // Nose downward leader
+        const nosePts = createLeaderPath(noseX, noseY, noseX + 15, curNoseY, 16 * scale, 9, 88);
+        ctx.save();
+        ctx.strokeStyle = grow >= 1.0 ? '#ffffff' : '#ff7a3d';
+        ctx.shadowColor = '#ff6633';
+        ctx.shadowBlur = grow >= 1.0 ? 20 : 8;
+        ctx.lineWidth = grow >= 1.0 ? 3 : 1.8;
+        ctx.beginPath();
+        nosePts.forEach((p, i) => i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y));
+        ctx.stroke();
+        ctx.restore();
+
+        // Brief flash upon connection
+        if (tFrac > 0.8) {
+          const flash = Math.sin((tFrac - 0.8) / 0.2 * Math.PI) * 0.25;
+          ctx.fillStyle = `rgba(255, 235, 190, ${flash})`;
+          ctx.fillRect(0, 0, width, height);
+        }
+      }
+
+      // -----------------------------------------------------------------------
+      // Step 2: Swept Stroke
+      // -----------------------------------------------------------------------
+      else if (currentStep === 2) {
+        const tFrac = Math.min(1.0, stepTime / STEP_DURATIONS[2]);
+
+        // Channel remains anchored at fixed X in the air
+        const airChannelX = width * 0.42;
+
+        // Aircraft moves forward
+        const travel = width * 0.32 * tFrac;
+        const px = width * 0.38 + travel;
+        const py = height * 0.52;
+
+        // Nose attachment sweeps back across fuselage
+        const maxSweep = 190 * scale;
+        const sweptDist = Math.min(maxSweep, travel * 0.85);
+        const attachX = (px + 148 * scale) - sweptDist;
+        const attachY = py - 14 * scale;
+
+        const tailX = px - 142 * scale;
+        const tailY = py - 76 * scale;
+
+        drawAirplane(px, py, scale, 0.15);
+
+        // Swept Nose Arc: From air channel down to sweeping fuselage point
+        const noseArcPts = createLeaderPath(airChannelX, 10, attachX, attachY, 12 * scale, 8, 12);
+        ctx.save();
+        ctx.strokeStyle = '#ffb84d';
+        ctx.shadowColor = '#ff9c1a';
+        ctx.shadowBlur = 10;
+        ctx.lineWidth = 2.4;
+        ctx.beginPath();
+        noseArcPts.forEach((p, i) => i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y));
+        ctx.stroke();
+        ctx.restore();
+
+        // Swept Tail Arc: Anchored to trailing edge, stretching back into wake
+        const wakeLength = Math.max(15, tailX - (airChannelX - 40));
+        ctx.save();
+        ctx.strokeStyle = '#ff7a3d';
+        ctx.shadowColor = '#ff6633';
+        ctx.shadowBlur = 10;
+        ctx.lineWidth = 2.4;
+        ctx.beginPath();
+        ctx.moveTo(tailX, tailY);
+        // Horizontal trailing stretch in the wake
+        const wakeX = tailX - wakeLength;
+        const wakeY = tailY + 4;
+        ctx.bezierCurveTo(tailX - wakeLength * 0.5, tailY, wakeX + 20, wakeY, wakeX, wakeY);
+        // Turn down to lower air anchor
+        const groundPts = createLeaderPath(wakeX, wakeY, airChannelX - 50, height - 10, 18 * scale, 8, 33);
+        groundPts.forEach(p => ctx.lineTo(p.x, p.y));
+        ctx.stroke();
+        ctx.restore();
+
+        // Subtle flight direction indicator
+        ctx.fillStyle = '#a39587';
+        ctx.font = '10px "IBM Plex Mono", monospace';
+        ctx.fillText('FLIGHT DIRECTION ►', px - 40, py + 65 * scale);
+      }
+
+      // -----------------------------------------------------------------------
+      // Step 3: Conducted Current
+      // -----------------------------------------------------------------------
+      else if (currentStep === 3) {
+        const px = width * 0.5;
+        const py = height * 0.52;
+
+        const pulse = 0.6 + 0.4 * Math.sin(stepTime * 7);
+        drawAirplane(px, py, scale, pulse);
+
+        const attachNoseX = px + 40 * scale;
+        const attachNoseY = py - 14 * scale;
+        const attachTailX = px - 146 * scale;
+        const attachTailY = py - 5 * scale;
+
+        // Active external channel completing circuit
+        ctx.save();
+        ctx.strokeStyle = `rgba(255, 220, 160, ${0.85 + 0.15 * pulse})`;
+        ctx.shadowColor = '#ff9c1a';
+        ctx.shadowBlur = 15 * pulse;
+        ctx.lineWidth = 3;
+
+        const arcIn = createLeaderPath(width * 0.6, 10, attachNoseX, attachNoseY, 12 * scale, 8, 55);
+        ctx.beginPath();
+        arcIn.forEach((p, i) => i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y));
+        ctx.stroke();
+
+        const arcOut = createLeaderPath(attachTailX, attachTailY, width * 0.25, height - 10, 15 * scale, 8, 77);
+        ctx.beginPath();
+        arcOut.forEach((p, i) => i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y));
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      requestAnimationFrame(animate);
+    }
+
+    requestAnimationFrame(animate);
+  })();
+</script>

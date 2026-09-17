@@ -1,0 +1,180 @@
+---
+interface Props {
+  class?: string;
+}
+
+const { class: className = '' } = Astro.props;
+---
+
+<div class={`plasma-viewport relative overflow-hidden bg-void-950 border border-solar/20 select-none ${className}`}>
+  <!-- Subtle technical grid background -->
+  <div class="absolute inset-0 bg-grid-pattern opacity-25 pointer-events-none"></div>
+
+  <!-- Ambient plasma glow spots -->
+  <div class="absolute top-1/2 left-1/3 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-solar/15 blur-3xl pointer-events-none"></div>
+  <div class="absolute top-1/2 right-1/4 -translate-y-1/2 w-36 h-36 bg-flame/15 blur-2xl pointer-events-none"></div>
+
+  <!-- SVG Electric Field & Lightning Streamers -->
+  <svg
+    viewBox="0 0 520 220"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    class="w-full h-full relative z-10"
+    preserveAspectRatio="xMidYMid meet"
+  >
+    <defs>
+      <linearGradient id="plasmaGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#ffb84d" />
+        <stop offset="50%" stop-color="#ff9c1a" />
+        <stop offset="100%" stop-color="#ff6633" />
+      </linearGradient>
+
+      <linearGradient id="fieldGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="#ff9c1a" stop-opacity="0.1" />
+        <stop offset="50%" stop-color="#ff9c1a" stop-opacity="0.4" />
+        <stop offset="100%" stop-color="#ff9c1a" stop-opacity="0.1" />
+      </linearGradient>
+
+      <filter id="plasmaGlow" x="-20%" y="-20%" width="140%" height="140%">
+        <feGaussianBlur stdDeviation="3" result="blur" />
+        <feMerge>
+          <feMergeNode in="blur" />
+          <feMergeNode in="SourceGraphic" />
+        </feMerge>
+      </filter>
+    </defs>
+
+    <!-- Equipotential / Field Streamlines -->
+    <path d="M 30,50 Q 150,110 270,110 T 490,70" stroke="url(#fieldGrad)" stroke-width="1" stroke-dasharray="4 6" fill="none" opacity="0.6" />
+    <path d="M 30,90 Q 170,120 290,120 T 490,120" stroke="url(#fieldGrad)" stroke-width="1" stroke-dasharray="6 8" fill="none" opacity="0.8" />
+    <path d="M 30,140 Q 180,130 310,130 T 490,170" stroke="url(#fieldGrad)" stroke-width="1" stroke-dasharray="4 6" fill="none" opacity="0.6" />
+
+    <!-- Aircraft / Surface representation schematic -->
+    <path d="M 40,110 L 160,110 L 210,75 L 260,110 L 480,110" stroke="rgba(255, 156, 26, 0.3)" stroke-width="1.5" stroke-dasharray="2 3" fill="none" />
+
+    <!-- Secondary streamer branch (fainter) -->
+    <path
+      d="M 190,40 L 225,72 L 255,85 L 290,75 L 340,115"
+      stroke="#ff7a3d"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      class="plasma-branch"
+      opacity="0.75"
+    />
+
+    <!-- Main Lightning Channel -->
+    <path
+      d="M 40,30 L 95,58 L 130,45 L 175,80 L 220,70 L 260,110 L 315,95 L 365,135 L 410,120 L 475,170"
+      stroke="url(#plasmaGrad1)"
+      stroke-width="2.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      filter="url(#plasmaGlow)"
+      class="plasma-main-arc"
+    />
+
+    <!-- Streamer Tip Leader -->
+    <path
+      d="M 260,110 L 285,150 L 320,165"
+      stroke="#ffb84d"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      class="plasma-leader"
+      opacity="0.85"
+    />
+
+    <!-- Attachment Points / Ionization Nodes -->
+    <circle cx="260" cy="110" r="4" fill="#fff5e0" filter="url(#plasmaGlow)" class="plasma-node" />
+    <circle cx="260" cy="110" r="12" stroke="#ff9c1a" stroke-width="1" stroke-dasharray="3 3" opacity="0.7" class="plasma-pulse-ring" />
+
+    <circle cx="175" cy="80" r="2.5" fill="#ffb84d" />
+    <circle cx="365" cy="135" r="2.5" fill="#ffb84d" />
+    <circle cx="475" cy="170" r="3" fill="#ff7a3d" />
+
+    <!-- Technical HUD Crosshairs -->
+    <g opacity="0.4" stroke="#ff9c1a" stroke-width="1">
+      <line x1="260" y1="20" x2="260" y2="35" />
+      <line x1="260" y1="185" x2="260" y2="200" />
+      <line x1="15" y1="110" x2="30" y2="110" />
+      <line x1="490" y1="110" x2="505" y2="110" />
+    </g>
+
+    <!-- Telemetry labels inside SVG -->
+    <text x="35" y="25" fill="#ffb84d" font-family="'IBM Plex Mono', monospace" font-size="8" letter-spacing="1.5" opacity="0.8">SIMULATION :: PLASMA ATTACHMENT</text>
+    <text x="35" y="200" fill="#a8a890" font-family="'IBM Plex Mono', monospace" font-size="8" letter-spacing="1">E_CRIT: 3.0 MV/m  ·  I_PEAK: 100 kA</text>
+    <text x="485" y="200" text-anchor="end" fill="#ff9c1a" font-family="'IBM Plex Mono', monospace" font-size="8" letter-spacing="1">COORD: (x: 260.4, y: 110.2)</text>
+  </svg>
+
+  <!-- Corner HUD brackets -->
+  <div class="absolute top-1.5 left-1.5 w-2.5 h-2.5 border-t border-l border-solar/60 pointer-events-none"></div>
+  <div class="absolute top-1.5 right-1.5 w-2.5 h-2.5 border-t border-r border-solar/60 pointer-events-none"></div>
+  <div class="absolute bottom-1.5 left-1.5 w-2.5 h-2.5 border-b border-l border-solar/60 pointer-events-none"></div>
+  <div class="absolute bottom-1.5 right-1.5 w-2.5 h-2.5 border-b border-r border-solar/60 pointer-events-none"></div>
+</div>
+
+<style>
+  .plasma-viewport {
+    min-height: 160px;
+    background: radial-gradient(circle at 50% 50%, #171109 0%, #0d0a06 100%);
+  }
+
+  .bg-grid-pattern {
+    background-image: 
+      linear-gradient(to right, rgba(255, 156, 26, 0.08) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 156, 26, 0.08) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+
+  .plasma-main-arc {
+    stroke-dasharray: 600;
+    stroke-dashoffset: 0;
+    animation: arcFlicker 4s ease-in-out infinite alternate;
+  }
+
+  .plasma-pulse-ring {
+    transform-origin: 260px 110px;
+    animation: pulseRing 2.5s ease-out infinite;
+  }
+
+  .plasma-branch {
+    animation: branchPulse 3s ease-in-out infinite alternate;
+  }
+
+  @keyframes arcFlicker {
+    0% {
+      opacity: 0.85;
+      stroke-width: 2.2;
+    }
+    50% {
+      opacity: 1;
+      stroke-width: 3;
+      filter: drop-shadow(0 0 6px rgba(255, 184, 77, 0.9));
+    }
+    100% {
+      opacity: 0.9;
+      stroke-width: 2.5;
+    }
+  }
+
+  @keyframes pulseRing {
+    0% {
+      transform: scale(0.8);
+      opacity: 0.9;
+    }
+    70% {
+      transform: scale(1.6);
+      opacity: 0;
+    }
+    100% {
+      transform: scale(1.8);
+      opacity: 0;
+    }
+  }
+
+  @keyframes branchPulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 0.85; }
+  }
+</style>

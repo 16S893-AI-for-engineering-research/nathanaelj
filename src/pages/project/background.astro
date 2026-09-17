@@ -1,0 +1,192 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { resolvePath } from '../../lib/paths';
+import LightningProcessAnimation from '../../components/project/LightningProcessAnimation.astro';
+import LightningZoningDiagram from '../../components/project/LightningZoningDiagram.astro';
+import '../../styles/project.css';
+---
+
+<BaseLayout
+  title="Background · Project"
+  description="Aircraft lightning protection 101: attachment physics, swept strokes, and aerospace lightning zoning."
+>
+  <div class="max-w-4xl mx-auto px-6 pt-16 pb-24">
+
+    <!-- ===== Navigation Breadcrumb ===== -->
+    <nav class="mb-10" aria-label="Breadcrumb" data-reveal="1">
+      <a
+        href={resolvePath('/project')}
+        class="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-solar hover:text-solar-light transition-colors"
+        style="border-bottom:none;"
+      >
+        <span aria-hidden="true">←</span> Back to Project Timeline
+      </a>
+    </nav>
+
+    <!-- ===== Header ===== -->
+    <header class="project-detail-header" data-reveal="1">
+      <h1 class="text-4xl md:text-6xl font-display font-bold leading-[1.25] pb-3 mb-2">
+        Project Background
+      </h1>
+
+      <p class="text-solar-light text-xl font-sans font-light max-w-3xl leading-relaxed mb-3">
+        Aircraft Lightning Protection 101
+      </p>
+
+      <time class="font-mono text-xs uppercase tracking-widest text-void-400 block">
+        February 2025
+      </time>
+    </header>
+
+    <!-- ===== Content Sections ===== -->
+    <article class="space-y-16 mt-10" data-reveal="2">
+
+      <!-- =========================================================================
+           Section 1: When Lightning Strikes
+           ========================================================================= -->
+      <section>
+        <h2 class="text-2xl md:text-3xl font-display font-bold text-void-100 mb-4">
+          1. When Lightning Strikes
+        </h2>
+
+        <!-- Verbatim intro -->
+        <p class="text-void-200 text-base md:text-lg leading-relaxed mb-6">
+          Aircraft lightning strikes are probably more frequent than you'd expect, but thankfully modern aircraft are well-protected against catastrophic lightning damage.
+        </p>
+
+        <!-- Statistics Boxes -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-8">
+          <div class="border border-solar/20 bg-void-950 p-4 relative overflow-hidden">
+            <div class="card-hud-corner card-hud-corner--tl"></div>
+            <div class="card-hud-corner card-hud-corner--tr"></div>
+            <div class="card-hud-corner card-hud-corner--bl"></div>
+            <div class="card-hud-corner card-hud-corner--br"></div>
+            <span class="font-mono text-xs text-solar block mb-1">01 / STRIKE FREQUENCY</span>
+            <span class="font-display text-2xl md:text-3xl font-bold text-white block">~1 / yr</span>
+            <p class="text-void-400 text-xs mt-2 mb-0">per commercial aircraft</p>
+          </div>
+
+          <div class="border border-solar/20 bg-void-950 p-4 relative overflow-hidden">
+            <div class="card-hud-corner card-hud-corner--tl"></div>
+            <div class="card-hud-corner card-hud-corner--tr"></div>
+            <div class="card-hud-corner card-hud-corner--bl"></div>
+            <div class="card-hud-corner card-hud-corner--br"></div>
+            <span class="font-mono text-xs text-solar block mb-1">02 / AIRCRAFT TRIGGERED</span>
+            <span class="font-display text-2xl md:text-3xl font-bold text-white block">~90%</span>
+            <p class="text-void-400 text-xs mt-2 mb-0">Strikes triggered by the presence of the aircraft</p>
+          </div>
+
+          <div class="border border-solar/20 bg-void-950 p-4 relative overflow-hidden">
+            <div class="card-hud-corner card-hud-corner--tl"></div>
+            <div class="card-hud-corner card-hud-corner--tr"></div>
+            <div class="card-hud-corner card-hud-corner--bl"></div>
+            <div class="card-hud-corner card-hud-corner--br"></div>
+            <span class="font-mono text-xs text-solar block mb-1">03 / RISK</span>
+            <span class="font-display text-2xl md:text-3xl font-bold text-white block">10<sup>-9</sup> / flt hr</span>
+            <p class="text-void-400 text-xs mt-2 mb-0">Probability of catastrophic failure due to lightning</p>
+          </div>
+        </div>
+
+        <!-- Interactive Physics Animation of the Strike Process -->
+        <LightningProcessAnimation />
+
+        <!-- Damage Categorization Boxes -->
+        <div class="mt-8">
+          <div class="font-mono text-xs text-solar uppercase tracking-wider font-semibold mb-3">
+            Damage Classification // Direct vs. Indirect
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="border border-solar/20 bg-void-950 p-5 relative overflow-hidden">
+              <div class="card-hud-corner card-hud-corner--tl"></div>
+              <div class="card-hud-corner card-hud-corner--tr"></div>
+              <div class="card-hud-corner card-hud-corner--bl"></div>
+              <div class="card-hud-corner card-hud-corner--br"></div>
+              <span class="font-mono text-xs text-solar block mb-1">01 / DIRECT EFFECTS</span>
+              <span class="font-display text-xl font-bold text-white block mb-2">Physical Damage</span>
+              <p class="text-void-300 text-sm font-sans mb-0 leading-relaxed">
+                <strong>Burning, pitting, melting</strong>, acoustic shockwaves, and composite delamination occurring immediately at lightning arc attachment points.
+              </p>
+            </div>
+
+            <div class="border border-solar/20 bg-void-950 p-5 relative overflow-hidden">
+              <div class="card-hud-corner card-hud-corner--tl"></div>
+              <div class="card-hud-corner card-hud-corner--tr"></div>
+              <div class="card-hud-corner card-hud-corner--bl"></div>
+              <div class="card-hud-corner card-hud-corner--br"></div>
+              <span class="font-mono text-xs text-solar block mb-1">02 / INDIRECT EFFECTS</span>
+              <span class="font-display text-xl font-bold text-white block mb-2">Electromagnetic Damage</span>
+              <p class="text-void-300 text-sm font-sans mb-0 leading-relaxed">
+                <strong>Electromagnetic interference and computer failure</strong> induced by severe transient magnetic fields and currents coupling into onboard wiring harnesses and avionics.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================================
+           Section 2: Lightning Zoning
+           ========================================================================= -->
+      <section class="pt-6">
+        <h2 class="text-2xl md:text-3xl font-display font-bold text-void-100 mb-4">
+          2. Lightning Zoning
+        </h2>
+
+        <!-- Verbatim intro -->
+        <p class="text-void-200 text-base md:text-lg leading-relaxed mb-6">
+          The first stage in aircraft lightning protection is zoning. We divide the aircraft into 3 zones (6 sub-zones) based on the localized lightning risk.
+        </p>
+
+        <!-- Aircraft Zoning Illustration & Detail View -->
+        <LightningZoningDiagram />
+
+        <!-- Key Industry Comment Callout -->
+        <div class="project-callout my-8">
+          <div class="flex items-center gap-2 font-mono text-xs font-bold text-solar uppercase tracking-wider mb-2">
+            <svg class="w-4 h-4 text-solar" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span>Key Takeaway // Certification &amp; Future Aircraft</span>
+          </div>
+          <p class="text-void-200 text-sm md:text-base font-sans italic leading-relaxed mb-0">
+            "We usually zone 'tube and wing' aircraft by 'similarity', which means looking at an existing aircraft with in-service experience and making the zoning about the same. This is often over-conservative, and won't work for next-generation aircraft with unconventional shapes."
+          </p>
+        </div>
+      </section>
+
+      <!-- =========================================================================
+           Section 3: Simulation Methods
+           ========================================================================= -->
+      <section class="opacity-50 border-t border-solar/15 pt-8 mt-12">
+        <h2 class="text-2xl md:text-3xl font-display font-bold text-void-200 mb-2">
+          3. Simulation Methods
+        </h2>
+      </section>
+
+      <!-- =========================================================================
+           Section 4: The Challenge
+           ========================================================================= -->
+      <section class="opacity-50 border-t border-solar/15 pt-8 mt-12">
+        <h2 class="text-2xl md:text-3xl font-display font-bold text-void-200 mb-2">
+          4. The Challenge
+        </h2>
+      </section>
+
+    </article>
+
+    <!-- ===== Navigation to Next Milestone ===== -->
+    <div class="mt-16 pt-8 border-t border-solar/20" data-reveal="4">
+      <div class="grid sm:grid-cols-2 gap-4">
+        <a href={resolvePath('/project')} class="project-nav-adjacent">
+          <span class="font-mono text-[10px] uppercase tracking-wider text-void-400">Timeline</span>
+          <span class="font-sans font-medium text-void-200 mt-1">← Return to All Milestones</span>
+        </a>
+
+        <a href={resolvePath('/project/proposal')} class="project-nav-adjacent text-right">
+          <span class="font-mono text-[10px] uppercase tracking-wider text-solar">Next Milestone // 02</span>
+          <span class="font-sans font-medium text-solar-light mt-1">Project Proposal →</span>
+        </a>
+      </div>
+    </div>
+
+  </div>
+</BaseLayout>
