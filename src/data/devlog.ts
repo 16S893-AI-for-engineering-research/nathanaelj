@@ -144,4 +144,65 @@ export const devLogEntries: DevLogEntry[] = [
       ],
     },
   },
+
+
+  {
+    slug: 'add-skill',
+    title: 'Skilling Up',
+    date: '2026-09-17',
+    summary:
+      'Added two new skills',
+    models: ['gemini-3.6-flash', 'gpt-5-nano', 'gpt-5'],
+    metrics: {
+      userMessages: 15,
+      assistantMessages: 90,
+      toolCalls: 75,
+      totalCostUsd: 0.7796,
+    },
+    description: {
+      keyChanges: [
+        'Added the `new-page` skill to provide guidance when creating new pages for this site',
+        'Created a new **script** to print a summary of recent pi sessions, and created a `pi-sessions` skill to run it',
+        'Also created and populated `AGENTS.md` to provide clearer guidance to models',
+        'Removed `Presentations` from the header, since I don\'t need slides for the project proposal',
+      ],
+      agentSuccesses: [
+        'Correctly formatted and implemented the **skills**',
+      ],
+      agentFailures: [
+        'The first attempt at the bash script for printing session info had an error. `GPT-5 Nano` was unable to fix it, and `GPT-5` also struggled substantially',
+        'Even providing an example Python script did not help the agent solve the scripting issue',
+        'The `pi-sessions` skill was also created without frontmatter at first. I should have provided more context for `GPT-5 Nano`'
+      ],
+    },
+  },
+
+
+  {
+    slug: 'start-project-content',
+    title: 'Initial Project Content',
+    date: '2026-09-17',
+    summary:
+      'Started adding project content',
+    models: ['gemini-3.8-flash'],
+    metrics: {
+      userMessages: 5,
+      assistantMessages: 84,
+      toolCalls: 79,
+      totalCostUsd: 3.1278,
+    },
+    description: {
+      keyChanges: [
+        'Created **project timeline** page and first placeholder pages',
+        'Implemented project background page and proposal page',
+      ],
+      agentSuccesses: [
+        'Created a **well-formatted** timeline',
+        'ANIMATIONS'
+      ],
+      agentFailures: [
+        '...',
+      ],
+    },
+  },
 ];
