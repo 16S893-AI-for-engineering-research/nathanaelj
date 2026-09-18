@@ -183,7 +183,7 @@ export const devLogEntries: DevLogEntry[] = [
     title: 'Initial Project Content',
     date: '2026-09-17',
     summary:
-      'Started adding project content',
+      'Added project background and proposal pages',
     models: ['gemini-3.8-flash'],
     metrics: {
       userMessages: 5,
