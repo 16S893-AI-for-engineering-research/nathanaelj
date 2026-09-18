@@ -136,6 +136,8 @@
     let currentStep = 1;
     let isPlaying = true;
     let stepTime = 0.0;
+    let restartCountdown = -1; // seconds remaining before restart; -1 = not waiting
+    const RESTART_DELAY = 7.0; // seconds to wait after completing before re-starting
     const STEP_DURATIONS = {
       1: 6.0, // 5-7 seconds for initial attachment growth and strike connection
       2: 5.5  // Swept stroke duration
@@ -484,10 +486,26 @@
       lastTime = now;
 
       if (isPlaying) {
-        stepTime += dt;
-        if (stepTime >= STEP_DURATIONS[currentStep]) {
-          stepTime = 0.0;
-          setStep(currentStep === 1 ? 2 : 1, true);
+        if (restartCountdown >= 0) {
+          // Counting down before restart
+          restartCountdown -= dt;
+          if (restartCountdown <= 0) {
+            restartCountdown = -1;
+            setStep(1, true);
+          }
+        } else {
+          stepTime += dt;
+          if (stepTime >= STEP_DURATIONS[currentStep]) {
+            if (currentStep === 1) {
+              // Move directly to step 2
+              stepTime = 0.0;
+              setStep(2, true);
+            } else {
+              // Step 2 finished — wait RESTART_DELAY before restarting
+              stepTime = STEP_DURATIONS[currentStep]; // hold at end
+              restartCountdown = RESTART_DELAY;
+            }
+          }
         }
       }
 

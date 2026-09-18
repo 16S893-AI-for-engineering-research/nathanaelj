@@ -2,7 +2,8 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { resolvePath } from '../../lib/paths';
 import LightningProcessAnimation from '../../components/project/LightningProcessAnimation.astro';
-import LightningZoningDiagram from '../../components/project/LightningZoningDiagram.astro';
+import SimulationPipelineDiagram from '../../components/project/SimulationPipelineDiagram.astro';
+import imgZoning from '../../images/Zoning.png';
 import '../../styles/project.css';
 ---
 
@@ -136,8 +137,80 @@ import '../../styles/project.css';
           The first stage in aircraft lightning protection is zoning. We divide the aircraft into 3 zones (6 sub-zones) based on the localized lightning risk.
         </p>
 
-        <!-- Aircraft Zoning Illustration & Detail View -->
-        <LightningZoningDiagram />
+        <!-- Aircraft Lightning Zone Definitions Table -->
+        <div class="border border-solar/20 bg-void-950 my-8 overflow-x-auto">
+          <div class="flex justify-between items-center px-4 py-2.5 border-b border-solar/15 bg-void-900/60">
+            <span class="font-mono text-[10px] uppercase tracking-wider text-solar">Zone Definitions</span>
+            <span class="font-mono text-[10px] uppercase tracking-wider text-void-500">ARP5414 Standard</span>
+          </div>
+          <table class="w-full text-left border-collapse text-sm">
+            <thead>
+              <tr class="border-b border-solar/15 bg-void-900/40 font-mono text-[11px] uppercase tracking-wider text-solar">
+                <th class="py-3 px-4 sm:px-6">Zone</th>
+                <th class="py-3 px-4 sm:px-6 w-28">Sub-Zone</th>
+                <th class="py-3 px-4 sm:px-6">Definition</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-solar/10 font-sans">
+              <!-- Zone 1: Initial attachment and first return stroke -->
+              <tr class="hover:bg-void-900/30 transition-colors">
+                <td rowspan="3" class="py-3.5 px-4 sm:px-6 align-top border-r border-solar/10 bg-void-900/20">
+                  <span class="font-mono font-bold text-solar text-sm block">Zone 1</span>
+                  <span class="text-xs text-void-300 block mt-0.5 leading-snug">Initial attachment and first return stroke</span>
+                </td>
+                <td class="py-3.5 px-4 sm:px-6 font-mono font-semibold text-solar-light">1A</td>
+                <td class="py-3.5 px-4 sm:px-6 text-void-200">First return stroke</td>
+              </tr>
+              <tr class="hover:bg-void-900/30 transition-colors">
+                <td class="py-3.5 px-4 sm:px-6 font-mono font-semibold text-solar-light">1B</td>
+                <td class="py-3.5 px-4 sm:px-6 text-void-200">First return stroke with long hang-on</td>
+              </tr>
+              <tr class="hover:bg-void-900/30 transition-colors border-b border-solar/20">
+                <td class="py-3.5 px-4 sm:px-6 font-mono font-semibold text-solar-light">1C</td>
+                <td class="py-3.5 px-4 sm:px-6 text-void-200">Transition zone</td>
+              </tr>
+
+              <!-- Zone 2: Swept stroke -->
+              <tr class="hover:bg-void-900/30 transition-colors">
+                <td rowspan="2" class="py-3.5 px-4 sm:px-6 align-top border-r border-solar/10 bg-void-900/20">
+                  <span class="font-mono font-bold text-solar text-sm block">Zone 2</span>
+                  <span class="text-xs text-void-300 block mt-0.5 leading-snug">Swept stroke</span>
+                </td>
+                <td class="py-3.5 px-4 sm:px-6 font-mono font-semibold text-solar-light">2A</td>
+                <td class="py-3.5 px-4 sm:px-6 text-void-200">Swept stroke</td>
+              </tr>
+              <tr class="hover:bg-void-900/30 transition-colors border-b border-solar/20">
+                <td class="py-3.5 px-4 sm:px-6 font-mono font-semibold text-solar-light">2B</td>
+                <td class="py-3.5 px-4 sm:px-6 text-void-200">Swept stroke with long hang-on</td>
+              </tr>
+
+              <!-- Zone 3: Direct attachment unlikely, but some conducted current -->
+              <tr class="hover:bg-void-900/30 transition-colors">
+                <td class="py-3.5 px-4 sm:px-6 align-top border-r border-solar/10 bg-void-900/20">
+                  <span class="font-mono font-bold text-solar text-sm block">Zone 3</span>
+                  <span class="text-xs text-void-300 block mt-0.5 leading-snug">Conducted current</span>
+                </td>
+                <td class="py-3.5 px-4 sm:px-6 font-mono font-semibold text-solar-light">3</td>
+                <td class="py-3.5 px-4 sm:px-6 text-void-200">Direct attachment unlikely, but some conducted current</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Aircraft Zoning Illustration Box -->
+        <div class="border border-solar/20 bg-void-950 my-8 overflow-hidden">
+          <div class="flex justify-between items-center px-4 py-2.5 border-b border-solar/15 bg-void-900/60">
+            <span class="font-mono text-[10px] uppercase tracking-wider text-solar">Zoning for a conventional aircraft</span>
+            <span class="font-mono text-[10px] uppercase tracking-wider text-void-500">ARP5414 Standard</span>
+          </div>
+          <div class="p-4 sm:p-6 flex items-center justify-center">
+            <img
+              src={imgZoning.src}
+              alt="Zoning for a conventional aircraft"
+              class="w-full max-w-2xl h-auto object-contain block mx-auto"
+            />
+          </div>
+        </div>
 
         <!-- Key Industry Comment Callout -->
         <div class="project-callout my-8">
@@ -160,6 +233,72 @@ import '../../styles/project.css';
         <h2 class="text-2xl md:text-3xl font-display font-bold text-void-100 mb-4">
           3. Simulation Methods
         </h2>
+
+        <p class="text-void-200 text-base md:text-lg leading-relaxed mb-4">
+          Simulations provide three key benefits to aircraft lightning zoning:
+        </p>
+        <ol class="list-none space-y-2 mb-8 pl-0">
+          <li class="flex items-start gap-3 text-void-200 text-base md:text-lg leading-relaxed">
+            <span class="font-mono text-solar font-bold shrink-0">(1)</span>
+            <span>They are <strong>generalizable</strong> to arbitrary aircraft geometries.</span>
+          </li>
+          <li class="flex items-start gap-3 text-void-200 text-base md:text-lg leading-relaxed">
+            <span class="font-mono text-solar font-bold shrink-0">(2)</span>
+            <span>They are <strong>physics-based</strong> and could help reduce over-conservativism.</span>
+          </li>
+          <li class="flex items-start gap-3 text-void-200 text-base md:text-lg leading-relaxed">
+            <span class="font-mono text-solar font-bold shrink-0">(3)</span>
+            <span>They are <strong>quantifiable</strong> and produce more repeatable zoning diagrams than existing aerospace standards.</span>
+          </li>
+        </ol>
+
+        <!-- Simulation Process Diagram -->
+        <div class="border border-solar/20 bg-void-950 my-8 overflow-x-auto">
+          <!-- Header -->
+          <div class="flex justify-between items-center px-4 py-2.5 border-b border-solar/15 bg-void-900/60">
+            <span class="font-mono text-[10px] uppercase tracking-wider text-solar">Simulation Pipeline</span>
+            <span class="font-mono text-[10px] uppercase tracking-wider text-void-500">Lightning Zoning</span>
+          </div>
+
+          <div class="p-6 min-w-[600px]">
+            <SimulationPipelineDiagram />
+          </div>
+
+          <!-- Reference links -->
+          <div class="grid grid-cols-2 border-t border-solar/15 divide-x divide-solar/15">
+            <div class="px-6 py-3">
+              <span class="font-mono text-[9px] uppercase tracking-wider text-void-500 block mb-1.5">Initial Attachment Literature</span>
+              <div class="flex flex-wrap gap-x-4 gap-y-1">
+                <a href="https://dspace.mit.edu/entities/publication/7fe902f3-3112-48d6-bbb4-dc227698eea1"
+                   target="_blank" rel="noopener noreferrer"
+                   class="font-mono text-xs text-solar hover:text-solar-light transition-colors">
+                  Austin &#8599;
+                </a>
+                <a href="https://hal.science/hal-01184414/file/ISP13006.1361805215.pdf"
+                   target="_blank" rel="noopener noreferrer"
+                   class="font-mono text-xs text-solar hover:text-solar-light transition-colors">
+                  Lalande et al. &#8599;
+                </a>
+              </div>
+            </div>
+            <div class="px-6 py-3">
+              <span class="font-mono text-[9px] uppercase tracking-wider text-void-500 block mb-1.5">Swept Stroke Literature</span>
+              <div class="flex flex-wrap gap-x-4 gap-y-1">
+                <a href="https://doi.org/10.1109/ACCESS.2024.3515833"
+                   target="_blank" rel="noopener noreferrer"
+                   class="font-mono text-xs text-solar hover:text-solar-light transition-colors">
+                  Jenkins et al. &#8599;
+                </a>
+                <a href="https://hal.science/hal-01184414/file/ISP13006.1361805215.pdf"
+                   target="_blank" rel="noopener noreferrer"
+                   class="font-mono text-xs text-solar hover:text-solar-light transition-colors">
+                  Lalande et al. &#8599;
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </section>
 
       <!-- =========================================================================
@@ -169,6 +308,96 @@ import '../../styles/project.css';
         <h2 class="text-2xl md:text-3xl font-display font-bold text-void-100 mb-4">
           4. The Challenge
         </h2>
+
+        <p class="text-void-200 text-base md:text-lg leading-relaxed mb-4">
+          The MIT Aerospace Plasma Group has an implementation of these models developed using
+          <strong>Taichi Lang</strong> with GPU acceleration. These simulations are computationally
+          expensive, and finding faster implementations would be of great value. Currently, it takes
+          about <strong>1 working day</strong> to complete a full zoning simulation using powerful GPUs.
+        </p>
+
+        <p class="text-void-200 text-base md:text-lg leading-relaxed mb-6">
+          The computational cost stems from the scale of the problem. A complete zoning simulation must
+          track a large number of stochastic lightning channels, each discretized into hundreds of
+          points, moving through a volumetric mesh over many time steps.
+        </p>
+
+        <!-- Scale Diagram -->
+        <div class="border border-solar/20 bg-void-950 my-8">
+          <div class="flex justify-between items-center px-4 py-2.5 border-b border-solar/15 bg-void-900/60">
+            <span class="font-mono text-[10px] uppercase tracking-wider text-solar">Simulation Scale</span>
+            <span class="font-mono text-[10px] uppercase tracking-wider text-void-500">per zoning run</span>
+          </div>
+          <div class="p-6">
+            <!-- Three scale elements stacked with multiplier connectors -->
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-0">
+
+              <!-- Lightning channels -->
+              <div class="flex-1 border border-solar/35 bg-void-900 p-4 text-center">
+                <span class="font-display text-3xl font-bold text-solar block">100,000</span>
+                <span class="font-mono text-[10px] uppercase tracking-wider text-void-300 block mt-1">Lightning Channels</span>
+                <span class="font-mono text-[10px] text-void-500 block mt-0.5">stochastic</span>
+              </div>
+
+              <!-- Multiplier -->
+              <div class="flex sm:flex-col items-center justify-center px-3 py-2 shrink-0">
+                <span class="font-mono text-lg text-solar/50">&times;</span>
+              </div>
+
+              <!-- Points per channel -->
+              <div class="flex-1 border border-solar/35 bg-void-900 p-4 text-center">
+                <span class="font-display text-3xl font-bold text-solar block">400</span>
+                <span class="font-mono text-[10px] uppercase tracking-wider text-void-300 block mt-1">Points / Channel</span>
+                <span class="font-mono text-[10px] text-void-500 block mt-0.5">spatial</span>
+              </div>
+
+              <!-- Multiplier -->
+              <div class="flex sm:flex-col items-center justify-center px-3 py-2 shrink-0">
+                <span class="font-mono text-lg text-solar/50">&times;</span>
+              </div>
+
+              <!-- Volume mesh cells -->
+              <div class="flex-1 border border-solar/35 bg-void-900 p-4 text-center">
+                <span class="font-display text-3xl font-bold text-solar block">500,000</span>
+                <span class="font-mono text-[10px] uppercase tracking-wider text-void-300 block mt-1">Mesh Cells</span>
+                <span class="font-mono text-[10px] text-void-500 block mt-0.5">interpolation</span>
+              </div>
+
+              <!-- Multiplier -->
+              <div class="flex sm:flex-col items-center justify-center px-3 py-2 shrink-0">
+                <span class="font-mono text-lg text-solar/50">&times;</span>
+              </div>
+
+              <!-- Time steps -->
+              <div class="flex-1 border border-solar/35 bg-void-900 p-4 text-center">
+                <span class="font-display text-3xl font-bold text-solar block">1,000</span>
+                <span class="font-mono text-[10px] uppercase tracking-wider text-void-300 block mt-1">Time Steps</span>
+                <span class="font-mono text-[10px] text-void-500 block mt-0.5">temporal</span>
+              </div>
+
+            </div>
+
+            <!-- Result bar -->
+            <div class="mt-4 border-t border-solar/15 pt-4 flex items-center gap-3">
+              <span class="font-mono text-[10px] uppercase tracking-wider text-void-500">Result:</span>
+              <span class="font-mono text-xs text-void-300">Many floating-point operations per simulation and gigabytes of data, requiring high-performance parallelization and quantized datatypes.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Key Challenge Callout -->
+        <div class="project-callout my-8">
+          <div class="flex items-center gap-2 font-mono text-xs font-bold text-solar uppercase tracking-wider mb-2">
+            <svg class="w-4 h-4 text-solar" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span>Key Challenge</span>
+          </div>
+          <p class="text-void-200 text-sm md:text-base font-sans italic leading-relaxed mb-0">
+            It is challenging to implement robust and computationally efficient simulations for aircraft lightning zoning. It is also unclear if existing literature is sufficient to fully describe the models. This project aims to address both of these issues.
+          </p>
+        </div>
+
       </section>
 
     </article>
