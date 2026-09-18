@@ -184,24 +184,26 @@ export const devLogEntries: DevLogEntry[] = [
     date: '2026-09-17',
     summary:
       'Added project background and proposal pages',
-    models: ['gemini-3.8-flash'],
+    models: ['gemini-3.8-flash', 'sonnet-4-6', 'gpt-5-nano', 'sonnet-4-6'],
     metrics: {
-      userMessages: 5,
-      assistantMessages: 84,
-      toolCalls: 79,
-      totalCostUsd: 3.1278,
+      userMessages: 16,
+      assistantMessages: 287,
+      toolCalls: 273,
+      totalCostUsd: 14.8633,
     },
     description: {
       keyChanges: [
         'Created **project timeline** page and first placeholder pages',
         'Implemented project background page and proposal page',
+        'Implemented lightning attachment **animation** in background page',
       ],
       agentSuccesses: [
         'Created a **well-formatted** timeline',
-        'ANIMATIONS'
+        '(With a lot of hand-holding) made some really nice diagrams on the Background page',
       ],
       agentFailures: [
-        '...',
+        'Was  useless at creating a **geometry**/ diagram representative of an aircraft, even with some reference material',
+        '`Gemini-3.8 Flash` rapidly increased in cost as conversation length increased. This became much more expensive than I anticipated.',
       ],
     },
   },

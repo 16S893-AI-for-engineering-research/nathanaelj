@@ -1,7 +1,7 @@
 ---
 import type { ProjectMilestone } from '../../data/project';
 import { resolvePath } from '../../lib/paths';
-import PlasmaGraphic from './PlasmaGraphic.astro';
+import PlasmaGraphicNoUI from './PlasmaGraphicNoUI.astro';
 import AgentGraphic from './AgentGraphic.astro';
 
 interface Props {
@@ -67,8 +67,8 @@ const linkHref = resolvePath(milestone.slug);
 
     <!-- Optional Visual Graphic / Image Container -->
     {milestone.graphicType === 'plasma' && (
-      <div class="my-4 pointer-events-none">
-        <PlasmaGraphic />
+      <div class="pointer-events-none">
+        <PlasmaGraphicNoUI />
       </div>
     )}
 

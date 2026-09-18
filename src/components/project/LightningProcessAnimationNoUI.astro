@@ -1,0 +1,287 @@
+---
+/**
+ * LightningProcessAnimationNoUI.astro
+ * Identical physics/rendering to LightningProcessAnimation.astro,
+ * but with the step-switcher bar, callout overlays, and play/pause controls removed.
+ * Autoplays the full two-phase sequence and loops.
+ */
+---
+
+<div class="lightning-sim-noui-container relative bg-void-950 border border-solar/30 overflow-hidden">
+  <!-- Canvas only — no header bar, no callouts -->
+  <div class="relative w-full h-52 sm:h-64 md:h-72 bg-[#070503] overflow-hidden select-none">
+    <canvas id="lightning-sim-canvas-noui" class="w-full h-full block"></canvas>
+  </div>
+</div>
+
+<script is:inline>
+  (function initLightningSimNoUI() {
+    const canvas = document.getElementById('lightning-sim-canvas-noui');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let currentStep = 1;
+    let stepTime = 0.0;
+    let restartCountdown = -1;
+    const RESTART_DELAY = 4.0;
+    const STEP_DURATIONS = { 1: 6.0, 2: 5.5 };
+
+    let width = 0, height = 0, dpr = 1;
+
+    function resize() {
+      const rect = canvas.parentElement.getBoundingClientRect();
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      width = rect.width;
+      height = rect.height;
+      canvas.width = Math.floor(width * dpr);
+      canvas.height = Math.floor(height * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      rebuildLightningChannels();
+    }
+
+    // ── Aircraft SVG paths ────────────────────────────────────────────────────
+    const SVG_REF_CX = 756.265;
+    const SVG_REF_CY = 400.47;
+    const TAIL_LOCAL_X = 266.48  - SVG_REF_CX; // -489.785
+    const TAIL_LOCAL_Y = 233.46  - SVG_REF_CY; // -167.01
+    const NOSE_LOCAL_X = 1316.03 - SVG_REF_CX; // +559.765
+    const NOSE_LOCAL_Y = 481.64  - SVG_REF_CY; // +81.17
+
+    const planePath0 = new Path2D("M 239.66 234.08 C 253.06 234.04 266.48 233.46 279.87 234.35 C 286.48 235.35 291.83 240.08 295.76 245.23 C 325.53 281.76 355.79 317.87 385.64 354.33 C 397.24 369.05 410.93 383.78 429.33 389.59 C 452.53 396.12 475.75 402.59 498.91 409.25 C 519.66 415.60 541.66 412.21 562.98 413.01 C 566.19 420.37 569.04 428.22 575.56 433.43 C 585.61 441.17 597.78 445.31 608.99 451.02 C 642.59 467.84 676.47 484.09 710.05 500.96 C 719.99 505.49 724.41 518.53 735.97 519.97 C 755.79 522.38 775.87 520.22 795.79 521.36 C 795.41 524.80 795.04 528.24 794.64 531.68 C 727.76 532.42 660.88 531.77 594.00 532.02 C 514.28 532.10 435.83 514.69 359.38 493.55 C 334.85 486.37 310.11 479.76 286.12 470.88 C 278.70 468.25 270.58 466.70 264.20 461.79 C 260.26 456.83 258.58 450.57 256.82 444.59 C 262.72 446.32 268.40 448.68 274.37 450.17 C 282.52 451.33 290.79 451.01 299.00 451.11 C 315.22 450.86 331.50 452.36 347.69 450.61 C 354.13 449.50 362.39 447.82 365.18 441.06 C 367.26 435.67 362.57 430.45 357.36 429.66 C 333.90 424.79 310.50 419.57 287.04 414.71 C 274.86 369.52 263.04 324.23 250.98 279.01 C 247.09 264.06 242.64 249.25 239.66 234.08 Z");
+    const planePath1 = new Path2D("M 540.69 344.81 C 548.18 345.67 557.83 342.97 563.56 349.42 C 581.93 370.12 599.19 391.79 617.38 412.65 C 622.87 419.04 630.96 422.48 639.12 423.87 C 698.96 436.96 758.78 450.16 818.58 463.47 C 852.53 471.04 886.68 477.79 920.44 486.21 C 898.12 487.16 875.63 488.60 853.85 493.82 C 847.61 495.14 845.59 502.78 839.62 504.40 C 828.20 506.84 817.20 510.82 805.82 513.38 C 789.25 514.80 772.59 513.88 755.99 514.02 C 748.85 513.47 741.10 514.54 734.38 511.55 C 729.78 508.63 726.50 504.10 722.47 500.53 C 714.30 492.98 703.76 488.97 693.99 484.01 C 672.23 474.00 651.06 462.79 629.48 452.40 C 613.42 444.04 596.52 437.29 580.96 428.01 C 574.25 422.02 571.59 413.10 567.76 405.27 C 559.00 385.00 548.98 365.29 540.69 344.81 Z");
+    const planePath2 = new Path2D("M 196.50 411.32 C 210.25 409.78 224.43 408.61 238.01 411.91 C 267.96 418.34 297.87 424.95 327.86 431.19 C 337.96 433.70 348.47 434.80 358.19 438.70 C 351.99 441.96 345.00 443.80 337.99 443.78 C 322.99 444.26 307.99 444.11 292.99 444.06 C 286.05 443.68 278.79 444.35 272.18 441.82 C 254.71 435.04 237.40 427.85 219.92 421.11 C 212.16 417.72 204.05 415.16 196.50 411.32 Z");
+    const planePath3 = new Path2D("M 631.58 413.57 C 688.37 412.26 745.19 413.36 802.00 413.00 C 915.33 413.01 1028.67 412.98 1142.00 413.01 C 1176.61 413.47 1212.31 417.17 1243.98 432.08 C 1254.21 436.45 1262.28 444.27 1270.85 451.15 C 1283.40 461.53 1301.36 463.96 1311.66 477.32 C 1316.03 481.64 1315.78 489.29 1311.66 493.68 C 1305.35 501.07 1296.41 505.58 1287.85 509.81 C 1261.43 521.44 1232.68 526.30 1204.14 529.25 C 1160.88 533.07 1117.38 531.78 1074.00 532.00 C 1040.45 531.84 1006.90 532.36 973.37 531.69 C 971.65 519.22 977.52 503.22 966.04 493.97 C 957.55 487.42 945.18 490.65 936.47 484.39 C 927.72 478.60 916.95 477.49 907.02 474.91 C 836.25 459.55 765.57 443.77 694.86 428.19 C 673.75 423.39 652.43 419.42 631.58 413.57 Z");
+    const planePath4 = new Path2D("M 851.96 502.61 C 879.26 495.19 907.85 494.25 935.98 495.18 C 943.81 495.58 951.91 495.92 959.33 498.75 C 963.36 500.26 965.61 504.71 964.83 508.99 C 965.29 524.32 965.36 539.68 964.89 555.02 C 964.32 562.43 954.74 563.29 949.03 564.19 C 916.84 567.48 883.74 567.03 852.31 558.69 C 851.85 540.00 851.97 521.30 851.96 502.61 Z");
+    const planePath5 = new Path2D("M 802.99 523.90 C 816.60 519.61 829.62 513.33 843.96 511.68 C 843.99 524.20 843.99 536.71 843.99 549.24 C 834.82 547.67 825.08 546.96 816.80 542.33 C 812.37 540.15 807.60 538.82 802.99 537.15 C 802.96 532.71 802.99 528.31 802.99 523.90 Z");
+
+    const LOWER_PROFILE = [
+      { x: 1316.0, y: 481.6 },
+      { x: 1287.8, y: 509.8 },
+      { x: 1204.1, y: 529.3 },
+      { x: 1074.0, y: 532.0 },
+      { x: 794.6,  y: 531.7 },
+      { x: 594.0,  y: 532.0 },
+      { x: 359.4,  y: 493.6 },
+      { x: 286.1,  y: 470.9 },
+      { x: 256.8,  y: 444.6 },
+      { x: 196.5,  y: 411.3 }
+    ];
+
+    function getBellySurfaceY(localSvgX) {
+      const svgX = localSvgX + SVG_REF_CX;
+      if (svgX >= LOWER_PROFILE[0].x) return LOWER_PROFILE[0].y - SVG_REF_CY;
+      if (svgX <= LOWER_PROFILE[LOWER_PROFILE.length - 1].x) return LOWER_PROFILE[LOWER_PROFILE.length - 1].y - SVG_REF_CY;
+      for (let i = 0; i < LOWER_PROFILE.length - 1; i++) {
+        const p1 = LOWER_PROFILE[i], p2 = LOWER_PROFILE[i + 1];
+        if (svgX <= p1.x && svgX >= p2.x) {
+          const t = (svgX - p2.x) / (p1.x - p2.x);
+          return (p2.y + t * (p1.y - p2.y)) - SVG_REF_CY;
+        }
+      }
+      return 0;
+    }
+
+    function drawAircraft(px, py, scale) {
+      ctx.save();
+      ctx.translate(px, py);
+      ctx.scale(scale, scale);
+      ctx.translate(-SVG_REF_CX, -SVG_REF_CY);
+      ctx.fillStyle = '#14100b'; ctx.strokeStyle = '#6e5432'; ctx.lineWidth = 1.4 / scale;
+      ctx.fill(planePath2); ctx.stroke(planePath2);
+      ctx.fillStyle = '#19140e'; ctx.strokeStyle = '#8f6d40'; ctx.lineWidth = 1.6 / scale;
+      ctx.fill(planePath0); ctx.stroke(planePath0);
+      ctx.fillStyle = '#1e1811'; ctx.strokeStyle = '#a68352'; ctx.lineWidth = 1.6 / scale;
+      ctx.fill(planePath3); ctx.stroke(planePath3);
+      ctx.fillStyle = '#16120c'; ctx.strokeStyle = '#6e5432'; ctx.lineWidth = 1.4 / scale;
+      ctx.fill(planePath5); ctx.stroke(planePath5);
+      ctx.fillStyle = '#241b12'; ctx.strokeStyle = '#8f6d40'; ctx.lineWidth = 1.6 / scale;
+      ctx.fill(planePath4); ctx.stroke(planePath4);
+      ctx.fillStyle = '#120e09'; ctx.strokeStyle = '#755833'; ctx.lineWidth = 1.4 / scale;
+      ctx.fill(planePath1); ctx.stroke(planePath1);
+      ctx.fillStyle = 'rgba(255, 184, 77, 0.85)';
+      ctx.fillRect(1238, 432, 16, 6);
+      ctx.restore();
+    }
+
+    function generateLightningPath(startX, startY, dirX, dirY, length, numPoints, tortuosity) {
+      numPoints = numPoints || 100; tortuosity = tortuosity || 0.22;
+      const points = [];
+      const dirLen = Math.hypot(dirX, dirY) || 1.0;
+      const wX = dirX / dirLen, wY = dirY / dirLen;
+      const perpX = -wY, perpY = wX;
+      const alpha_macro = 0.88, alpha_micro = 0.16;
+      const weight_macro = 0.78, weight_micro = 0.22;
+      const n_seg = numPoints - 1;
+      const step_scale = 1.25 * tortuosity * length / Math.sqrt(n_seg);
+      let v_macro = 0, v_micro = 0, offset = 0;
+      points.push({ x: startX, y: startY });
+      for (let i = 1; i < numPoints; i++) {
+        v_macro = alpha_macro * v_macro + (1 - alpha_macro) * (Math.random() - 0.5) * 2;
+        v_micro = alpha_micro * v_micro + (1 - alpha_micro) * (Math.random() - 0.5) * 2;
+        offset += step_scale * (weight_macro * v_macro + weight_micro * v_micro);
+        const t = i / n_seg;
+        points.push({ x: startX + wX * length * t + perpX * offset, y: startY + wY * length * t + perpY * offset });
+      }
+      return points;
+    }
+
+    let tailLeaderChannel = [], noseLeaderChannel = [], tailBranchChannel = [], noseBranchChannel = [];
+
+    function rebuildLightningChannels() {
+      if (width <= 0 || height <= 0) return;
+      const scale = Math.min(width / 1300, height / 460, 0.24);
+      const startX = width * 0.28;
+      const py = height * 0.52;
+      const iTailX = startX + TAIL_LOCAL_X * scale;
+      const iTailY = py + TAIL_LOCAL_Y * scale;
+      const iNoseX = startX + NOSE_LOCAL_X * scale;
+      const iNoseY = py + NOSE_LOCAL_Y * scale;
+      const tailDist = iTailY + 30;
+      tailLeaderChannel = generateLightningPath(iTailX, iTailY, 0.04, -1.0, tailDist, 110, 0.20);
+      if (tailLeaderChannel.length > 55) {
+        const bp = tailLeaderChannel[50];
+        tailBranchChannel = generateLightningPath(bp.x, bp.y, 0.45, -0.89, tailDist * 0.45, 35, 0.26);
+      }
+      const noseDist = (height - iNoseY) + 30;
+      noseLeaderChannel = generateLightningPath(iNoseX, iNoseY, 0.06, 1.0, noseDist, 110, 0.20);
+      if (noseLeaderChannel.length > 50) {
+        const bp = noseLeaderChannel[45];
+        noseBranchChannel = generateLightningPath(bp.x, bp.y, 0.4, 0.91, noseDist * 0.45, 35, 0.26);
+      }
+    }
+
+    function drawRevealedPath(points, progress, color, glowColor, lineWidth, showHead) {
+      if (!points || points.length < 2 || progress <= 0) return;
+      lineWidth = lineWidth || 2.0;
+      const totalSegs = points.length - 1;
+      const vis = Math.min(progress, 1.0) * totalSegs;
+      const full = Math.floor(vis);
+      const rem = vis - full;
+      ctx.save();
+      ctx.strokeStyle = color; ctx.shadowColor = glowColor; ctx.shadowBlur = 12;
+      ctx.lineWidth = lineWidth; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+      ctx.beginPath(); ctx.moveTo(points[0].x, points[0].y);
+      for (let i = 1; i <= full; i++) ctx.lineTo(points[i].x, points[i].y);
+      let tipX = points[full].x, tipY = points[full].y;
+      if (rem > 0 && full < totalSegs) {
+        const pn = points[full + 1];
+        tipX += (pn.x - tipX) * rem; tipY += (pn.y - tipY) * rem;
+        ctx.lineTo(tipX, tipY);
+      }
+      ctx.stroke();
+      if (showHead && progress < 1.0) {
+        ctx.fillStyle = '#ffffff'; ctx.shadowColor = '#ffffff'; ctx.shadowBlur = 18;
+        ctx.beginPath(); ctx.arc(tipX, tipY, 3, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = glowColor; ctx.globalAlpha = 0.45;
+        ctx.beginPath(); ctx.arc(tipX, tipY, 7, 0, Math.PI * 2); ctx.fill();
+      }
+      ctx.restore();
+    }
+
+    let lastTime = performance.now();
+
+    function animate(now) {
+      const dt = Math.min((now - lastTime) / 1000, 0.1);
+      lastTime = now;
+
+      if (restartCountdown >= 0) {
+        restartCountdown -= dt;
+        if (restartCountdown <= 0) {
+          restartCountdown = -1;
+          currentStep = 1; stepTime = 0.0;
+          rebuildLightningChannels();
+        }
+      } else {
+        stepTime += dt;
+        if (stepTime >= STEP_DURATIONS[currentStep]) {
+          if (currentStep === 1) { currentStep = 2; stepTime = 0.0; }
+          else { stepTime = STEP_DURATIONS[2]; restartCountdown = RESTART_DELAY; }
+        }
+      }
+
+      ctx.fillStyle = '#070503';
+      ctx.fillRect(0, 0, width, height);
+
+      ctx.strokeStyle = 'rgba(255, 156, 26, 0.035)'; ctx.lineWidth = 1;
+      for (let x = 0; x < width; x += 45) {
+        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, height); ctx.stroke();
+      }
+
+      const scale = Math.min(width / 1300, height / 460, 0.24);
+      const startX = width * 0.28;
+      const py = height * 0.52;
+
+      if (currentStep === 1) {
+        drawAircraft(startX, py, scale);
+        const growthDuration = 4.8;
+        const growthProgress = Math.min(1.0, stepTime / growthDuration);
+        const isConnected = stepTime >= growthDuration;
+        const tailColor = isConnected ? '#ffffff' : '#ffb84d';
+        const tailGlow  = isConnected ? '#ff9c1a' : '#ffaa33';
+        const tailWidth = isConnected ? 3.0 : 1.8;
+        drawRevealedPath(tailLeaderChannel, growthProgress, tailColor, tailGlow, tailWidth, !isConnected);
+        if (growthProgress > 0.45) drawRevealedPath(tailBranchChannel, (growthProgress - 0.45) / 0.55, tailColor, tailGlow, tailWidth * 0.75, !isConnected);
+        const noseColor = isConnected ? '#ffffff' : '#ff7a3d';
+        const noseGlow  = isConnected ? '#ff5522' : '#ff6633';
+        const noseWidth = isConnected ? 3.0 : 1.8;
+        drawRevealedPath(noseLeaderChannel, growthProgress, noseColor, noseGlow, noseWidth, !isConnected);
+        if (growthProgress > 0.42) drawRevealedPath(noseBranchChannel, (growthProgress - 0.42) / 0.58, noseColor, noseGlow, noseWidth * 0.75, !isConnected);
+        if (isConnected) {
+          const ct = stepTime - growthDuration;
+          if (ct < 0.25) { ctx.fillStyle = `rgba(255,235,190,${Math.sin((ct/0.25)*Math.PI)*0.35})`; ctx.fillRect(0,0,width,height); }
+        }
+      } else {
+        const tFrac = Math.min(1.0, stepTime / STEP_DURATIONS[2]);
+        const ease = tFrac < 0.5 ? 2*tFrac*tFrac : 1-Math.pow(-2*tFrac+2,2)/2;
+        const fwd = width * 0.42 * ease;
+        const curX = startX + fwd;
+        drawAircraft(curX, py, scale);
+
+        ctx.fillStyle = 'rgba(163,149,135,0.65)';
+        ctx.font = '10px "IBM Plex Mono", monospace';
+        ctx.fillText('FLIGHT DIRECTION ►', curX - 45, py + 62);
+
+        const iNoseX = startX + NOSE_LOCAL_X * scale;
+        const iNoseY = py + NOSE_LOCAL_Y * scale;
+        const sweep = fwd / scale;
+        const cLocalX = Math.max(TAIL_LOCAL_X + 15, NOSE_LOCAL_X - sweep);
+        const cPlaneX = curX + cLocalX * scale;
+        const cPlaneY = py + getBellySurfaceY(cLocalX) * scale;
+        drawRevealedPath(noseLeaderChannel, 1.0, '#ff9c1a', '#ff6622', 2.6, false);
+        ctx.save();
+        ctx.strokeStyle = '#ffb84d'; ctx.shadowColor = '#ff9c1a'; ctx.shadowBlur = 14;
+        ctx.lineWidth = 2.6; ctx.lineCap = 'round';
+        ctx.beginPath(); ctx.moveTo(iNoseX, iNoseY);
+        ctx.quadraticCurveTo((iNoseX+cPlaneX)*0.5, Math.max(iNoseY,cPlaneY)+12*scale, cPlaneX, cPlaneY);
+        ctx.stroke();
+        ctx.fillStyle = '#ffffff'; ctx.shadowColor = '#ff9c1a'; ctx.shadowBlur = 18;
+        ctx.beginPath(); ctx.arc(cPlaneX, cPlaneY, 3.5, 0, Math.PI*2); ctx.fill();
+        ctx.restore();
+
+        const iTailX = startX + TAIL_LOCAL_X * scale;
+        const iTailY = py + TAIL_LOCAL_Y * scale;
+        const curTailX = curX + TAIL_LOCAL_X * scale;
+        const curTailY = py + TAIL_LOCAL_Y * scale;
+        drawRevealedPath(tailLeaderChannel, 1.0, '#ff9c1a', '#ff8822', 2.6, false);
+        ctx.save();
+        ctx.strokeStyle = '#ff7a3d'; ctx.shadowColor = '#ff5522'; ctx.shadowBlur = 14;
+        ctx.lineWidth = 2.4; ctx.lineCap = 'round';
+        ctx.beginPath(); ctx.moveTo(curTailX, curTailY);
+        const dX = curTailX - iTailX;
+        const wob = Math.sin(stepTime * 14) * 2;
+        ctx.bezierCurveTo(curTailX-dX*0.4, curTailY+wob, iTailX+dX*0.2, iTailY+2, iTailX, iTailY);
+        ctx.stroke();
+        ctx.fillStyle = '#ffffff'; ctx.shadowColor = '#ff7a3d'; ctx.shadowBlur = 16;
+        ctx.beginPath(); ctx.arc(curTailX, curTailY, 3, 0, Math.PI*2); ctx.fill();
+        ctx.restore();
+      }
+
+      requestAnimationFrame(animate);
+    }
+
+    resize();
+    window.addEventListener('resize', resize);
+    requestAnimationFrame(animate);
+  })();
+</script>
