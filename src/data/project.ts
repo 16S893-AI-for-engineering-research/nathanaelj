@@ -37,10 +37,10 @@ export const projectMilestones: ProjectMilestone[] = [
   },
   {
     number: 3,
-    title: 'Reproducing work',
-    tagline: '',
+    title: 'Warm-up',
+    tagline: 'Testing agent capabilities by reproducing simple results',
     date: 'September 2026',
-    summary: 'Implementing ...',
+    summary: '',
     slug: '/project/reproducing-work',
     stage: 'Phase 03',
     status: 'completed',
