@@ -1,0 +1,142 @@
+{
+  "extends": [
+    "node-dev"
+  ],
+  "meta": {
+    "name": "mit-parley",
+    "version": "",
+    "description": "Pi coding agent with the MIT Parley extension: project folder + Pi state, Parley reached only through nono's credential proxy",
+    "author": null
+  },
+  "security": {
+    "signal_mode": null,
+    "process_info_mode": null,
+    "ipc_mode": null,
+    "capability_elevation": null,
+    "approval_backends": {},
+    "approval_defaults": null,
+    "wsl2_proxy_policy": null
+  },
+  "groups": {
+    "include": [],
+    "exclude": []
+  },
+  "commands": {
+    "allow": [],
+    "deny": []
+  },
+  "filesystem": {
+    "allow": [
+      "$HOME/.pi/agent"
+    ],
+    "read": [],
+    "write": [],
+    "allow_file": [
+      "/usr/bin/sudo"
+    ],
+    "read_file": [
+      "~/.profile"
+    ],
+    "write_file": [],
+    "unix_socket": [],
+    "unix_socket_bind": [],
+    "unix_socket_dir": [],
+    "unix_socket_dir_bind": [],
+    "unix_socket_subtree": [],
+    "unix_socket_subtree_bind": [],
+    "deny": [],
+    "bypass_protection": [
+      "~/.profile"
+    ],
+    "suppress_save_prompt": []
+  },
+  "network": {
+    "block": false,
+    "allow_http2": false,
+    "network_profile": null,
+    "allow_domain": [
+      "parley.api.mit.edu"
+    ],
+    "deny_domain": [],
+    "credentials": [
+      "parley"
+    ],
+    "open_port": [],
+    "open_port_range": [],
+    "listen_port": [],
+    "listen_port_range": [],
+    "connect_port": [],
+    "no_proxy": [],
+    "custom_credentials": {
+      "parley": {
+        "upstream": "https://parley.api.mit.edu",
+        "credential_key": "env://PARLEY_API_KEY",
+        "redeem_phantoms": [],
+        "auth": null,
+        "inject_mode": "header",
+        "inject_header": "Authorization",
+        "credential_format": "Bearer {}",
+        "path_pattern": null,
+        "path_replacement": null,
+        "query_param_name": null,
+        "proxy": null,
+        "env_var": "MY_MIT_PARLEY_API_KEY",
+        "endpoint_rules": [
+          {
+            "method": "POST",
+            "path": "/v1/chat/completions"
+          },
+          {
+            "method": "POST",
+            "path": "/v1/responses"
+          }
+        ],
+        "endpoint_policy": null,
+        "tls_ca": null,
+        "tls_client_cert": null,
+        "tls_client_key": null,
+        "aws_auth": null,
+        "spiffe": null,
+        "rate_limit": null
+      }
+    },
+    "tls_intercept": null,
+    "upstream_proxy": null,
+    "upstream_bypass": []
+  },
+  "diagnostics": {
+    "suppress_system_services": [
+      "user-preference-read"
+    ]
+  },
+  "linux": {
+    "af_unix_mediation": null,
+    "sandbox_policy": null
+  },
+  "env_credentials": {},
+  "environment": {
+    "deny_vars": [
+      "PARLEY_API_KEY",
+      "MIT_PARLEY_API_KEY"
+    ],
+    "case_insensitive_vars": false,
+    "set_vars": {}
+  },
+  "credential_capture": {},
+  "credential_providers": {},
+  "credential_routes": [],
+  "workdir": {
+    "access": "readwrite"
+  },
+  "hooks": {},
+  "session_hooks": {},
+  "rollback": {
+    "exclude_patterns": [],
+    "exclude_globs": []
+  },
+  "interactive": false,
+  "skipdirs": [],
+  "packs": [],
+  "command_args": [],
+  "unsafe_macos_seatbelt_rules": []
+}
