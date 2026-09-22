@@ -1,0 +1,48 @@
+---
+import { projectMilestones } from '../../data/project';
+import { resolvePath } from '../../lib/paths';
+
+interface Props {
+  currentSlug: string;
+}
+
+const { currentSlug } = Astro.props;
+const currentIndex = projectMilestones.findIndex(
+  (milestone) => milestone.slug === currentSlug,
+);
+const previousMilestone = currentIndex > 0 ? projectMilestones[currentIndex - 1] : undefined;
+const nextMilestone =
+  currentIndex >= 0 ? projectMilestones[currentIndex + 1] : undefined;
+---
+
+<nav class="mt-16 pt-8 border-t border-solar/20" aria-label="Milestone navigation" data-reveal="4">
+  <div class="grid sm:grid-cols-2 gap-4">
+    {previousMilestone ? (
+      <a href={resolvePath(previousMilestone.slug)} class="project-nav-adjacent">
+        <span class="font-mono text-[10px] uppercase tracking-wider text-solar">
+          Previous Milestone // {String(previousMilestone.number).padStart(2, '0')}
+        </span>
+        <span class="font-sans font-medium text-solar-light mt-1">← {previousMilestone.title}</span>
+      </a>
+    ) : (
+      <a href={resolvePath('/project')} class="project-nav-adjacent">
+        <span class="font-mono text-[10px] uppercase tracking-wider text-void-400">Timeline</span>
+        <span class="font-sans font-medium text-void-200 mt-1">← Return to All Milestones</span>
+      </a>
+    )}
+
+    {nextMilestone ? (
+      <a href={resolvePath(nextMilestone.slug)} class="project-nav-adjacent text-right">
+        <span class="font-mono text-[10px] uppercase tracking-wider text-solar">
+          Next Milestone // {String(nextMilestone.number).padStart(2, '0')}
+        </span>
+        <span class="font-sans font-medium text-solar-light mt-1">{nextMilestone.title} →</span>
+      </a>
+    ) : (
+      <a href={resolvePath('/project')} class="project-nav-adjacent text-right">
+        <span class="font-mono text-[10px] uppercase tracking-wider text-void-400">Timeline</span>
+        <span class="font-sans font-medium text-void-200 mt-1">All Milestones Overview →</span>
+      </a>
+    )}
+  </div>
+</nav>

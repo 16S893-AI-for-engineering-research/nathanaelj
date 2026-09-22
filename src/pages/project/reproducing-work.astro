@@ -1,0 +1,55 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { resolvePath } from '../../lib/paths';
+import MilestoneNavigation from '../../components/project/MilestoneNavigation.astro';
+import '../../styles/project.css';
+---
+
+<BaseLayout
+  title="Reproducing work · Project"
+  description="Reproducing work for the project."
+>
+  <div class="max-w-4xl mx-auto px-6 pt-16 pb-24">
+    <nav class="mb-10" aria-label="Breadcrumb" data-reveal="1">
+      <a
+        href={resolvePath('/project')}
+        class="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-solar hover:text-solar-light transition-colors"
+        style="border-bottom:none;"
+      >
+        <span aria-hidden="true">←</span> Back to Project Timeline
+      </a>
+    </nav>
+
+    <header class="project-detail-header" data-reveal="1">
+      <h1 class="text-4xl md:text-6xl font-display font-bold leading-[1.25] pb-3 mb-2">
+        Reproducing work
+      </h1>
+
+      <time class="font-mono text-xs uppercase tracking-widest text-void-400 block">
+        September 2026
+      </time>
+    </header>
+
+    <article class="space-y-12 mt-10" data-reveal="2">
+      <section>
+        <h2 class="text-2xl md:text-3xl font-display font-bold text-void-100 mb-4">
+          1. Original Work
+        </h2>
+      </section>
+
+      <section>
+        <h2 class="text-2xl md:text-3xl font-display font-bold text-void-100 mb-4">
+          2. Reproduction
+        </h2>
+      </section>
+
+      <section>
+        <h2 class="text-2xl md:text-3xl font-display font-bold text-void-100 mb-4">
+          3. Evaluation
+        </h2>
+      </section>
+    </article>
+
+    <MilestoneNavigation currentSlug="/project/reproducing-work" />
+  </div>
+</BaseLayout>

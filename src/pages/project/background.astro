@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { resolvePath } from '../../lib/paths';
+import MilestoneNavigation from '../../components/project/MilestoneNavigation.astro';
 import LightningProcessAnimation from '../../components/project/LightningProcessAnimation.astro';
 import SimulationPipelineDiagram from '../../components/project/SimulationPipelineDiagram.astro';
 import imgZoning from '../../images/Zoning.png';
@@ -402,20 +403,7 @@ import '../../styles/project.css';
 
     </article>
 
-    <!-- ===== Navigation to Next Milestone ===== -->
-    <div class="mt-16 pt-8 border-t border-solar/20" data-reveal="4">
-      <div class="grid sm:grid-cols-2 gap-4">
-        <a href={resolvePath('/project')} class="project-nav-adjacent">
-          <span class="font-mono text-[10px] uppercase tracking-wider text-void-400">Timeline</span>
-          <span class="font-sans font-medium text-void-200 mt-1">← Return to All Milestones</span>
-        </a>
-
-        <a href={resolvePath('/project/proposal')} class="project-nav-adjacent text-right">
-          <span class="font-mono text-[10px] uppercase tracking-wider text-solar">Next Milestone // 02</span>
-          <span class="font-sans font-medium text-solar-light mt-1">Project Proposal →</span>
-        </a>
-      </div>
-    </div>
+    <MilestoneNavigation currentSlug="/project/background" />
 
   </div>
 </BaseLayout>

@@ -35,4 +35,14 @@ export const projectMilestones: ProjectMilestone[] = [
     stage: 'Phase 02',
     status: 'completed',
   },
+  {
+    number: 3,
+    title: 'Reproducing work',
+    tagline: '',
+    date: 'September 2026',
+    summary: 'Implementing ...',
+    slug: '/project/reproducing-work',
+    stage: 'Phase 03',
+    status: 'completed',
+  },
 ];
