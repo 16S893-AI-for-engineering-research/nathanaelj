@@ -1,4 +1,4 @@
-# 16.S893 AI Agents for Engineering Research - Portfolio
+# 16.S897 AI Agents for Engineering Research - Portfolio
 
 ## Development
 
@@ -19,7 +19,7 @@ npm run build
 
 This site is automatically deployed to GitHub Pages via GitHub Actions on push to `main`.
 
-Visit: https://16s893-ai-for-engineering-research.github.io/nathanaelj/
+Visit: https://16s897-ai-for-engineering-research.github.io/nathanaelj/
 
 ## Project Structure
 

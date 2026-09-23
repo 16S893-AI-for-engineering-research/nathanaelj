@@ -6,7 +6,7 @@ This file provides system context, architectural guidelines, and instruction rul
 
 ## 1. Project Overview & Architecture
 
-This repository contains the portfolio website for **16.S893 (AI Agents for Engineering Research)** at MIT.
+This repository contains the portfolio website for **16.S897 (AI Agents for Engineering Research)** at MIT.
 
 ### Core Stack
 - **Framework:** [Astro](https://astro.build) — Static site generator with Islands Architecture.

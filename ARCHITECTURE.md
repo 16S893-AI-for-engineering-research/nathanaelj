@@ -21,7 +21,7 @@
 - **Animation approach:** TBD with theme design
 
 ## Deployment
-- **Static hosting:** GitHub Pages via `16s893-ai-for-engineering-research.github.io/nathanaelj`
+- **Static hosting:** GitHub Pages via `16s897-ai-for-engineering-research.github.io/nathanaelj`
 - **CI/CD:** GitHub Actions workflow for auto-deployment on push to `main`
 - **Build output:** `dist/` directory
 

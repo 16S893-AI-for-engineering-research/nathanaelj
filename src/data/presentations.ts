@@ -20,7 +20,7 @@ export const presentations: Presentation[] = [
     slides: [
       {
         layout: 'cover',
-        kicker: '16.S893 · AI Agents for Engineering Research',
+        kicker: '16.S897 · AI Agents for Engineering Research',
         title: 'Placeholder Presentation',
         subtitle:
           'A stand-in deck showing how presentations are authored, rendered and presented on this site.',
