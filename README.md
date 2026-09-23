@@ -1,4 +1,4 @@
-# 16.S983 AI Agents for Engineering Research - Portfolio
+# 16.S893 AI Agents for Engineering Research - Portfolio
 
 ## Development
 

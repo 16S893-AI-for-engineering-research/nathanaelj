@@ -15,7 +15,7 @@ interface Props {
   chrome?: boolean;
 }
 
-const { title, description = "Nathanael Jenkins' portfolio for MIT 16.S983: AI Agents for Engineering Research", chrome = true } = Astro.props;
+const { title, description = "Nathanael Jenkins' portfolio for MIT 16.S893: AI Agents for Engineering Research", chrome = true } = Astro.props;
 const currentPath = Astro.url.pathname;
 ---
 
@@ -27,7 +27,7 @@ const currentPath = Astro.url.pathname;
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
-    <title>{title} | 16.S983 Portfolio</title>
+    <title>{title} | 16.S893 Portfolio</title>
   </head>
   <body class={chrome ? undefined : 'is-immersive'}>
     {chrome && <Header currentPath={currentPath} />}
