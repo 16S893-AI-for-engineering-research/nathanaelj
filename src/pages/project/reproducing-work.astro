@@ -1,8 +1,13 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import figureSrc from '../../images/Figure_to_reproduce.png';
+import discrepancySrc from '../../images/Reproduction_Discrepancy.png';
+import reproductionSrc from '../../images/reproduction.png';
+import originalSrc from '../../images/original.png';
 import { resolvePath } from '../../lib/paths';
 import MilestoneNavigation from '../../components/project/MilestoneNavigation.astro';
 import '../../styles/project.css';
+import '../../styles/devlog.css';
 ---
 
 <BaseLayout
@@ -41,9 +46,22 @@ import '../../styles/project.css';
         </h2>
 
         <p class="text-void-200 text-base md:text-lg leading-relaxed mb-4">
-          <a href="https://doi.org/10.1016/S1631-0705(02)01410-X"  target="_blank" rel="noopener noreferrer">The interaction between a lightning flash and an aircraft in flight (Larsson, 2002)</a> is a seminal work that presents models related to the aircraft lightning swept stroke.
-          <i>Coming soon... a summary of the results to be reproduced</i>
+          <a href="https://doi.org/10.1016/S1631-0705(02)01410-X" target="_blank" rel="noopener noreferrer">The interaction between a lightning flash and an aircraft in flight (Larsson, 2002)</a> is a seminal work that presents models related to the aircraft lightning swept stroke.
+          The paper describes a model for the swept stroke and applications of the model for the zoning of aircraft.<br/><br/>
+          We will replicate <strong>figure 18</strong>, which illustrates a numerical simulation of the model in a <strong>Blasius boundary layer</strong>.
+          This involves relatively complex math and physics, but remains a tractable and simple analytical problem with a clear, reproducible plot as the result.
         </p>
+
+        <figure class="mt-6">
+          <img
+            src={figureSrc.src}
+            alt="The original figure from Larsson 2002, Figure 18"
+            class="w-full border border-void-600"
+          />
+          <figcaption class="mt-2 font-mono text-xs text-void-400 uppercase tracking-wider">
+            The original figure
+          </figcaption>
+        </figure>
       </section>
 
       <section>
@@ -51,9 +69,53 @@ import '../../styles/project.css';
           2. Reproduction
         </h2>
 
-        <p class="text-void-200 text-base md:text-lg leading-relaxed mb-4">
-          <i>Coming soon... a summary of the reproduction</i>
-        </p>
+        <ol class="list-decimal list-inside space-y-3 text-void-200 text-base md:text-lg leading-relaxed">
+          <li>Used <code class="dl-code">GPT 5.6 Sol</code> to read the PDF and <strong>create a plan</strong>, following <code class="dl-code">tdd</code></li>
+          <li>Reviewed the plan and <strong>corrected</strong> the figure <strong>styling</strong> using <code class="dl-code">Haiku 4.6</code> <span class="text-void-400">(Using Haiku was a bad idea)</span></li>
+          <li>Cleaned up the <strong>plan</strong> using <code class="dl-code">GPT 5.6 Terra</code></li>
+          <li><strong>Implemented</strong> the plan (first pass) using <code class="dl-code">GPT 5.6 Terra</code></li>
+          <li>Reviewed results and noticed <strong>small discrepancy</strong>. Asked <code class="dl-code">Terra</code> to review</li>
+        </ol>
+
+        <figure class="mt-4 mb-4 w-3/4 mx-auto">
+          <img
+            src={discrepancySrc.src}
+            alt="First pass reproduction, with discrepancy (black: original, colors: reproduction)"
+            class="w-full border border-void-600"
+          />
+          <figcaption class="mt-2 font-mono text-xs text-void-400 uppercase tracking-wider text-center">
+            First pass reproduction, with discrepancy (black: original, colors: reproduction)
+          </figcaption>
+        </figure>
+
+        <ol class="list-decimal list-inside space-y-3 text-void-200 text-base md:text-lg leading-relaxed" start="6">
+          <li>Provided <code class="dl-code">Terra</code> with <strong>more papers</strong>, having realized the original paper was missing information</li>
+          <li>Realized the information is not provided in any references. This is a <strong>gap in the literature</strong>, and the figure is not easily reproducible with the given information</li>
+          <li>I developed an <strong>empirical estimate</strong> for the missing information and asked <code class="dl-code">Terra</code> to implement it. This did not work either. Gave up and stuck with the first reproduction.</li>
+        </ol>
+
+        <div class="mt-4 flex gap-4">
+          <figure class="w-1/2">
+            <img
+              src={reproductionSrc.src}
+              alt="Reproduced figure (with small discrepancy)"
+              class="w-full border border-void-600"
+            />
+            <figcaption class="mt-2 font-mono text-xs text-void-400 uppercase tracking-wider text-center">
+              Reproduced figure
+            </figcaption>
+          </figure>
+          <figure class="w-1/2">
+            <img
+              src={originalSrc.src}
+              alt="Original figure from Larsson 2002"
+              class="w-full border border-void-600"
+            />
+            <figcaption class="mt-2 font-mono text-xs text-void-400 uppercase tracking-wider text-center">
+              Original figure
+            </figcaption>
+          </figure>
+        </div>
       </section>
 
       <section>
@@ -62,8 +124,50 @@ import '../../styles/project.css';
         </h2>
 
         <p class="text-void-200 text-base md:text-lg leading-relaxed mb-4">
-          <i>Coming soon... evaluation of the reproduction</i>
+          This assignment proved that agents can be a very <strong>powerful tool for reproducing work</strong> and implementing well-described physics models. They are also useful for identifying gaps in literature that would prevent reproduction. I spent a good amount of time checking that the agent was correct that there wasn't sufficient information to reproduce the figure.
+          <br/><br/>The reproduced figure does mostly match the original figure, except for a <strong>small discrepancy</strong> that can be attributed to the papers' lack of a complete description of how the figure was produced.
+          <br/><br/>I plan to spend more time experimenting with <strong>skills</strong> (especially <code class="dl-code">tdd</code> and <code class="dl-code">grill-me-docs</code>), and <strong>sandboxing</strong>. In particular, I should create new <code class="dl-code">nono</code> profiles that allow read access to <code class="dl-code">uv</code> and other tools that I want my agents to be able to use. I'd also like to explore <code class="dl-code">backlog.md</code> and other tools for managing <strong>sub-agents</strong> for my more complex project ambitions.
         </p>
+      </section>
+
+      <section>
+        <h2 class="text-2xl md:text-3xl font-display font-bold text-void-100 mb-4">
+          4. Prompts
+        </h2>
+
+        <p class="text-void-200 text-base md:text-lg leading-relaxed mb-4">
+          All of the prompts I used to reproduce the result.
+        </p>
+
+        <div class="space-y-3">
+          <p class="font-mono text-xs text-void-500 uppercase tracking-wider">Session · 2026-09-23 · GPT 5.6 Sol</p>
+          <pre class="font-mono text-sm text-void-200 bg-void-800 border border-void-600 p-4 overflow-x-auto whitespace-pre-wrap"><code>Read @Paper.pdf and then make a plan to implement code that will reproduce figure 18: numerical simulation of a swept stroke along a painted surface with flow velocity of 52 m/s and current 600 A using a Blasius boundary layer profile in two dimensions. The figure extents are from 0.0 to 3.0 m along the surface and the distance from the surface (Y-axis) is from 0.00 to 0.05 m. Plan the model physics and implementation but do not implement it yet. Use /skill:tdd and create a clear skeleton of the codebase. Keep it lightweight. Use the uv package manager and implement the simulation using Python. Plan to implement physical property based tests and provide examples in the skeleton, but don&#039;t fully implement the tests yet. Focus on nailing down a robust, elegant, and accurate plan for the simulations. After making the plan, review it for errors, inconsistencies, or inefficiencies and resolve them.</code></pre>
+          <pre class="font-mono text-sm text-void-200 bg-void-800 border border-void-600 p-4 overflow-x-auto whitespace-pre-wrap"><code>Please modify the test plan so that it creates both a monochrome plot that looks like the original figure (the current plan) *and* a plot that follows the styling in the figure styling skill, /skill:figure-styling</code></pre>
+
+          <p class="font-mono text-xs text-void-500 uppercase tracking-wider pt-2">Session · 2026-09-23 · Haiku 4.6</p>
+          <pre class="font-mono text-sm text-void-200 bg-void-800 border border-void-600 p-4 overflow-x-auto whitespace-pre-wrap"><code>Please read the /tdd test plan in this repository and tidy it up so that it&#039;s clearer, and the docs include clear instructions for next steps, through to completion. Keep it simple.</code></pre>
+
+          <p class="font-mono text-xs text-void-500 uppercase tracking-wider pt-2">Session · 2026-09-23 · GPT 5.6 Terra</p>
+          <pre class="font-mono text-sm text-void-200 bg-void-800 border border-void-600 p-4 overflow-x-auto whitespace-pre-wrap"><code>Please check if you can call the uv package manager here.</code></pre>
+
+          <p class="font-mono text-xs text-void-500 uppercase tracking-wider pt-2">Session · 2026-09-23 · GPT 5.6 Terra</p>
+          <pre class="font-mono text-sm text-void-200 bg-void-800 border border-void-600 p-4 overflow-x-auto whitespace-pre-wrap"><code>Please follow the TDD (test-driven development) plan that we have already created in this repository and implement the codebase. Start by designing the tests, then implement the code. Keep it elegant. Ask if you have questions. Stop when you have too many questions, or when the implementation is complete. If you complete it in one pass, provide me with the command I need to run to execute the code.</code></pre>
+          <pre class="font-mono text-sm text-void-200 bg-void-800 border border-void-600 p-4 overflow-x-auto whitespace-pre-wrap"><code>You should have access to uv and the PyPI stuff now. Please run the tests (some of them are failing) and fix any issues. Report back when the codebase works, and you have executed it</code></pre>
+          <pre class="font-mono text-sm text-void-200 bg-void-800 border border-void-600 p-4 overflow-x-auto whitespace-pre-wrap"><code>Great work. Can you make the plot aspect ratios closer to 1:1.5 (h:w)? The results look more jaggesd after the first reattachment, as if the blasius profile is not being enforced, or time steps are too large. Can you fix this please?</code></pre>
+          <pre class="font-mono text-sm text-void-200 bg-void-800 border border-void-600 p-4 overflow-x-auto whitespace-pre-wrap"><code>Much better. Please make the plot line thickness for the monochrome case half as thick, and where the dotted lines overlap please just show one dotted line (they&#039;re overlapping to form a solid line, which is misleading)</code></pre>
+
+          <p class="font-mono text-xs text-void-500 uppercase tracking-wider pt-2">Session · 2026-09-23 · GPT 5.6 Terra</p>
+          <p class="font-mono text-xs text-void-250 uppercase tracking-wider">Failed attempt to fix the discrepancy. No changes from this conversation were kept.</p>
+          <pre class="font-mono text-sm text-void-200 bg-void-800 border border-void-600 p-4 overflow-x-auto whitespace-pre-wrap"><code>The implementation in this codebase creates a figure that is very similar to Figure 18 in the paper we are trying to replicate, but there is a subtle difference in the curvature of the time snapshots near the wall. Our implementation is more sharply curved (so it sits slightly below the original paper&#039;s implementation just in the near wall region). Everything else lines up great, although this does seem to have a subtle impact on reattachment during the later time steps. Can you identify what the cause of this could be? If it&#039;s a parameter we don&#039;t know, that is ok, just let me know and tell me how I could manually explore changing that parameter. If it could be implementation-related, highlight potential discrepancies and list solutions, but do not implement anything</code></pre>
+          <pre class="font-mono text-sm text-void-200 bg-void-800 border border-void-600 p-4 overflow-x-auto whitespace-pre-wrap"><code>Good thoughts. I provided reference [17] in @Paper_2.pdf. Please read it and make sure that we have included everything needed to replicate figure 7 of paper 2 (which is the same as figure 18 in paper 1). If paper 2 contains enough information to fill in our missing knowledge, use that and implement the fix. If it doesn&#039;t contain enough information, just report back to me with a brief summary of what we don&#039;t know.</code></pre>
+          <pre class="font-mono text-sm text-void-200 bg-void-800 border border-void-600 p-4 overflow-x-auto whitespace-pre-wrap"><code>See if @Paper_3.pdf (the precursor to paper 2) has the missing information. I think it does, but again if this still doesn&#039;t answer everything we need to know to reproduce the plot, just report back. Otherwise, please implement the fix.</code></pre>
+          <pre class="font-mono text-sm text-void-200 bg-void-800 border border-void-600 p-4 overflow-x-auto whitespace-pre-wrap"><code>Can you implement the anti-bending effect using standard/ estimated vales for k, n, and C_p (note, k is the inverse of curvature radius, which we can calculate from our simulation, n is the number density which is around 2.55x10^25 m^-3 in air, and C_p is around 1.005 kJ/kg.K in air) Let&#039;s see if those values give us something close to the figure and we&#039;ll go from there.</code></pre>
+          <pre class="font-mono text-sm text-void-200 bg-void-800 border border-void-600 p-4 overflow-x-auto whitespace-pre-wrap"><code>Ok looks like that didn&#039;t change anything. Please delete the exploratory figure and never create figures in the tmp directory. Remove the anti bending function too.</code></pre>
+          <pre class="font-mono text-sm text-void-200 bg-void-800 border border-void-600 p-4 overflow-x-auto whitespace-pre-wrap"><code>I reviewed the papers and think we should try re-implementing the anti-bending velocity, using this relationship instead (I calculated it myself, don&#039;t worry about where it came from, just implement it): Anti-bending velocity v_a = 0.9k (where k is the curvature = 1/ radius of curvature). Implement that.</code></pre>
+          <pre class="font-mono text-sm text-void-200 bg-void-800 border border-void-600 p-4 overflow-x-auto whitespace-pre-wrap"><code>This is towards the centre of curvature (option 1). And whoops, the parameter should 0.09, not 0.9! Try implementing that - we shouldn&#039;t need to significantly change time stepping</code></pre>
+          <pre class="font-mono text-sm text-void-200 bg-void-800 border border-void-600 p-4 overflow-x-auto whitespace-pre-wrap"><code>Can you try implementing it with a limiter to neglect the non-physical corners caused by the reattachment logic (since the real arc wouldn&#039;t behave like that), by only applying the curvature velocity where curvature is less than 2000 m^-1 (0.5mm radius of curvature). If the curvature is tighter than that, just set v_a to zero. See if that works</code></pre>
+          <pre class="font-mono text-sm text-void-200 bg-void-800 border border-void-600 p-4 overflow-x-auto whitespace-pre-wrap"><code>Sorry, let&#039;s just remove that. It doesn&#039;t work. I think the original work is the closest we&#039;re going to get to the paper figure.</code></pre>
+        </div>
       </section>
     </article>
 

@@ -190,7 +190,7 @@ export const devLogEntries: DevLogEntry[] = [
     date: '2026-09-17',
     summary:
       'Added project background and proposal pages',
-    models: ['gemini-3.8-flash', 'sonnet-4-6', 'gpt-5-nano', 'sonnet-4-6'],
+    models: ['gemini-3.8-flash', 'sonnet-4.6', 'gpt-5-nano'],
     metrics: {
       userMessages: 16,
       assistantMessages: 287,
@@ -242,6 +242,43 @@ export const devLogEntries: DevLogEntry[] = [
       agentFailures: [
         'Attempted to create a file in `~/Library`',
         'Didn\'t copy **styling** from previous project pages until explicitly instructed to do so (arguably just bad prompting)',
+      ],
+    },
+  },
+
+
+  {
+    slug: 'reproducing-results',
+    title: 'Reproducing a Result',
+    date: '2026-09-23',
+    summary:
+      'Reproducing results from a paper, using nifty skills',
+    models: ['gpt-5.6-sol', 'sonnet-4.6', 'haiku-4.5', 'gpt-5-nano', 'gpt-5.6-terra'],
+    metrics: {
+      userMessages: 22,
+      assistantMessages: 123,
+      toolCalls: 336,
+      totalCostUsd: 5.0746,
+    },
+    description: {
+      keyChanges: [
+        'Reproduced results from a paper (to the best extent possible). Wrote up a summary in `projects/reproducing-work`.',
+        'Adjusted `figure-styling` skill to fit website design choices',
+        'Used `Sol` for **planning and skeleton**, then implemented with `Terra`',
+        '`tdd` (**test-driven design**) skill was effective for codebase planning',
+        'Discovered **missing information in literature**',
+      ],
+      agentSuccesses: [
+        'After planning, implementation was **\'one-shot\'**',
+        'Identified **gap in literature** and was able to evaluate other PDF files to look for missing information',
+        'Used skills and applied correct formatting',
+      ],
+      agentFailures: [
+        'Tried to use `haiku-4.5` to modify the plan to produce the plot using two different formats, but it had a very **difficult time editing** the markdown files and ended up writing a Python script to find & replace files, instead of using the edit tool.',
+        'One again (see Portfolio Setup `dev-log` entry), Haiku created way **too many markdown documentation files**. This cluttered up the repository compared to the clean plan.',
+        'When investigating the small difference in curvature, `Terra` spent a long time trying to view the difference itself, rather than just trusting what I had described.',
+        'Agents struggled when **sandboxing** restricted access to tools (`uv`, `python`, etc.). I should handle this better in the future',
+        'It seems that this figure **cannot be reproduced** exactly based on the description in the paper (despite looking in several of its references, too)',
       ],
     },
   },
