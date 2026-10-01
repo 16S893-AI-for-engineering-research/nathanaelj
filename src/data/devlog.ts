@@ -282,4 +282,37 @@ export const devLogEntries: DevLogEntry[] = [
       ],
     },
   },
+
+
+  {
+    slug: 'project-launch',
+    title: 'Project Planning: Day 1',
+    date: '2026-10-01',
+    summary:
+      'Setting things up for project creation',
+    models: ['sonnet-5', 'opus-5'],
+    metrics: {
+      userMessages: 20,
+      assistantMessages: 220,
+      toolCalls: 225,
+      totalCostUsd: 2.6892,
+    },
+    description: {
+      keyChanges: [
+        'Created `Project planning` portfolio page with more details about project plan',
+        'Created a `check-literature` skill to accelerate literature reference, and record potential literature gaps',
+        'Prepared style guides/ agent instructions (`AGENTS.md`, etc.)',
+        'Added a script in `~/.zshrc` to change the author of commits from within pi sessions',
+        'Created a custom `nono` profile for sandboxing (to be refined as we go)',
+        'NOTE TO SELF: ADD PORTFOLIO TOKENS USED TOO',
+      ],
+      agentSuccesses: [
+        'Reviewed literature and created a library to summarize several papers under a new skill',
+      ],
+      agentFailures: [
+        'First attempt to review literature tried using subagents and a PDF extension in Pi, but the reviewer subagent couldn\'t use the PDF extension so the agent became confused and started trying to find other ways to read the PDF files. Took a while to stop the agent (I\'ve now installed `pi-stop`).',
+        'For more simple tasks, `Opus` and `Sonnet` quickly fill up their context with unnecessary thinking',
+      ],
+    },
+  },
 ];

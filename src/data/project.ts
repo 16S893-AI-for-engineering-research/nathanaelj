@@ -45,4 +45,14 @@ export const projectMilestones: ProjectMilestone[] = [
     stage: 'Phase 03',
     status: 'completed',
   },
+  {
+    number: 4,
+    title: 'Project Planning',
+    tagline: 'Agent setup and strategic planning',
+    date: 'October 2026',
+    summary: '',
+    slug: '/project/project-planning',
+    stage: 'Phase 04',
+    status: 'in-progress',
+  },
 ];
