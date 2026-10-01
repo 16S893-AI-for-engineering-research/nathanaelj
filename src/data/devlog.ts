@@ -292,10 +292,10 @@ export const devLogEntries: DevLogEntry[] = [
       'Setting things up for project creation',
     models: ['sonnet-5', 'opus-5'],
     metrics: {
-      userMessages: 20,
-      assistantMessages: 220,
-      toolCalls: 225,
-      totalCostUsd: 2.6892,
+      userMessages: 11,
+      assistantMessages: 250,
+      toolCalls: 280,
+      totalCostUsd: 9.56,
     },
     description: {
       keyChanges: [
@@ -304,7 +304,6 @@ export const devLogEntries: DevLogEntry[] = [
         'Prepared style guides/ agent instructions (`AGENTS.md`, etc.)',
         'Added a script in `~/.zshrc` to change the author of commits from within pi sessions',
         'Created a custom `nono` profile for sandboxing (to be refined as we go)',
-        'NOTE TO SELF: ADD PORTFOLIO TOKENS USED TOO',
       ],
       agentSuccesses: [
         'Reviewed literature and created a library to summarize several papers under a new skill',
