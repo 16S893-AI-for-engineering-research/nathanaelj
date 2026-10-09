@@ -347,4 +347,34 @@ export const devLogEntries: DevLogEntry[] = [
       ],
     },
   },
+
+
+  {
+    slug: 'project-launch-3',
+    title: 'Project Planning: Day 3',
+    date: '2026-10-09',
+    summary:
+      'Choosing a language',
+    models: ['opus-5', 'opus-5.5'],
+    metrics: {
+      userMessages: 10,
+      assistantMessages: 55,
+      toolCalls: 47,
+      totalCostUsd: 2.4978,
+    },
+    description: {
+      keyChanges: [
+        'Refined the `architecting` markdown files',
+        'Fixed issue running sub-agents from `nono` sandbox (although sub-agents that load prohibited tools, such as web search, will fail)',
+        'Recommended `Python` + `NVIDIA Warp` or `Julia` for the language: decided to run some tests to nail down which is better',
+      ],
+      agentSuccesses: [
+        'Used `xhigh` thinking mode with `Opus 5.5` for the critical architecture decision',
+        'Didn\'t assert its answer but instead **proposed running a simple test** to evaluate which of the two top options would be best',
+      ],
+      agentFailures: [
+        'Parley **API key expired**, so had to create a new one',
+      ],
+    },
+  },
 ]; 
