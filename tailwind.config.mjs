@@ -5,6 +5,8 @@ export default {
       colors: {
         // Sunrise/Sunset solar theme
         'solar': {
+          DEFAULT: '#ff9c1a',
+          'light': '#ffb84d',
           50: '#fffbf0',
           100: '#fff5e0',
           200: '#ffecc7',
@@ -18,6 +20,7 @@ export default {
         },
         // Warm orange accent
         'flame': {
+          DEFAULT: '#ff6633',
           50: '#fff7f0',
           100: '#ffe8d9',
           200: '#ffd1b3',
@@ -31,6 +34,7 @@ export default {
         },
         // Deep red accent
         'ember': {
+          DEFAULT: '#ff3333',
           50: '#fff0f0',
           100: '#ffe0d9',
           200: '#ffc2b3',

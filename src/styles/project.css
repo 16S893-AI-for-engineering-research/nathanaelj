@@ -400,3 +400,28 @@
   background: rgba(255, 156, 26, 0.08);
   transform: translateY(-2px);
 }
+
+/* Literature link buttons with full 4-sided borders */
+.lit-link-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--color-solar);
+  background: rgba(255, 156, 26, 0.05);
+  border: 1px solid rgba(255, 156, 26, 0.35) !important;
+  padding: 0.375rem 0.75rem !important;
+  white-space: nowrap;
+  flex-shrink: 0;
+  text-decoration: none !important;
+  transition: all 0.2s ease;
+}
+
+.lit-link-btn:hover {
+  color: var(--color-solar-light);
+  background: rgba(255, 156, 26, 0.12);
+  border-color: var(--color-solar) !important;
+}
+

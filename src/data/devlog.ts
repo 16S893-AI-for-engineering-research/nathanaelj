@@ -314,4 +314,37 @@ export const devLogEntries: DevLogEntry[] = [
       ],
     },
   },
-];
+
+
+  {
+    slug: 'project-launch-2',
+    title: 'Project Planning: Day 2',
+    date: '2026-10-02',
+    summary:
+      'Architecting the project',
+    models: ['sonnet-5', 'opus-5'],
+    metrics: {
+      userMessages: 23,
+      assistantMessages: 309,
+      toolCalls: 294,
+      totalCostUsd: 11.4053,
+    },
+    description: {
+      keyChanges: [
+        'Updated project planning portfolio page',
+        'Prepared project description and detailed guidance for planning/ architecting discussions',
+        'Created `architecting` set of markdown files that describe the high-level requirements, for translation into `backlog.md` tasks',
+      ],
+      agentSuccesses: [
+        'Provided useful review of project description files in preparation for architectural discussions',
+      ],
+      agentFailures: [
+        'It cost more to make a simple SVG flowchart for my portfolio than it did to process all of the literature. `Sonnet` became confused (yet again) by simple geometry',
+        'Edit application failed for a change to the portfolio site: ` Validation failed for tool "edit": edits.0: must be object` and agent resorted to running a massive Python script to do the find and replace instead',
+        'Refactored `architecting` files into a better structure, but tried to start indexing validation and config items with letters and numbers (e.g. `D1.3`) which was confusing and unhelpful',
+        'Had difficulty launching subagents (couldn\'t find `@earendil-works/pi-agent-core/node,`) and had to fiddle with pi installation',
+        'Had more difficulty launching subagents from within the sandbox with `async:true`. Seems to be a challenge using sub-agents inside nono.',
+      ],
+    },
+  },
+]; 
