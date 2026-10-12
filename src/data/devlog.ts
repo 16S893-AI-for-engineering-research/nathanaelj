@@ -377,4 +377,37 @@ export const devLogEntries: DevLogEntry[] = [
       ],
     },
   },
+
+
+  {
+    slug: 'project-launch-4',
+    title: 'Project Planning: Day 4',
+    date: '2026-10-12',
+    summary:
+      'Testing potential languages: selecting Python + Warp',
+    models: ['opus-5.5'],
+    metrics: {
+      userMessages: 16,
+      assistantMessages: 372,
+      toolCalls: 649,
+      totalCostUsd: 24.3822,
+    },
+    description: {
+      keyChanges: [
+        'Installed the `ASD-STE100` skill for re-writing prompts and files using Simplified Technical English',
+        'Created language test **spike** to compare `Warp` vs `Julia`',
+
+      ],
+      agentSuccesses: [
+        'Quickly re-wrote a document using `STE100`, improving clarity for readers and future AI agents, using the `ASD-STE100` skill',
+        'Orchestrated sub-agents to implement language test spike. Implemented a very comprehensive set of tests (arguably too comprehensive)',
+        'Spike **testing** was easy to run (sub-agents performed well) and led to a good conclusion: we will use `Warp` + `Python`',
+        'Populated `backlog.md` board with initial high-level tasks',
+      ],
+      agentFailures: [
+        'Used over **$20** in a single prompt (including sub-agents) to develop what should have been a very simple test between different languages. This was a bit over-the-top; I probably should\'ve instructed it to keep things more simple...',
+        'Still gets consistently confused by **sandboxing** and doesn\'t realize its not running on the machine with GPUs',
+      ],
+    },
+  },
 ]; 
