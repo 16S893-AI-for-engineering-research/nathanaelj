@@ -584,9 +584,126 @@ import '../../styles/project.css';
           4. Architectural Decisions
         </h2>
 
-        <p class="text-void-200 text-base md:text-lg leading-relaxed mb-0">
-          Coming soon.
+        <!-- ===== 4.1 Overall structure ===== -->
+        <h3 class="font-mono text-xs uppercase tracking-widest text-solar mb-2">Overall Structure</h3>
+
+        <div class="project-sandbox-frame my-6">
+          <div class="project-sandbox-frame__header">
+            <span>Toolkit pipeline</span>
+            <span>Aircraft simulations in, zoning diagram out</span>
+          </div>
+
+          <div class="w-full bg-void-950 p-4">
+            <svg viewBox="0 0 1000 300" fill="none" xmlns="http://www.w3.org/2000/svg" class="block w-full h-auto">
+              <!-- Off-the-shelf inputs -->
+              <g transform="translate(40, 20)">
+                <rect width="260" height="86" fill="#140f0a" stroke="rgba(255, 156, 26, 0.25)" stroke-width="2" stroke-dasharray="6 4" />
+                <rect width="260" height="26" fill="rgba(255, 156, 26, 0.06)" />
+                <text x="130" y="18" text-anchor="middle" fill="#ffb84d" font-family="'IBM Plex Mono', monospace" font-size="11" font-weight="600">OFF-THE-SHELF</text>
+                <text x="130" y="58" text-anchor="middle" fill="#f0e8dc" font-family="'Sora', sans-serif" font-size="17" font-weight="600">Electrostatics</text>
+                <text x="130" y="77" text-anchor="middle" fill="#ffb84d" font-family="'IBM Plex Mono', monospace" font-size="11">electric field</text>
+              </g>
+              <g transform="translate(370, 20)">
+                <rect width="260" height="86" fill="#140f0a" stroke="rgba(255, 156, 26, 0.25)" stroke-width="2" stroke-dasharray="6 4" />
+                <rect width="260" height="26" fill="rgba(255, 156, 26, 0.06)" />
+                <text x="130" y="18" text-anchor="middle" fill="#ffb84d" font-family="'IBM Plex Mono', monospace" font-size="11" font-weight="600">OFF-THE-SHELF</text>
+                <text x="130" y="58" text-anchor="middle" fill="#f0e8dc" font-family="'Sora', sans-serif" font-size="17" font-weight="600">Fluid dynamics</text>
+                <text x="130" y="77" text-anchor="middle" fill="#ffb84d" font-family="'IBM Plex Mono', monospace" font-size="11">airflow</text>
+              </g>
+
+              <!-- Toolkit boundary -->
+              <rect x="20" y="140" width="960" height="140" fill="#0d0a06" stroke="rgba(255, 156, 26, 0.45)" stroke-width="1.5" />
+              <text x="36" y="162" fill="#ff9c1a" font-family="'IBM Plex Mono', monospace" font-size="11" font-weight="700" letter-spacing="0.08em">THIS TOOLKIT</text>
+
+              <!-- Stage 1 -->
+              <g transform="translate(40, 176)">
+                <rect width="260" height="86" fill="#140f0a" stroke="rgba(255, 156, 26, 0.4)" stroke-width="2" />
+                <rect width="260" height="26" fill="rgba(255, 156, 26, 0.1)" />
+                <text x="130" y="18" text-anchor="middle" fill="#ffb84d" font-family="'IBM Plex Mono', monospace" font-size="11" font-weight="600">STAGE 1</text>
+                <text x="130" y="58" text-anchor="middle" fill="#f0e8dc" font-family="'Sora', sans-serif" font-size="17" font-weight="600">Initial attachment</text>
+                <text x="130" y="77" text-anchor="middle" fill="#ffb84d" font-family="'IBM Plex Mono', monospace" font-size="11">where lightning first strikes</text>
+              </g>
+
+              <!-- Stage 2 -->
+              <g transform="translate(370, 176)">
+                <rect width="260" height="86" fill="#140f0a" stroke="rgba(255, 156, 26, 0.4)" stroke-width="2" />
+                <rect width="260" height="26" fill="rgba(255, 156, 26, 0.1)" />
+                <text x="130" y="18" text-anchor="middle" fill="#ffb84d" font-family="'IBM Plex Mono', monospace" font-size="11" font-weight="600">STAGE 2</text>
+                <text x="130" y="58" text-anchor="middle" fill="#f0e8dc" font-family="'Sora', sans-serif" font-size="17" font-weight="600">Swept stroke</text>
+                <text x="130" y="77" text-anchor="middle" fill="#ffb84d" font-family="'IBM Plex Mono', monospace" font-size="11">how the arc sweeps over the skin</text>
+              </g>
+
+              <!-- Stage 3 -->
+              <g transform="translate(700, 176)">
+                <rect width="260" height="86" fill="#1b1208" stroke="#ff9c1a" stroke-width="2" filter="url(#s3Glow)" />
+                <rect width="260" height="26" fill="rgba(255, 156, 26, 0.2)" />
+                <text x="130" y="18" text-anchor="middle" fill="#fff5e0" font-family="'IBM Plex Mono', monospace" font-size="11" font-weight="700">STAGE 3</text>
+                <text x="130" y="58" text-anchor="middle" fill="#ff9c1a" font-family="'Sora', sans-serif" font-size="17" font-weight="700">Zoning</text>
+                <text x="130" y="77" text-anchor="middle" fill="#ffffff" font-family="'IBM Plex Mono', monospace" font-size="11">zoning diagram</text>
+              </g>
+
+              <!-- Connectors -->
+              <line x1="170" y1="107" x2="170" y2="174" stroke="#ff7a3d" stroke-width="2" marker-end="url(#s3Arrow)" />
+              <line x1="500" y1="107" x2="500" y2="174" stroke="#ff7a3d" stroke-width="2" marker-end="url(#s3Arrow)" />
+              <line x1="301" y1="219" x2="368" y2="219" stroke="#ff7a3d" stroke-width="2" marker-end="url(#s3Arrow)" />
+              <line x1="631" y1="219" x2="698" y2="219" stroke="#ff7a3d" stroke-width="2" marker-end="url(#s3Arrow)" />
+            </svg>
+          </div>
+          <p class="text-void-400 text-xs font-mono mt-3 mb-0">
+            Existing tools produce the field and airflow simulations; the toolkit turns them into a zoning diagram.
+          </p>
+        </div>
+
+        <ul class="list-none space-y-2.5 pl-0 my-6 text-void-200 text-sm md:text-base">
+          <li class="flex items-start gap-3">
+            <span class="text-solar font-mono text-sm shrink-0">&#9670;</span>
+            <span>Meshing, electrostatics and airflow are solved with <strong>existing tools</strong>, not rebuilt.</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="text-solar font-mono text-sm shrink-0">&#9670;</span>
+            <span>Each stage saves its results to files, so any stage can be <strong>re-run on its own</strong> (e.g. tweak the zoning without repeating the simulations).</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="text-solar font-mono text-sm shrink-0">&#9670;</span>
+            <span>Command-line tool, built to run on <strong>GPUs</strong> on a workstation or cluster. Target: under an hour per aircraft.</span>
+          </li>
+        </ul>
+
+        <!-- ===== 4.2 Language ===== -->
+        <h3 class="font-mono text-xs uppercase tracking-widest text-solar mt-10 mb-2">Choice of Language</h3>
+
+        <p class="text-void-200 text-base leading-relaxed mb-0">
+          Two options were tested head-to-head on the same core simulation loop, with about a day of work each, on two GPUs.
         </p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-px bg-solar/15 border border-solar/20 my-6">
+          <div class="bg-void-900 p-4 border-l-2 border-solar">
+            <div class="flex justify-between items-center mb-1.5">
+              <span class="font-mono text-[11px] uppercase tracking-wider text-solar">Python + NVIDIA Warp</span>
+              <span class="font-mono text-[10px] uppercase tracking-wider text-void-950 bg-solar px-1.5 py-0.5">Selected</span>
+            </div>
+            <p class="text-void-200 text-sm leading-snug mb-0">Familiar, readable, strong testing tools. Speed: 1&#215;.</p>
+          </div>
+          <div class="bg-void-950 p-4">
+            <div class="font-mono text-[11px] uppercase tracking-wider text-void-400 mb-1.5">Julia</div>
+            <p class="text-void-200 text-sm leading-snug mb-0">Single fast language. Speed: 1.6&#215;.</p>
+          </div>
+        </div>
+
+        <ul class="list-none space-y-2.5 pl-0 my-6 text-void-200 text-sm md:text-base">
+          <li class="flex items-start gap-3">
+            <span class="text-solar font-mono text-sm shrink-0">&#9670;</span>
+            <span>Both gave correct results and ran on both GPUs.</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="text-solar font-mono text-sm shrink-0">&#9670;</span>
+            <span>The rule set in advance: pick Python unless Julia is <strong>more than twice as fast</strong>. It was not, so Python won.</span>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="text-solar font-mono text-sm shrink-0">&#9670;</span>
+            <span>The slow parts came from the algorithm, not the language, so they will be fixed in the method itself.</span>
+          </li>
+        </ul>
       </section>
 
     </article>
