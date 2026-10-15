@@ -414,16 +414,16 @@ export const devLogEntries: DevLogEntry[] = [
 
   {
     slug: 'implementation-1',
-    title: 'Implementation: Day 1',
+    title: 'Initial Implementation: Day 1',
     date: '2026-10-13',
     summary:
       'Implementing codebase infrastructure',
     models: ['opus-5.5'],
     metrics: {
-      userMessages: 28,
-      assistantMessages: 343,
-      toolCalls: 420,
-      totalCostUsd: 15.0503,
+      userMessages: 43,
+      assistantMessages: 612,
+      toolCalls: 825,
+      totalCostUsd: 33.0586,
     },
     description: {
       keyChanges: [
@@ -439,6 +439,33 @@ export const devLogEntries: DevLogEntry[] = [
       agentFailures: [
         'Our **architectural decision** related to having exactly matching mesh files was not a great idea, since connectivity does not match in some of my input files. However, we were able to workshop a solution',
         '`pi` tool timeout when trying to rewrite all backlog tasks at once. Resorted to using sub-agents',
+      ],
+    },
+  },
+
+
+  {
+    slug: 'implementation-2',
+    title: 'Initial Implementation: Day 2',
+    date: '2026-10-14',
+    summary:
+      'Implementing initial attachment stage',
+    models: ['opus-5.5'],
+    metrics: {
+      userMessages: 14,
+      assistantMessages: 159,
+      toolCalls: 250,
+      totalCostUsd: 11.8251,
+    },
+    description: {
+      keyChanges: [
+        'A',
+      ],
+      agentSuccesses: [
+        'A',
+      ],
+      agentFailures: [
+        'A',
       ],
     },
   },
