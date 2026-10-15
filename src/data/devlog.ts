@@ -459,13 +459,77 @@ export const devLogEntries: DevLogEntry[] = [
     },
     description: {
       keyChanges: [
-        'A',
+        'Implemented a first-pass of the initial attachment simulation stage',
+        'Produced first (partial) results (and they look correct!)',
       ],
       agentSuccesses: [
-        'A',
+        'Using backlog sub-tasks with sub-agents seemed a very effective way to implement large new components of the codebase',
+        'Successfully implemented GPU parallelization using `warp`',
+        'Identified literature gaps and recorded them in `LIT_GAPS.md`. Also left unanswered questions in an outstanding backlog task',
       ],
       agentFailures: [
-        'A',
+        'First-pass implemnentation is much slower than my existing (human-written) codebase, when executing on GPU. I need to review this',
+      ],
+    },
+  },
+
+
+  {
+    slug: 'implementation-3',
+    title: 'Refining Initial Attachment Stage',
+    date: '2026-10-15',
+    summary:
+      'Refining initial attachment stage',
+    models: ['opus-5.5'],
+    metrics: {
+      userMessages: 16,
+      assistantMessages: 288,
+      toolCalls: 495,
+      totalCostUsd: 27.7703,
+    },
+    description: {
+      keyChanges: [
+        'Added `CODEMAP.xml` (agent-generated) to make it easier (and quicker) for agents to find the correct files (inspired by Bjarni)',
+        'Identified key blockers to initial attachment performance and costructed an **acceleration** plan',
+        '**Accelerated** initial attachment code by several orders of magnitude (not fully profiled, but estimated around 10-100x faster)',
+        'Acceleration changed **GPU utilization** from around 10% to 100% during initial attachment simulation',
+      ],
+      agentSuccesses: [
+        'Comprehensively reviewed GPU code **architecture** (WARP kernels) and created a `backlog` task with many sub-tasks (this was **expensive** but worthwhile)',
+        'Acceleration was completed \'single shot\' by an orchesterator launching several **sub-agents**. `backlog` sub-tasks enabled efficient, and dependency-aware orchestration',
+      ],
+      agentFailures: [
+        'First pass implementation put too much weight on obtaining bitwise-identical results for the bisection algorithm (part of our verification procedure), which resulted in vastly less **parallelization** than desired',
+      ],
+    },
+  },
+
+
+  {
+    slug: 'implementation-4',
+    title: 'Implementing Swept Stroke',
+    date: '2026-10-15',
+    summary:
+      'First pass at implementing swept stroke stage',
+    models: ['opus-5.5'],
+    metrics: {
+      userMessages: 20,
+      assistantMessages: 350,
+      toolCalls: 535,
+      totalCostUsd: 21.5118,
+    },
+    description: {
+      keyChanges: [
+        'Started implementing swept stroke phase',
+        'Removed unwanted task for current waveforms (simulations should not record current-related metrics, I missed this during the architecting phase)',
+      ],
+      agentSuccesses: [
+        'Identified missing information before launching sub-agents and asked for clarification, as desired',
+        'Sub-divided tasks and used STE100 style language to simplify instructions',
+        '(Following the failure recorded below), successfully added a **steering prompt** to store current status when pausing implementation of a long-duration task. The agent created a resume procedure in a `backlog` task',
+      ],
+      agentFailures: [
+        'One task took too long and I had to move my laptop away from WiFi. I couldn\'t find a good way to **pause** the task without losing its progress',
       ],
     },
   },
