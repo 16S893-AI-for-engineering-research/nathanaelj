@@ -525,11 +525,68 @@ export const devLogEntries: DevLogEntry[] = [
       ],
       agentSuccesses: [
         'Identified missing information before launching sub-agents and asked for clarification, as desired',
-        'Sub-divided tasks and used STE100 style language to simplify instructions',
+        'Sub-divided tasks and used `STE100` style language to simplify instructions',
         '(Following the failure recorded below), successfully added a **steering prompt** to store current status when pausing implementation of a long-duration task. The agent created a resume procedure in a `backlog` task',
       ],
       agentFailures: [
         'One task took too long and I had to move my laptop away from WiFi. I couldn\'t find a good way to **pause** the task without losing its progress',
+      ],
+    },
+  },
+
+
+  {
+    slug: 'implementation-5',
+    title: 'Implementing Swept Stroke, continued',
+    date: '2026-10-16',
+    summary:
+      'Continued swept stroke stage implementation',
+    models: ['opus-5.5'],
+    metrics: {
+      userMessages: 18,
+      assistantMessages: 500,
+      toolCalls: 804,
+      totalCostUsd: 31.6127,
+    },
+    description: {
+      keyChanges: [
+        'Agents continued to implement planned swept stroke stage',
+      ],
+      agentSuccesses: [
+        '`backlog` enabled agents to run almost autonomously',
+        'Use of steering prompts to **pause** long running tasks (and record progress in `backlog`) to resume in future sessions',
+      ],
+      agentFailures: [
+        '*Nothing of note*',
+      ],
+    },
+  },
+
+
+  {
+    slug: 'implementation-6',
+    title: 'Implementing Swept Stroke and Zoning',
+    date: '2026-10-20',
+    summary:
+      'Finished swept stroke and zoning stage implementations (first pass)',
+    models: ['opus-5.5'],
+    metrics: {
+      userMessages: 13,
+      assistantMessages: 485,
+      toolCalls: 824,
+      totalCostUsd: 30.8812,
+    },
+    description: {
+      keyChanges: [
+        'Completed **swept stroke** implemetation',
+        'Reviewed **zoning** stage backlog tasks and divided into sub-tasks',
+        'Completed **zoning** stage implementation',
+      ],
+      agentSuccesses: [
+        'Rapidly implemented large codebase, with minimal supervision',
+      ],
+      agentFailures: [
+        '*None of note (yet)...*',
       ],
     },
   },
