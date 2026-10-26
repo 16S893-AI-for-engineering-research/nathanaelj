@@ -628,4 +628,106 @@ export const devLogEntries: DevLogEntry[] = [
       ],
     },
   },
+
+
+  {
+    slug: 'implementation-6',
+    title: 'Implementing Swept Stroke and Zoning',
+    date: '2026-10-20',
+    summary:
+      'Finished swept stroke and zoning stage implementations (first pass)',
+    models: ['opus-5.5'],
+    metrics: {
+      userMessages: 13,
+      assistantMessages: 485,
+      toolCalls: 824,
+      totalCostUsd: 30.8812,
+    },
+    description: {
+      keyChanges: [
+        'Completed **swept stroke** implemetation',
+        'Reviewed **zoning** stage backlog tasks and divided into sub-tasks',
+        'Completed **zoning** stage implementation',
+      ],
+      agentSuccesses: [
+        'Rapidly implemented large codebase, with minimal supervision',
+      ],
+      agentFailures: [
+        '*None of note (yet)...*',
+      ],
+    },
+  },
+
+
+  {
+    slug: 'implementation-7',
+    title: 'Reviewing first-pass codebase implementation',
+    date: '2026-10-21',
+    summary:
+      'Evaluating first pass codebase',
+    models: ['opus-5.5'],
+    metrics: {
+      userMessages: 16,
+      assistantMessages: 202,
+      toolCalls: 319,
+      totalCostUsd: 10.0566,
+    },
+    description: {
+      keyChanges: [
+        'Manually **reviewed** code, docs, and results to identify key issues/ next steps',
+        'Updated `README.md` to include clearer guidance for users (and reminders for myself)',
+        'Reviewed **literature gaps** document and manually provided answers',
+        'Installed `pretty-mermaid-skills` skill, to help agents create clear diagrams',
+        'Manually reviewed **documentation**',
+        'Prepared `backlog` tasks for fixing major bugs/ issues in the first-pass codebase',
+        'Implemented trivial `backlog` tasks, in preparation for more major changes tomorrow',
+      ],
+      agentSuccesses: [
+        'Helped identify which **literature gaps** had already been addressed in agent-user discussions (using `backlog` task records)',
+        'Literature gaps record was comprehensive and helpful for understanding whether further clarification is needed (nothing major of note)',
+        'Created new `backlog` tasks for a long list of user requests for changes',
+        'Initial test configurations produce results that appear (qualitatively) consistent with previous work'
+      ],
+      agentFailures: [
+        'Attempts to add **ASCII diagrams** to documentation were poor. I\'m hoping the `pretty-mermaid-skills` skill can help fix this',
+        'Agents added a lot of *fluff* to the output file (additional variables/ notes that were not requested)',
+        'The swept stroke phase executes extremely slowly. Performance improvements will be needed',
+      ],
+    },
+  },
+
+
+  {
+    slug: 'implementation-8',
+    title: 'Refining swept stroke implementation',
+    date: '2026-10-26',
+    summary:
+      'Profiling and accelerating swept stroke phase, using a remote server',
+    models: ['opus-5.5'],
+    metrics: {
+      userMessages: 14,
+      assistantMessages: 508,
+      toolCalls: 866,
+      totalCostUsd: 32.5686,
+    },
+    description: {
+      keyChanges: [
+        'Created a custom `ai-agent` user profile on the **remote server** with access restrictions',
+        'Created a custom `remote-exec` **skill** for agents to run profiling tests on the remote cluster',
+        'Updated `nono` **sandbox** to allow **ssh** access to the cluster, using the appropriate profile',
+        'Installed `zoning` tool on the remote cluster under the `ai-agent` account so that agents can run profiling tests',
+        'Added Github **SSH key** for agent to interact with git on remote server',
+      ],
+      agentSuccesses: [
+        'Created a robust agent **skill** with clear instructions and comprehensive checkpointing for slow-running tests',
+        'Was able to identify **sandbox** related issues when accessing the cluster',
+        'Achieved **>16x speedup** by implementing first-round performance improvements',
+        'Achieved further speedup with second-round performance improvements. Swept stroke phase now runs in a much more reasonable time',
+      ],
+      agentFailures: [
+        '`git pull` failed on the remote server when the agent tried to run it because login credentials were not set up correctly (hence creating an SSH key)',
+        'One **sub-agent** got stuck planning for **30 minutes** before it timed out. The orchestrator re-launched with additional sub-sub-tasks',
+      ],
+    },
+  },
 ]; 
