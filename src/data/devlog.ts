@@ -730,4 +730,31 @@ export const devLogEntries: DevLogEntry[] = [
       ],
     },
   },
+
+
+  {
+    slug: 'tidying',
+    title: 'Tidying up',
+    date: '2026-10-26',
+    summary:
+      'Rearranging src directory to tidy up codebase',
+    models: ['opus-5.5'],
+    metrics: {
+      userMessages: 1,
+      assistantMessages: 54,
+      toolCalls: 56,
+      totalCostUsd: 2.7803,
+    },
+    description: {
+      keyChanges: [
+        'Rearranged `src` directory to make it easier to navigate source code',
+      ],
+      agentSuccesses: [
+        'Re-organized source directory, and created appropriate **documentation** with diagrams (using `pretty-mermaid` skill)',
+      ],
+      agentFailures: [
+        '*Nothing of note*',
+      ],
+    },
+  },
 ]; 
