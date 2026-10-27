@@ -757,4 +757,35 @@ export const devLogEntries: DevLogEntry[] = [
       ],
     },
   },
+
+
+  {
+    slug: 'backlog-round-1',
+    title: 'Lingering backlog tasks',
+    date: '2026-10-27',
+    summary:
+      'Reviewing and closing out outstanding, lower-priority backlog tasks',
+    models: ['opus-5.5', 'gpt-6.1-Sol'],
+    metrics: {
+      userMessages: 23,
+      assistantMessages: 279,
+      toolCalls: 347,
+      totalCostUsd: 7.5154,
+    },
+    description: {
+      keyChanges: [
+        'Finished all outstanding `backlog`` tasks',
+        'Tried `GPT 6.1 Sol` as an alternative to `Opus 5.5` and found it to perform well (good code, time-efficient, and cost-efficient)',
+        'Implemented initial arc **tortuosity** for swept stroke simulations'
+      ],
+      agentSuccesses: [
+        'Identified where `backlog` tasks were redundant/ already completed by prior tasks and updated them appropriately',
+        'Implemented backlog tasks relatively independently, after asking the user clarifying quesitons',
+        'Implemented **throwaway** code to compare different initial arc **tortuosity** methods',
+      ],
+      agentFailures: [
+        '*Nothing of note...*',
+      ],
+    },
+  },
 ]; 
