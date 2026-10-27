@@ -557,7 +557,6 @@ export const devLogEntries: DevLogEntry[] = [
         'Use of steering prompts to **pause** long running tasks (and record progress in `backlog`) to resume in future sessions',
       ],
       agentFailures: [
-        '*Nothing of note*',
       ],
     },
   },
@@ -586,74 +585,6 @@ export const devLogEntries: DevLogEntry[] = [
         'Rapidly implemented large codebase, with minimal supervision',
       ],
       agentFailures: [
-        '*None of note (yet)...*',
-      ],
-    },
-  },
-
-
-  {
-    slug: 'implementation-7',
-    title: 'Reviewing first-pass codebase implementation',
-    date: '2026-10-21',
-    summary:
-      'Evaluating first pass codebase',
-    models: ['opus-5.5'],
-    metrics: {
-      userMessages: 16,
-      assistantMessages: 202,
-      toolCalls: 319,
-      totalCostUsd: 10.0566,
-    },
-    description: {
-      keyChanges: [
-        'Manually **reviewed** code, docs, and results to identify key issues/ next steps',
-        'Updated `README.md` to include clearer guidance for users (and reminders for myself)',
-        'Reviewed **literature gaps** document and manually provided answers',
-        'Installed `pretty-mermaid-skills` skill, to help agents create clear diagrams',
-        'Manually reviewed **documentation**',
-        'Prepared `backlog` tasks for fixing major bugs/ issues in the first-pass codebase',
-        'Implemented trivial `backlog` tasks, in preparation for more major changes tomorrow',
-      ],
-      agentSuccesses: [
-        'Helped identify which **literature gaps** had already been addressed in agent-user discussions (using `backlog` task records)',
-        'Literature gaps record was comprehensive and helpful for understanding whether further clarification is needed (nothing major of note)',
-        'Created new `backlog` tasks for a long list of user requests for changes',
-        'Initial test configurations produce results that appear (qualitatively) consistent with previous work'
-      ],
-      agentFailures: [
-        'Attempts to add **ASCII diagrams** to documentation were poor. I\'m hoping the `pretty-mermaid-skills` skill can help fix this',
-        'Agents added a lot of *fluff* to the output file (additional variables/ notes that were not requested)',
-        'The swept stroke phase executes extremely slowly. Performance improvements will be needed',
-      ],
-    },
-  },
-
-
-  {
-    slug: 'implementation-6',
-    title: 'Implementing Swept Stroke and Zoning',
-    date: '2026-10-20',
-    summary:
-      'Finished swept stroke and zoning stage implementations (first pass)',
-    models: ['opus-5.5'],
-    metrics: {
-      userMessages: 13,
-      assistantMessages: 485,
-      toolCalls: 824,
-      totalCostUsd: 30.8812,
-    },
-    description: {
-      keyChanges: [
-        'Completed **swept stroke** implemetation',
-        'Reviewed **zoning** stage backlog tasks and divided into sub-tasks',
-        'Completed **zoning** stage implementation',
-      ],
-      agentSuccesses: [
-        'Rapidly implemented large codebase, with minimal supervision',
-      ],
-      agentFailures: [
-        '*None of note (yet)...*',
       ],
     },
   },
@@ -753,7 +684,6 @@ export const devLogEntries: DevLogEntry[] = [
         'Re-organized source directory, and created appropriate **documentation** with diagrams (using `pretty-mermaid` skill)',
       ],
       agentFailures: [
-        '*Nothing of note*',
       ],
     },
   },
@@ -767,10 +697,10 @@ export const devLogEntries: DevLogEntry[] = [
       'Reviewing and closing out outstanding, lower-priority backlog tasks',
     models: ['opus-5.5', 'gpt-6.1-Sol'],
     metrics: {
-      userMessages: 23,
-      assistantMessages: 279,
-      toolCalls: 347,
-      totalCostUsd: 7.5154,
+      userMessages: 24,
+      assistantMessages: 299,
+      toolCalls: 366,
+      totalCostUsd: 8.2126,
     },
     description: {
       keyChanges: [
@@ -782,9 +712,68 @@ export const devLogEntries: DevLogEntry[] = [
         'Identified where `backlog` tasks were redundant/ already completed by prior tasks and updated them appropriately',
         'Implemented backlog tasks relatively independently, after asking the user clarifying quesitons',
         'Implemented **throwaway** code to compare different initial arc **tortuosity** methods',
+        'Tested `walkthrough` extension to explain changes to swept stroke arc tortuosity (effective, but not cheap)',
       ],
       agentFailures: [
-        '*Nothing of note...*',
+      ],
+    },
+  },
+
+
+  {
+    slug: 'core-info',
+    title: 'Core contribution notes',
+    date: '2026-10-27',
+    summary:
+      'Description of core code, and relevant checks',
+    models: [],
+    metrics: {
+      userMessages: 0,
+      assistantMessages: 0,
+      toolCalls: 0,
+      totalCostUsd: 0.0,
+    },
+    description: {
+      keyChanges: [
+        'Each of the stages in this code contains some **core** code (that is integral to the primary thesis of the work)',
+        '`initial attachment` relies on the volume integral analysis of the electric field input data',
+        '`swept stroke` is a reduced physics model that relies on the result of `initial attachment` and the input CFD data',
+        '`zoning mapping` uses a custom mapping algorithm',
+        'Each of these **core** algorithms has been previously implemented and tested, so expected results are known for several configurations',
+        'The **core** contributions will be checked by: (1) reviewing implemented code (which is relatively short), (2) comparing to known results, and (3) exploring results and output files comprehensively',
+        'Further trust in the **core** has already been achieved by using `tdd` (test-driven development)',
+        'What is **not yet known** is whether the \'first pass\' implementation made by agents is indeed correct',
+        'It is also not yet known how efficient the first pass implementation is (yet to be profiled and compared to the old code)',
+      ],
+      agentSuccesses: [
+      ],
+      agentFailures: [
+      ],
+    },
+  },
+
+
+  {
+    slug: 'fiddling-1',
+    title: 'Let the debugging begin',
+    date: '2026-10-27',
+    summary:
+      'Implementing a minor fix, and exploring the parallelization scheme',
+    models: ['opus-5.5', 'gpt-6.1-Sol'],
+    metrics: {
+      userMessages: 2,
+      assistantMessages: 44,
+      toolCalls: 53,
+      totalCostUsd: 1.2872,
+    },
+    description: {
+      keyChanges: [
+        'Improved the check for identical meshes between electrostatic and CFD inputs, to prevent spurious errors',
+        'Used `/walkthrough` to understand initial attachment parallelization, to try to identify further scope for acceleration',
+      ],
+      agentSuccesses: [
+      ],
+      agentFailures: [
       ],
     },
   },
