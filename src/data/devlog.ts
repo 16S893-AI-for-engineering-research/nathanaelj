@@ -777,4 +777,34 @@ export const devLogEntries: DevLogEntry[] = [
       ],
     },
   },
+
+
+  {
+    slug: 'fiddling-2',
+    title: 'More small changes',
+    date: '2026-10-28',
+    summary:
+      'More minor adjustments',
+    models: ['opus-5.5', 'gpt-6.1-Sol', 'gpt-6-astra'],
+    metrics: {
+      userMessages: 10,
+      assistantMessages: 388,
+      toolCalls: 691,
+      totalCostUsd: 20.7950,
+    },
+    description: {
+      keyChanges: [
+        'Resolved **minor issues** in the codebase, mostly related to infrastructure',
+        'Implemented several **minor improvements** related to **infrastructure**',
+        'Identified and fixed **failing tests** (caused by manually changing example config parameters)',    
+      ],
+      agentSuccesses: [
+        'Created and executed `backlog` tasks for issues and improvements',
+      ],
+      agentFailures: [
+        'Tried using `astra` for a more advanced planning task... it burns through money!',
+        'Earlier agents had created **tests** that depended on the example config file, which is not good',
+      ],
+    },
+  },
 ]; 
