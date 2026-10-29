@@ -787,16 +787,16 @@ export const devLogEntries: DevLogEntry[] = [
       'More minor adjustments',
     models: ['opus-5.5', 'gpt-6.1-Sol', 'gpt-6-astra'],
     metrics: {
-      userMessages: 10,
-      assistantMessages: 388,
-      toolCalls: 691,
-      totalCostUsd: 20.7950,
+      userMessages: 11,
+      assistantMessages: 444,
+      toolCalls: 759,
+      totalCostUsd: 21.7713,
     },
     description: {
       keyChanges: [
         'Resolved **minor issues** in the codebase, mostly related to infrastructure',
         'Implemented several **minor improvements** related to **infrastructure**',
-        'Identified and fixed **failing tests** (caused by manually changing example config parameters)',    
+        'Identified and fixed **failing tests** (caused by manually changing example config parameters)',
       ],
       agentSuccesses: [
         'Created and executed `backlog` tasks for issues and improvements',
@@ -804,6 +804,35 @@ export const devLogEntries: DevLogEntry[] = [
       agentFailures: [
         'Tried using `astra` for a more advanced planning task... it burns through money!',
         'Earlier agents had created **tests** that depended on the example config file, which is not good',
+      ],
+    },
+  },
+
+
+  {
+    slug: 'fiddling-3',
+    title: 'More minor changes',
+    date: '2026-10-29',
+    summary:
+      'More minor changes',
+    models: ['opus-5.5', 'gpt-6.1-Sol'],
+    metrics: {
+      userMessages: 15,
+      assistantMessages: 569,
+      toolCalls: 1187,
+      totalCostUsd: 11.5207,
+    },
+    description: {
+      keyChanges: [
+        'Created and exexcuted backlog tasks for a number of minor **infrastructure** improvements',
+        'Added scripts to automatically generate visualizations using `paraview`',
+        'Added new plots to show attachment statistics, including new antenna-gaine style plots',
+      ],
+      agentSuccesses: [
+        'Implemented attachment statistics plots in one shot, where my previous AI agent efforts (about 1 year ago) took many, many attempts!',
+        '`Gpt 6.1 Sol` is very cost-efficient!',
+      ],
+      agentFailures: [
       ],
     },
   },
