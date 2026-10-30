@@ -836,4 +836,38 @@ export const devLogEntries: DevLogEntry[] = [
       ],
     },
   },
+
+
+  {
+    slug: 'core-review',
+    title: 'Reviewing the core',
+    date: '2026-10-30',
+    summary:
+      'Investigating core code implementation',
+    models: ['gpt-6.1-Sol'],
+    metrics: {
+      userMessages: 16,
+      assistantMessages: 378,
+      toolCalls: 557,
+      totalCostUsd: 5.8296,
+    },
+    description: {
+      keyChanges: [
+        'Completed some miscellaneous/ minor backlog tasks (**infrastructure** improvements)',
+        'Used `/walkthrough` to explain key components of the code **core**, and instructed agents to describe the *actual implementaiton* not the documented or commented claims',
+        'Executed **test runs** on real, large-scale simulation data',
+        'Adjusted initial attachment bisection algorithm to resolve issues',
+      ],
+      agentSuccesses: [
+        '`/walkthrough` was very effective using `GPT 6.1 Sol` (and much cheaper than last time I tried it: under `$2` for three walkthroughs)',
+        'Reminded me about a physics decision I made a few months ago that I had forgotten!',
+        '`/walkthrough` and further agent analysis helped identify issues with the initial attachment bisection algorithm that caused spurious results',
+      ],
+      agentFailures: [
+        '**Language and writing style** in the walkthrough is very \'AI-esque\'',
+        'First-pass initial attachment stage produced some spurious results in particular (low-fidelity) configurations',
+        'Unable to identify the root cause of **spurious results** in the initial attachment stage (further investigation needed)',
+      ],
+    },
+  },
 ]; 
