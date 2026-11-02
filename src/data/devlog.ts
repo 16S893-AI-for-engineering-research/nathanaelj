@@ -870,4 +870,33 @@ export const devLogEntries: DevLogEntry[] = [
       ],
     },
   },
+
+
+  {
+    slug: 'debugging-init',
+    title: 'Debugging initial attachment',
+    date: '2026-11-02',
+    summary:
+      'Debugging suprious results in the initial attachment stage',
+    models: ['gpt-6.1-Sol'],
+    metrics: {
+      userMessages: 5,
+      assistantMessages: 119,
+      toolCalls: 152,
+      totalCostUsd: 2.1056,
+    },
+    description: {
+      keyChanges: [
+        'Implemented new `debug` mode to collect more debugging data',
+        'Adjusted bisection algorithm to attempt to resolve spurious results',
+      ],
+      agentSuccesses: [
+        'Helped inspect and probe **core** code, under careful supervision',
+        'Implemented new `debug` mode',
+        'Added polarity check to polarity difference calculation, **solving the bug!**',
+      ],
+      agentFailures: [
+      ],
+    },
+  },
 ]; 
