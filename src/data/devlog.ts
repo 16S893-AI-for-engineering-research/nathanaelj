@@ -899,4 +899,57 @@ export const devLogEntries: DevLogEntry[] = [
       ],
     },
   },
+
+
+  {
+    slug: 'update-website',
+    title: 'Updating portfolio pages',
+    date: '2026-11-03',
+    summary:
+      'Updating website portfolio pages',
+    models: ['gpt-6.1-Sol'],
+    metrics: {
+      userMessages: 2,
+      assistantMessages: 15,
+      toolCalls: 21,
+      totalCostUsd: 0.1298,
+    },
+    description: {
+      keyChanges: [
+        'Created very simple **implementation** page, including brief summary of the `dev-log`',
+        'Added placeholder **results** page',
+      ],
+      agentSuccesses: [
+        '`GPT 6.1 Sol` is very efficient at effectively executing these kinds of simple tasks',
+      ],
+      agentFailures: [
+      ],
+    },
+  },
+
+
+  {
+    slug: 'minor-fiddling',
+    title: 'Small, fiddly improvements',
+    date: '2026-11-03',
+    summary:
+      'Implemented many small improvements based on notes from using the code for a few days',
+    models: ['gpt-6.1-Sol'],
+    metrics: {
+      userMessages: 11,
+      assistantMessages: 337,
+      toolCalls: 380,
+      totalCostUsd: 5.1459,
+    },
+    description: {
+      keyChanges: [
+        'Created `backlog` tasks for small improvements, based on my notes from the past few days',
+        'Implemented those tasks (excluding any that require developer consultation)'
+      ],
+      agentSuccesses: [
+      ],
+      agentFailures: [
+      ],
+    },
+  },
 ]; 

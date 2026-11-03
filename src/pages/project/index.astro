@@ -2,7 +2,6 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { projectMilestones } from '../../data/project';
 import TimelineCard from '../../components/project/TimelineCard.astro';
-import { resolvePath } from '../../lib/paths';
 import '../../styles/project.css';
 ---
 
@@ -33,28 +32,6 @@ import '../../styles/project.css';
         <TimelineCard milestone={milestone} index={index} />
       ))}
 
-      <!-- Upcoming Stage Slot -->
-      <div class="timeline-item opacity-75" data-reveal="3">
-        <div class="timeline-node-container" aria-hidden="true">
-          <div class="timeline-node !border-solar/40 !bg-void-950">
-            <div class="timeline-node__inner !bg-solar/30"></div>
-          </div>
-        </div>
-
-        <div class="project-card project-card--future">
-          <div class="project-card__header">
-            <time class="project-card__date !text-void-400">In Development</time>
-          </div>
-
-          <h2 class="project-card__title !text-void-300 !text-2xl">
-            Implementation
-          </h2>
-
-          <p class="text-void-400 text-sm leading-relaxed mb-0">
-            More updates coming soon...
-          </p>
-        </div>
-      </div>
     </div>
 
   </div>

@@ -1,0 +1,43 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { resolvePath } from '../../lib/paths';
+import MilestoneNavigation from '../../components/project/MilestoneNavigation.astro';
+import '../../styles/project.css';
+---
+
+<BaseLayout
+  title="Implementation · Project"
+  description="Implementing and refining the aircraft lightning zoning simulation pipeline with AI agents."
+>
+  <main class="max-w-4xl mx-auto px-6 pt-16 pb-24">
+    <nav class="mb-10" aria-label="Breadcrumb" data-reveal="1">
+      <a
+        href={resolvePath('/project')}
+        class="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-solar hover:text-solar-light transition-colors"
+        style="border-bottom:none;"
+      >
+        <span aria-hidden="true">←</span> Back to Project Timeline
+      </a>
+    </nav>
+
+    <header class="project-detail-header" data-reveal="1">
+      <h1 class="text-4xl md:text-6xl font-display font-bold leading-[1.25] pb-3 mb-2">
+        Implementation
+      </h1>
+      <time class="font-mono text-xs uppercase tracking-widest text-void-400 block">
+        October–November 2026
+      </time>
+    </header>
+
+    <article class="space-y-6 mt-10 text-void-200 text-base leading-relaxed" data-reveal="2">
+      <p>
+        Implemented a Python and NVIDIA Warp pipeline for aircraft lightning zoning, covering initial attachment, swept stroke simulation, and zone mapping. The code includes mesh input validation, logging, tests, and visualization tools; GPU performance improvements made the simulations substantially faster, while comparison with previous results and detailed physics checks remain ongoing.
+      </p>
+      <p>
+        The <a href={resolvePath('/dev-log')}>dev-log</a> traces the work from architecture and language selection through implementation, profiling, and debugging. Clear backlog tasks and targeted skills helped agents work largely independently, but human review remained essential to resolve physics questions, catch numerical bugs, and keep performance and scope under control.
+      </p>
+    </article>
+
+    <MilestoneNavigation currentSlug="/project/implementation" />
+  </main>
+</BaseLayout>
