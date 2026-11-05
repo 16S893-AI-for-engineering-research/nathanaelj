@@ -978,4 +978,76 @@ export const devLogEntries: DevLogEntry[] = [
       ],
     },
   },
+
+
+  {
+    slug: 'bug-fixing',
+    title: 'Comparing to old codes and tidying up',
+    date: '2026-11-05',
+    summary:
+      'Validating results and tidying up the repo',
+    models: ['gpt-6.1-Sol'],
+    metrics: {
+      userMessages: 13,
+      assistantMessages: 388,
+      toolCalls: 639,
+      totalCostUsd: 7.8234,
+    },
+    description: {
+      keyChanges: [
+        'Validated that **results using the new code match the old code!** (quantatively and qualitatively)',
+        'Compared performance with old code and predicted (very approximately) **new code is 2.8x faster than old code!**',
+        'Updated warnings and checked for potential silent failures',
+        'Fixed failing tests (caused by yesterday\'s changes to make logs less verbose',
+        'Created a new `comment-only` **skill** to prevent git commits with changes to anything other than comments (for use when agents have been explicitly told to only edit comments)',
+        'Re-factored comments in all `src/` Python files (using the new **skill**)',
+      ],
+      agentSuccesses: [
+        'Identified particularly verbose warnings and improved them',
+        'Created the `comment-only` **skill**',
+        'Used sub-agents to **refactor** comments across the entire codebase (which was remarkably low-cost!)',
+      ],
+      agentFailures: [
+        'Yesterday\'s updates to the log files failed to correctly update all of the Python tests, which caused test failures',
+      ],
+    },
+  },
+
+
+  {
+    slug: 'vol-integral',
+    title: 'Creating (and then deleting) a new volume integral method',
+    date: '2026-11-05',
+    summary:
+      'Testing and un-doing a new volume integral method (and some other stuff)',
+    models: ['gpt-6.1-Sol'],
+    metrics: {
+      userMessages: 25,
+      assistantMessages: 651,
+      toolCalls: 899,
+      totalCostUsd: 12.0275,
+    },
+    description: {
+      keyChanges: [
+        '(Having validated the legacy `volume-integral` method) brainstormed a new method that sub-divides cell contributions',
+        'Created and implemented a `backlog` task for the new method',
+        'Ddebugged an issue with `Warp` compiling slowly for the new method', 
+        'Implemented a number of small **infrastructure** improvements',
+        'Investigated discrepancy between \'surface\' and \'Gauss\' methods for computing aircraft capacitance (confirmed that this is expected, and is not an issue)',
+        'Ultimately, **removed** the new volume integration method as it was far too slow',
+      ],
+      agentSuccesses: [
+        'Helped flesh out several potential methods for the `continuous-volume-integral` method',
+        'Created and implemented the `backlog` task for the new method (this was essentially a one-shot task, which would otherwise have taken me several weeks, at least)',
+        'Inspected code and identified likely cause of `warp` compilation issues (loop unrolling resulting in excessively large cache files)',
+        '**Fixed** the compilation bug; `warp` now compiles the new module in under 2 seconds... but the method runs too slowly',
+        'This was a good case-study in using agents to create *\'throwaway\'* code for testing a complex idea quickly',
+      ],
+      agentFailures: [
+        '`Warp` crashed while **compiling** the new kernel after initial implementation; it would hang indefinitely',
+        'Changing the freestream velocity configuration parameter took a lot longer than anticipated. The agent seemed to get confused by this',
+        'The new method is significantly more computationally intensive (prohibitively so)',
+      ],
+    },
+  },
 ]; 
