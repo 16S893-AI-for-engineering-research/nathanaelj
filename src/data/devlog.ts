@@ -952,4 +952,30 @@ export const devLogEntries: DevLogEntry[] = [
       ],
     },
   },
+
+
+  {
+    slug: 'minor-fiddling-2',
+    title: 'More small improvements',
+    date: '2026-11-04',
+    summary:
+      'Improved logging formatting and fixed an issue',
+    models: ['gpt-6.1-Sol'],
+    metrics: {
+      userMessages: 6,
+      assistantMessages: 205,
+      toolCalls: 250,
+      totalCostUsd: 3.4108,
+    },
+    description: {
+      keyChanges: [
+        'Improved logging formatting and added a log reading module (`zoning log`) to display log files with coloring',
+        'Fixed an error that was thrown for higher-fidelity simulations by adding a loop to adjust a default parameter if a simulation fails',
+      ],
+      agentSuccesses: [
+      ],
+      agentFailures: [
+      ],
+    },
+  },
 ]; 
