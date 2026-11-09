@@ -1050,4 +1050,33 @@ export const devLogEntries: DevLogEntry[] = [
       ],
     },
   },
+
+
+  {
+    slug: 'vol-integral-2',
+    title: 'Trying a new (new) volume integral method',
+    date: '2026-11-09',
+    summary:
+      'One more attempt at an improved volume integral',
+    models: ['gpt-6.1-Sol'],
+    metrics: {
+      userMessages: 0,
+      assistantMessages: 0,
+      toolCalls: 0,
+      totalCostUsd: 0,
+    },
+    description: {
+      keyChanges: [
+        '*Successfully* implemented a new \'continuous\' volume integral scheme, using reduced-accuracy quadrature',
+        'Accelerated the new scheme to approx. **7x faster** than the initial implementation (but still 2x slower than the original volume integral scheme)',
+      ],
+      agentSuccesses: [
+        'Proposed a less expensive quadrature scheme to use (provided **math advice**)',
+        '**Accelerated** the new code significantly, over multiple sessions',
+      ],
+      agentFailures: [
+        '`6.1 Sol` occasionally starts thinking about token usage during reasoning. This seems to be a quirk of the model.',
+      ],
+    },
+  },
 ]; 
