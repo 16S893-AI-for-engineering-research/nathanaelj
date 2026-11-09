@@ -1060,10 +1060,10 @@ export const devLogEntries: DevLogEntry[] = [
       'One more attempt at an improved volume integral',
     models: ['gpt-6.1-Sol'],
     metrics: {
-      userMessages: 0,
-      assistantMessages: 0,
-      toolCalls: 0,
-      totalCostUsd: 0,
+      userMessages: 16,
+      assistantMessages: 300,
+      toolCalls: 437,
+      totalCostUsd: 5.9377,
     },
     description: {
       keyChanges: [
@@ -1076,6 +1076,7 @@ export const devLogEntries: DevLogEntry[] = [
       ],
       agentFailures: [
         '`6.1 Sol` occasionally starts thinking about token usage during reasoning. This seems to be a quirk of the model.',
+        'Made the same polarity-related mistake as previously when implementing the other volume integral method',
       ],
     },
   },
