@@ -1080,4 +1080,32 @@ export const devLogEntries: DevLogEntry[] = [
       ],
     },
   },
+
+
+  {
+    slug: 'claude-geom-gen',
+    title: 'Generating geometry with Claude Design',
+    date: '2026-11-10',
+    summary:
+      'Testing 3D model creation in Claude Design',
+    models: ['fable-5.2', 'opus-5.5'],
+    metrics: {
+      userMessages: 0,
+      assistantMessages: 0,
+      toolCalls: 0,
+      totalCostUsd: 0,
+    },
+    description: {
+      keyChanges: [
+        'Created a business jet geometry using `fable 5.2` and `Claude Design` artefacts',
+        'Generated a custom script to create fluid domain and MATLAB-friendly STL',
+        'Executed a zoning simulation on the AI-generated geometry',
+      ],
+      agentSuccesses: [
+        'Much faster than creating my own geometry using **OpenVSP**, and created a geometry that is *not* representative of a specific aircraft (so that we don\'t upset any OEMs)',
+      ],
+      agentFailures: [
+      ],
+    },
+  },
 ]; 
