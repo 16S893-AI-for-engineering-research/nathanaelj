@@ -1108,4 +1108,30 @@ export const devLogEntries: DevLogEntry[] = [
       ],
     },
   },
+
+
+  {
+    slug: 'minor-fixes',
+    title: 'Minor logging improvements',
+    date: '2026-11-10',
+    summary:
+      'Improving log formatting and adding memory check before stages',
+    models: ['gpt-6.1-sol'],
+    metrics: {
+      userMessages: 4,
+      assistantMessages: 206,
+      toolCalls: 245,
+      totalCostUsd: 3.0887,
+    },
+    description: {
+      keyChanges: [
+        'Added new checks to ensure GPU has sufficient memory before executing a stage',
+        'Improved log formatting',
+      ],
+      agentSuccesses: [
+      ],
+      agentFailures: [
+      ],
+    },
+  },
 ]; 
