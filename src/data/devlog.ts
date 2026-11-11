@@ -1134,4 +1134,29 @@ export const devLogEntries: DevLogEntry[] = [
       ],
     },
   },
+
+
+  {
+    slug: 'walkthru-cont-int',
+    title: 'Inspecting the new integral method',
+    date: '2026-11-11',
+    summary:
+      'Using walkthrough to understand the new volume integral method',
+    models: ['gpt-6.1-sol'],
+    metrics: {
+      userMessages: 1,
+      assistantMessages: 16,
+      toolCalls: 15,
+      totalCostUsd: 0.2111,
+    },
+    description: {
+      keyChanges: [
+        'Used `walkthrough` skill to inspect the new continuous volume integral method',
+      ],
+      agentSuccesses: [
+      ],
+      agentFailures: [
+      ],
+    },
+  },
 ]; 
