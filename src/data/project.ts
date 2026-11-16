@@ -67,12 +67,12 @@ export const projectMilestones: ProjectMilestone[] = [
   },
   {
     number: 6,
-    title: 'Results',
-    tagline: '',
+    title: 'Final Presentation',
+    tagline: 'AI agents, engineering decisions, and lightning zoning results',
     date: 'November 2026',
     summary: '',
-    slug: '/project/results',
+    slug: '/project/final-presentation',
     stage: 'Phase 06',
-    status: 'planned',
+    status: 'completed',
   },
 ];

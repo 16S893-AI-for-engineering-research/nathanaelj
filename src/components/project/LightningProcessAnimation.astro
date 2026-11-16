@@ -10,9 +10,12 @@
  *    - Arc sweeps aft across fuselage surface
  *    - Tail arc stretches back into the wake
  */
+interface Props { presentation?: boolean; }
+const { presentation = false } = Astro.props;
 ---
 
-<div class="lightning-sim-container relative bg-void-950 border border-solar/30 my-8 overflow-hidden">
+<div class:list={['lightning-sim-container', presentation ? 'lightning-presentation' : 'relative bg-void-950 border border-solar/30 my-8 overflow-hidden']} data-lightning-sim data-presentation={String(presentation)}>
+  {!presentation && <>
   <!-- Step Switcher Bar -->
   <div class="flex flex-wrap items-center justify-between gap-3 px-4 py-3 bg-void-900/90 border-b border-solar/20">
     <!-- Step tabs -->
@@ -61,10 +64,12 @@
     </div>
   </div>
 
+  </>}
   <!-- Animation Canvas Container -->
-  <div class="relative w-full h-72 sm:h-88 md:h-[420px] bg-[#070503] overflow-hidden select-none">
-    <canvas id="lightning-sim-canvas" class="w-full h-full block cursor-pointer"></canvas>
+  <div class={presentation ? 'lightning-presentation__canvas' : 'relative w-full h-72 sm:h-88 md:h-[420px] bg-[#070503] overflow-hidden select-none'}>
+    <canvas id="lightning-sim-canvas" class:list={['w-full h-full block', !presentation && 'cursor-pointer']} role="img" aria-label="Animated initial lightning attachment and channel sweeping across a moving aircraft"></canvas>
 
+    {!presentation && <>
     <!-- Progress Scrubber -->
     <div class="absolute top-0 left-0 right-0 h-0.5 bg-void-800">
       <div id="sim-progress-bar" class="h-full bg-solar transition-all duration-75" style="width: 0%;"></div>
@@ -95,10 +100,12 @@
         As the aircraft moves forwards, the lightning channel is swept over the surface.
       </p>
     </div>
+    </>}
   </div>
 </div>
 
 <style>
+  .lightning-presentation, .lightning-presentation__canvas { width: 100%; height: 100%; min-height: 0; background: #fff; overflow: hidden; }
   .sim-step-btn {
     border-color: rgba(255, 156, 26, 0.2);
     background: rgba(13, 10, 6, 0.6);
@@ -121,6 +128,17 @@
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
+    const isPresentation = canvas.closest('[data-lightning-sim]')?.dataset.presentation === 'true';
+    const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const coreColor = isPresentation ? '#ff9c1a' : '#ffffff';
+
+    function solarGradient() {
+      const gradient = ctx.createLinearGradient(0, 0, width, height);
+      gradient.addColorStop(0, '#ff6633');
+      gradient.addColorStop(0.6, '#ff9c1a');
+      gradient.addColorStop(1, '#ffb84d');
+      return gradient;
+    }
 
     const progressBar = document.getElementById('sim-progress-bar');
     const callout1 = document.getElementById('sim-callout-1');
@@ -134,8 +152,8 @@
     const stepBtn2 = document.getElementById('sim-step-btn-2');
 
     let currentStep = 1;
-    let isPlaying = true;
-    let stepTime = 0.0;
+    let isPlaying = !isPresentation || !reduceMotion;
+    let stepTime = isPresentation && reduceMotion ? 5.5 : 0.0;
     let restartCountdown = -1; // seconds remaining before restart; -1 = not waiting
     const RESTART_DELAY = 7.0; // seconds to wait after completing before re-starting
     const STEP_DURATIONS = {
@@ -148,10 +166,9 @@
     let dpr = 1;
 
     function resize() {
-      const rect = canvas.parentElement.getBoundingClientRect();
       dpr = Math.min(window.devicePixelRatio || 1, 2);
-      width = rect.width;
-      height = rect.height;
+      width = canvas.parentElement.clientWidth;
+      height = canvas.parentElement.clientHeight;
       canvas.width = Math.floor(width * dpr);
       canvas.height = Math.floor(height * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -190,7 +207,7 @@
     }
 
     btnPlay?.addEventListener('click', togglePlay);
-    canvas.addEventListener('click', togglePlay);
+    if (!isPresentation) canvas.addEventListener('click', togglePlay);
     btnRestart?.addEventListener('click', () => {
       setStep(1, true);
       isPlaying = true;
@@ -220,35 +237,18 @@
     const planePath4 = new Path2D("M 851.96 502.61 C 879.26 495.19 907.85 494.25 935.98 495.18 C 943.81 495.58 951.91 495.92 959.33 498.75 C 963.36 500.26 965.61 504.71 964.83 508.99 C 965.29 524.32 965.36 539.68 964.89 555.02 C 964.32 562.43 954.74 563.29 949.03 564.19 C 916.84 567.48 883.74 567.03 852.31 558.69 C 851.85 540.00 851.97 521.30 851.96 502.61 Z");
     const planePath5 = new Path2D("M 802.99 523.90 C 816.60 519.61 829.62 513.33 843.96 511.68 C 843.99 524.20 843.99 536.71 843.99 549.24 C 834.82 547.67 825.08 546.96 816.80 542.33 C 812.37 540.15 807.60 538.82 802.99 537.15 C 802.96 532.71 802.99 528.31 802.99 523.90 Z");
 
-    // Fuselage bottom (belly/chin/keel) contour for downward leader swept attachment point
-    const LOWER_PROFILE = [
-      { x: 1316.0, y: 481.6 }, // nose radome tip
-      { x: 1287.8, y: 509.8 }, // chin lower curve
-      { x: 1204.1, y: 529.3 }, // forward keel
-      { x: 1074.0, y: 532.0 }, // belly flat line
-      { x: 794.6,  y: 531.7 }, // mid belly
-      { x: 594.0,  y: 532.0 }, // aft belly
-      { x: 359.4,  y: 493.6 }, // aft upsweep
-      { x: 286.1,  y: 470.9 }, // aft fuselage lower
-      { x: 256.8,  y: 444.6 }, // tailcone lower
-      { x: 196.5,  y: 411.3 }  // tailcone tip
-    ];
-
-    function getBellySurfaceY(localSvgX) {
-      const svgX = localSvgX + SVG_REF_CX;
-      if (svgX >= LOWER_PROFILE[0].x) return LOWER_PROFILE[0].y - SVG_REF_CY;
-      if (svgX <= LOWER_PROFILE[LOWER_PROFILE.length - 1].x) {
-        return LOWER_PROFILE[LOWER_PROFILE.length - 1].y - SVG_REF_CY;
+    // Intersect the exteriors of all silhouette pieces. A separate clip per
+    // piece prevents overlapping aircraft paths from reopening holes (even-odd).
+    // Transform paths into canvas CSS pixels; the context retains its DPR scale.
+    function clipAircraftExterior(px, py, scale) {
+      const transform = new DOMMatrix([scale, 0, 0, scale,
+        px - SVG_REF_CX * scale, py - SVG_REF_CY * scale]);
+      for (const piece of [planePath0, planePath1, planePath2, planePath3, planePath4, planePath5]) {
+        const exterior = new Path2D();
+        exterior.rect(0, 0, width, height);
+        exterior.addPath(piece, transform);
+        ctx.clip(exterior, 'evenodd');
       }
-      for (let i = 0; i < LOWER_PROFILE.length - 1; i++) {
-        const p1 = LOWER_PROFILE[i];
-        const p2 = LOWER_PROFILE[i + 1];
-        if (svgX <= p1.x && svgX >= p2.x) {
-          const t = (svgX - p2.x) / (p1.x - p2.x);
-          return (p2.y + t * (p1.y - p2.y)) - SVG_REF_CY;
-        }
-      }
-      return 0;
     }
 
     function drawAircraft(px, py, scale) {
@@ -258,43 +258,43 @@
       ctx.translate(-SVG_REF_CX, -SVG_REF_CY);
 
       // Path 2: Horizontal Stabilizer
-      ctx.fillStyle = '#14100b';
-      ctx.strokeStyle = '#6e5432';
+      ctx.fillStyle = isPresentation ? '#dce4e5' : '#14100b';
+      ctx.strokeStyle = isPresentation ? '#536d76' : '#6e5432';
       ctx.lineWidth = 1.4 / scale;
       ctx.fill(planePath2);
       ctx.stroke(planePath2);
 
       // Path 0: Vertical Tail & Aft Fuselage
-      ctx.fillStyle = '#19140e';
-      ctx.strokeStyle = '#8f6d40';
+      ctx.fillStyle = isPresentation ? '#e5ecec' : '#19140e';
+      ctx.strokeStyle = isPresentation ? '#536d76' : '#8f6d40';
       ctx.lineWidth = 1.6 / scale;
       ctx.fill(planePath0);
       ctx.stroke(planePath0);
 
       // Path 3: Forward Fuselage & Radome
-      ctx.fillStyle = '#1e1811';
-      ctx.strokeStyle = '#a68352';
+      ctx.fillStyle = isPresentation ? '#edf1f0' : '#1e1811';
+      ctx.strokeStyle = isPresentation ? '#536d76' : '#a68352';
       ctx.lineWidth = 1.6 / scale;
       ctx.fill(planePath3);
       ctx.stroke(planePath3);
 
       // Path 5: Engine Pylon
-      ctx.fillStyle = '#16120c';
-      ctx.strokeStyle = '#6e5432';
+      ctx.fillStyle = isPresentation ? '#d3dfe2' : '#16120c';
+      ctx.strokeStyle = isPresentation ? '#536d76' : '#6e5432';
       ctx.lineWidth = 1.4 / scale;
       ctx.fill(planePath5);
       ctx.stroke(planePath5);
 
       // Path 4: Engine Nacelle
-      ctx.fillStyle = '#241b12';
-      ctx.strokeStyle = '#8f6d40';
+      ctx.fillStyle = isPresentation ? '#dce4e5' : '#241b12';
+      ctx.strokeStyle = isPresentation ? '#536d76' : '#8f6d40';
       ctx.lineWidth = 1.6 / scale;
       ctx.fill(planePath4);
       ctx.stroke(planePath4);
 
       // Path 1: Wing
-      ctx.fillStyle = '#120e09';
-      ctx.strokeStyle = '#755833';
+      ctx.fillStyle = isPresentation ? '#c8d8dc' : '#120e09';
+      ctx.strokeStyle = isPresentation ? '#536d76' : '#755833';
       ctx.lineWidth = 1.4 / scale;
       ctx.fill(planePath1);
       ctx.stroke(planePath1);
@@ -358,8 +358,8 @@
     function rebuildLightningChannels() {
       if (width <= 0 || height <= 0) return;
 
-      const scale = Math.min(width / 1300, height / 460, 0.24);
-      const startX = width * 0.28;
+      const scale = Math.min(width / (isPresentation ? 1850 : 1300), height / 460, isPresentation ? 0.42 : 0.24);
+      const startX = width * (isPresentation ? 0.30 : 0.28);
       const py = height * 0.52;
 
       const initialTailX = startX + TAIL_LOCAL_X * scale;
@@ -430,7 +430,7 @@
       const remainder = visibleLength - fullCount;
 
       ctx.save();
-      ctx.strokeStyle = color;
+      ctx.strokeStyle = isPresentation ? solarGradient() : color;
       ctx.shadowColor = glowColor;
       ctx.shadowBlur = 12;
       ctx.lineWidth = lineWidth;
@@ -458,8 +458,8 @@
 
       // Glowing leader head at the advancing tip (before connection)
       if (showLeaderHead && progress < 1.0) {
-        ctx.fillStyle = '#ffffff';
-        ctx.shadowColor = '#ffffff';
+        ctx.fillStyle = coreColor;
+        ctx.shadowColor = coreColor;
         ctx.shadowBlur = 18;
         ctx.beginPath();
         ctx.arc(tipX, tipY, 3, 0, Math.PI * 2);
@@ -484,6 +484,10 @@
     function animate(now) {
       const dt = Math.min((now - lastTime) / 1000, 0.1);
       lastTime = now;
+      if (isPresentation && (canvas.closest('[data-slide]')?.hidden || document.hidden || width === 0 || height === 0)) {
+        requestAnimationFrame(animate);
+        return;
+      }
 
       if (isPlaying) {
         if (restartCountdown >= 0) {
@@ -516,11 +520,11 @@
       if (progressBar) progressBar.style.width = `${overallProgress}%`;
 
       // Clear Canvas
-      ctx.fillStyle = '#070503';
+      ctx.fillStyle = isPresentation ? '#ffffff' : '#070503';
       ctx.fillRect(0, 0, width, height);
 
       // Subtle atmospheric grid
-      ctx.strokeStyle = 'rgba(255, 156, 26, 0.035)';
+      ctx.strokeStyle = isPresentation ? 'transparent' : 'rgba(255, 156, 26, 0.035)';
       ctx.lineWidth = 1;
       for (let x = 0; x < width; x += 45) {
         ctx.beginPath();
@@ -529,8 +533,8 @@
         ctx.stroke();
       }
 
-      const scale = Math.min(width / 1300, height / 460, 0.24);
-      const startX = width * 0.28;
+      const scale = Math.min(width / (isPresentation ? 1850 : 1300), height / 460, isPresentation ? 0.42 : 0.24);
+      const startX = width * (isPresentation ? 0.30 : 0.28);
       const py = height * 0.52;
 
       // -----------------------------------------------------------------------
@@ -547,7 +551,7 @@
         const isConnected = stepTime >= growthDuration;
 
         // Upward positive leader from tail
-        const tailColor = isConnected ? '#ffffff' : '#ffb84d';
+        const tailColor = isConnected ? coreColor : (isPresentation ? '#ff9c1a' : '#ffb84d');
         const tailGlow = isConnected ? '#ff9c1a' : '#ffaa33';
         const tailWidth = isConnected ? 3.0 : 1.8;
         drawRevealedPath(tailLeaderChannel, growthProgress, tailColor, tailGlow, tailWidth, !isConnected);
@@ -559,7 +563,7 @@
         }
 
         // Downward negative leader from nose
-        const noseColor = isConnected ? '#ffffff' : '#ff7a3d';
+        const noseColor = isConnected ? coreColor : '#ff7a3d';
         const noseGlow = isConnected ? '#ff5522' : '#ff6633';
         const noseWidth = isConnected ? 3.0 : 1.8;
         drawRevealedPath(noseLeaderChannel, growthProgress, noseColor, noseGlow, noseWidth, !isConnected);
@@ -594,54 +598,24 @@
           : 1 - Math.pow(-2 * tFrac + 2, 2) / 2;
 
         // Forward flight: aircraft advances forward from left to right
-        const forwardDistance = width * 0.42 * easeMotion;
+        const forwardDistance = width * (isPresentation ? 0.35 : 0.42) * easeMotion;
         const currentPlaneX = startX + forwardDistance;
 
         // Draw aircraft at current flight position
         drawAircraft(currentPlaneX, py, scale);
 
-        // Flight direction arrow indicator
-        ctx.fillStyle = 'rgba(163, 149, 135, 0.65)';
-        ctx.font = '10px "IBM Plex Mono", monospace';
-        ctx.fillText('FLIGHT DIRECTION ►', currentPlaneX - 45, py + 62);
+        if (!isPresentation) {
+          ctx.fillStyle = 'rgba(163, 149, 135, 0.65)';
+          ctx.font = '10px "IBM Plex Mono", monospace';
+          ctx.fillText('FLIGHT DIRECTION ►', currentPlaneX - 45, py + 62);
+        }
 
-        // 1. Lower Channel (Nose -> Swept across bottom fuselage / belly)
-        // Atmospheric channel remains anchored in the air mass at initialNoseX
-        const initialNoseX = startX + NOSE_LOCAL_X * scale;
-        const initialNoseY = py + NOSE_LOCAL_Y * scale;
-
-        // As aircraft moves forward, the air channel sweeps along the bottom of the fuselage
-        const sweepDistanceOnPlane = forwardDistance / scale;
-        const contactLocalX = Math.max(TAIL_LOCAL_X + 15, NOSE_LOCAL_X - sweepDistanceOnPlane);
-        const contactSvgY = getBellySurfaceY(contactLocalX);
-        const contactPlaneX = currentPlaneX + contactLocalX * scale;
-        const contactPlaneY = py + contactSvgY * scale;
-
-        // Persistent external downward channel from initialNoseX to ground
-        drawRevealedPath(noseLeaderChannel, 1.0, '#ff9c1a', '#ff6622', 2.6, false);
-
-        // Arc connecting the air mass channel root to the moving bottom fuselage contact point
+        // 1. Lower channel stays fixed in the air mass. Hide the portion inside
+        // the moving aircraft rather than adding a connector to an approximate
+        // belly point. The visible channel meets the actual silhouette naturally.
         ctx.save();
-        ctx.strokeStyle = '#ffb84d';
-        ctx.shadowColor = '#ff9c1a';
-        ctx.shadowBlur = 14;
-        ctx.lineWidth = 2.6;
-        ctx.lineCap = 'round';
-        ctx.beginPath();
-        ctx.moveTo(initialNoseX, initialNoseY);
-        // Arc curves under the belly to the bottom attachment root
-        const midX = (initialNoseX + contactPlaneX) * 0.5;
-        const midY = Math.max(initialNoseY, contactPlaneY) + 12 * scale;
-        ctx.quadraticCurveTo(midX, midY, contactPlaneX, contactPlaneY);
-        ctx.stroke();
-
-        // Glowing attachment root on bottom aircraft skin
-        ctx.fillStyle = '#ffffff';
-        ctx.shadowColor = '#ff9c1a';
-        ctx.shadowBlur = 18;
-        ctx.beginPath();
-        ctx.arc(contactPlaneX, contactPlaneY, 3.5, 0, Math.PI * 2);
-        ctx.fill();
+        clipAircraftExterior(currentPlaneX, py, scale);
+        drawRevealedPath(noseLeaderChannel, 1.0, '#ff9c1a', '#ff6622', 2.6, false);
         ctx.restore();
 
         // 2. Upper Channel (Tail -> Stretched wake)
@@ -656,7 +630,7 @@
 
         // Stretched trailing arc in the wake: trailing edge back to air column
         ctx.save();
-        ctx.strokeStyle = '#ff7a3d';
+        ctx.strokeStyle = isPresentation ? solarGradient() : '#ff7a3d';
         ctx.shadowColor = '#ff5522';
         ctx.shadowBlur = 14;
         ctx.lineWidth = 2.4;
@@ -678,7 +652,7 @@
         ctx.stroke();
 
         // Glowing attachment point on tail trailing edge
-        ctx.fillStyle = '#ffffff';
+        ctx.fillStyle = coreColor;
         ctx.shadowColor = '#ff7a3d';
         ctx.shadowBlur = 16;
         ctx.beginPath();
@@ -692,6 +666,17 @@
 
     resize();
     window.addEventListener('resize', resize);
+    if (isPresentation) {
+      new ResizeObserver(resize).observe(canvas.parentElement);
+      canvas.closest('.final-deck')?.addEventListener('deck:slidechange', () => {
+        if (!canvas.closest('[data-slide]')?.hidden) {
+          resize();
+          setStep(1, true);
+          restartCountdown = -1;
+          if (reduceMotion) stepTime = 5.5;
+        }
+      });
+    }
     requestAnimationFrame(animate);
   })();
 </script>
