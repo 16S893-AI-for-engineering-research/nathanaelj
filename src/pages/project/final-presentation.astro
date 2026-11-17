@@ -108,22 +108,21 @@ const mappingX = sweptX + widths[1] + 4;
         </div>
       </FinalSlide>
 
-      <FinalSlide title="Debugging initial attachment">
-        <h2>Debugging initial attachment</h2>
+      <FinalSlide title="AI-accelerated debugging">
+        <h2>AI-accelerated debugging</h2>
         <div class="two-col">
-          <p class="large-statement">Spurious attachments<br />led to a missing<br /><em>polarity check.</em></p>
+          <p class="large-statement">Missing polarity check<br />led to<br /><em>spurious results</em></p>
           <ul class="clean-list"><li>Inspect actual implementation with agent walkthroughs.</li><li>Add diagnostics and probe the core under supervision.</li><li>Correct the polarity calculation.</li></ul>
         </div>
       </FinalSlide>
 
       <FinalSlide title="Throwaway code made more ideas testable" class="throwaway-slide">
         <h2>Throwaway code made more ideas testable</h2>
-        <p class="large-statement">Explore ideas we otherwise<br /><em>would not have time to implement.</em></p>
         <ol class="experiment-pipeline">
           <li><span class="step-number">01</span><h3>Idea</h3><p>Adaptive cut-cell<br />volume integration</p></li>
           <li><span class="step-number">02</span><h3>Test implementation</h3><p>Agent builds an<br />isolated alternative</p></li>
           <li><span class="step-number">03</span><h3>Quick debug</h3><p>Fix loop unrolling;<br />compilation &lt; 2 s</p></li>
-          <li><span class="step-number">04</span><h3>Throw away</h3><p>Still too slow to run.<br />Keep the insight.</p></li>
+          <li><span class="step-number">04</span><h3>Evaluate and implement</h3><p>Still too slow to run.<br />Throw away.</p></li>
         </ol>
       </FinalSlide>
 
@@ -161,18 +160,23 @@ const mappingX = sweptX + widths[1] + 4;
       <FinalSlide title="Validating results" class="validation-slide">
         <h2>Validating results</h2>
         <div class="two-col validation-comparison">
-          <img class="deck-image" src={comparison.src} width="1596" height="1622" alt="Working comparison of critical aircraft potential for second attachment: pre-AI implementation at top, new simulation at bottom. The original assembled plot formatting is preserved." />
-          <div class="validation-copy"><p class="large-statement">Qualitative and<br />quantitative agreement<br /><em>with the pre-AI code.</em></p><p class="comparison-order">Top: pre-AI · Bottom: new simulation</p></div>
+          <figure class="comparison-figure">
+            <img class="deck-image" src={comparison.src} width="1596" height="1622" alt="Working comparison of critical aircraft potential for second attachment: pre-AI implementation at top, new simulation at bottom. The original assembled plot formatting is preserved." />
+            <figcaption><span class="comparison-label comparison-label--pre">Pre-AI</span><span class="comparison-label comparison-label--new">New simulation</span></figcaption>
+          </figure>
+          <div class="validation-copy"><p class="large-statement">Qualitative and<br />quantitative agreement<br /><em>with the pre-AI code.</em></p></div>
         </div>
       </FinalSlide>
 
       <FinalSlide title="The resulting surface zoning">
         <h2>The resulting surface zoning</h2>
+        <img class="zoning-key" src={zoningKey.src} width={zoningKey.width} height={zoningKey.height} alt="Key to the surface zoning colors." />
         <figure class="hero-figure"><img class="deck-image" src={ram1.src} width="3840" height="2160" alt="Conventional transport aircraft surface zoning result, with distinct initial-attachment and swept-attachment regions." /><figcaption>Conventional transport aircraft</figcaption></figure>
       </FinalSlide>
 
       <FinalSlide title="Application to unconventional geometries">
         <h2>Application to unconventional geometries</h2>
+        <img class="zoning-key" src={zoningKey.src} width={zoningKey.width} height={zoningKey.height} alt="Key to the surface zoning colors." />
         <div class="gallery">
           <figure><img src={ram2.src} width="3840" height="2160" alt="Mid-size transport aircraft zoning result." /><figcaption>Mid-size transport aircraft</figcaption></figure>
           <figure><img src={ram5.src} width="3840" height="2160" alt="Blended-wing body zoning result." /><figcaption>Blended-wing body</figcaption></figure>
@@ -200,9 +204,18 @@ const mappingX = sweptX + widths[1] + 4;
         </div>
       </FinalSlide>
 
-      <FinalSlide title="What's next?">
+      <FinalSlide title="What's next?" class="next-slide">
         <h2>What's next?</h2>
-        <p class="statement">Integrate CFD<br />Integrate electrostatics<br /><em>Complete the end-to-end<br />zoning workflow</em></p>
+        <div class="next-steps">
+          <p>Integrate CFD</p>
+          <p>Integrate electrostatics</p>
+          <p><em>Complete the end-to-end<br />zoning workflow</em></p>
+          <svg class="next-arrows" viewBox="0 0 1424 600" fill="none" aria-hidden="true">
+            <defs><marker id="next-arrowhead" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 2 2 L 10 6 L 2 10" stroke="currentColor" stroke-width="1.5" /></marker></defs>
+            <path d="M 145 110 C 105 220, 235 240, 305 240" marker-end="url(#next-arrowhead)" />
+            <path d="M 600 310 C 560 410, 655 430, 720 430" marker-end="url(#next-arrowhead)" />
+          </svg>
+        </div>
       </FinalSlide>
     </div>
     <FinalDeckControls />

@@ -1169,16 +1169,18 @@ export const devLogEntries: DevLogEntry[] = [
       'Creating slides for final presentation',
     models: ['gpt-6.1-sol'],
     metrics: {
-      userMessages: 0,
-      assistantMessages: 0,
-      toolCalls: 0,
-      totalCostUsd: 0,
+      userMessages: 5,
+      assistantMessages: 171,
+      toolCalls: 287,
+      totalCostUsd: 2.8727,
     },
     description: {
       keyChanges: [
-        'AA',
+        'Created final presentation',
+        'Made presentation `light-mode` for better compatibility with images',
       ],
       agentSuccesses: [
+        'Created a web-based **presentation feature** quickly and effectively',
       ],
       agentFailures: [
       ],

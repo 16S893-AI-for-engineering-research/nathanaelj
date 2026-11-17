@@ -237,13 +237,18 @@ const { presentation = false } = Astro.props;
     const planePath4 = new Path2D("M 851.96 502.61 C 879.26 495.19 907.85 494.25 935.98 495.18 C 943.81 495.58 951.91 495.92 959.33 498.75 C 963.36 500.26 965.61 504.71 964.83 508.99 C 965.29 524.32 965.36 539.68 964.89 555.02 C 964.32 562.43 954.74 563.29 949.03 564.19 C 916.84 567.48 883.74 567.03 852.31 558.69 C 851.85 540.00 851.97 521.30 851.96 502.61 Z");
     const planePath5 = new Path2D("M 802.99 523.90 C 816.60 519.61 829.62 513.33 843.96 511.68 C 843.99 524.20 843.99 536.71 843.99 549.24 C 834.82 547.67 825.08 546.96 816.80 542.33 C 812.37 540.15 807.60 538.82 802.99 537.15 C 802.96 532.71 802.99 528.31 802.99 523.90 Z");
 
-    // Intersect the exteriors of all silhouette pieces. A separate clip per
-    // piece prevents overlapping aircraft paths from reopening holes (even-odd).
+    // Continuous lower fuselage envelope, independent of wing-root cutouts in
+    // the artwork. The lower channel must meet the belly, not emerge through
+    // gaps between the separate wing and fuselage paths. Extend the mask above
+    // the aircraft so no part of the lower channel can appear over the wing.
+    const lowerFuselageMask = new Path2D("M 239.66 -2000 L 1316.03 -2000 L 1316.03 481.64 C 1316.03 486.5 1315.78 489.29 1311.66 493.68 C 1305.35 501.07 1296.41 505.58 1287.85 509.81 C 1261.43 521.44 1232.68 526.30 1204.14 529.25 C 1160.88 533.07 1117.38 531.78 1074 532 L 594 532.02 C 514.28 532.10 435.83 514.69 359.38 493.55 C 334.85 486.37 310.11 479.76 286.12 470.88 C 278.70 468.25 270.58 466.70 264.20 461.79 L 239.66 444.59 Z");
+
+    // Clip each occluder separately: overlapping masks must not reopen holes.
     // Transform paths into canvas CSS pixels; the context retains its DPR scale.
-    function clipAircraftExterior(px, py, scale) {
+    function clipLowerChannelExterior(px, py, scale) {
       const transform = new DOMMatrix([scale, 0, 0, scale,
         px - SVG_REF_CX * scale, py - SVG_REF_CY * scale]);
-      for (const piece of [planePath0, planePath1, planePath2, planePath3, planePath4, planePath5]) {
+      for (const piece of [lowerFuselageMask, planePath4, planePath5]) {
         const exterior = new Path2D();
         exterior.rect(0, 0, width, height);
         exterior.addPath(piece, transform);
@@ -298,10 +303,6 @@ const { presentation = false } = Astro.props;
       ctx.lineWidth = 1.4 / scale;
       ctx.fill(planePath1);
       ctx.stroke(planePath1);
-
-      // Cockpit window accent
-      ctx.fillStyle = 'rgba(255, 184, 77, 0.85)';
-      ctx.fillRect(1238, 432, 16, 6);
 
       ctx.restore();
     }
@@ -610,11 +611,11 @@ const { presentation = false } = Astro.props;
           ctx.fillText('FLIGHT DIRECTION ►', currentPlaneX - 45, py + 62);
         }
 
-        // 1. Lower channel stays fixed in the air mass. Hide the portion inside
-        // the moving aircraft rather than adding a connector to an approximate
-        // belly point. The visible channel meets the actual silhouette naturally.
+        // 1. Lower channel stays fixed in the air mass and meets the continuous
+        // belly envelope. Only the engine nacelle/pylon can occlude it below
+        // that surface; gaps in the wing artwork cannot expose it above the belly.
         ctx.save();
-        clipAircraftExterior(currentPlaneX, py, scale);
+        clipLowerChannelExterior(currentPlaneX, py, scale);
         drawRevealedPath(noseLeaderChannel, 1.0, '#ff9c1a', '#ff6622', 2.6, false);
         ctx.restore();
 

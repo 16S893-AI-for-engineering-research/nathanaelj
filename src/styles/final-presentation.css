@@ -41,7 +41,7 @@ html:has(.final-deck), body:has(.final-deck) { background: #fff; color-scheme: l
 .cover-copy { position: relative; z-index: 1; width: 950px; display: flex; flex-direction: column; gap: 58px; }
 .cover h1 { width: 100%; max-width: none; padding: .12em .3em .12em 0; }
 .cover .cover-image { position: absolute; z-index: 0; width: 1280px; max-width: none; height: auto; right: -150px; top: 50%; transform: translateY(-44%); pointer-events: none; }
-.cover .byline { display: flex; align-items: baseline; gap: 24px; width: max-content; white-space: nowrap; line-height: 1.65; color: var(--muted); }
+.cover .byline { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; width: max-content; white-space: nowrap; line-height: 1.65; color: var(--muted); }
 .cover .byline strong { font-size: 25px; font-weight: 700; color: var(--ink); background: none; -webkit-text-fill-color: currentColor; }
 .cover .byline span { font-size: 20px; }
 .deck-image { width: 100%; height: 100%; object-fit: contain; min-height: 0; }
@@ -61,7 +61,7 @@ html:has(.final-deck), body:has(.final-deck) { background: #fff; color-scheme: l
 .bottom-line { font-size: 28px !important; color: var(--accent) !important; }
 .physics-results { display: grid; grid-template-columns: 1.1fr 1fr; gap: 30px; flex: 1; min-height: 0; }
 .physics-zoning { position: relative; min-height: 0; }
-.physics-slide .zoning-key { position: absolute; right: 88px; top: 70px; width: 104px; height: auto; object-fit: contain; }
+.final-slide .zoning-key { position: absolute; right: 88px; top: 70px; width: 104px; height: auto; object-fit: contain; }
 .literature-slide .slide-content { gap: 30px; }
 .development-stages { flex: 1; align-content: center; position: relative; z-index: 1; }
 .development-stages > div { padding-top: 16px; }
@@ -81,7 +81,6 @@ html:has(.final-deck), body:has(.final-deck) { background: #fff; color-scheme: l
 .skills-list dt { font: 400 27px/1.5 'IBM Plex Mono', monospace; color: var(--accent); }
 .skills-list dd { font-size: 27px; line-height: 1.5; margin: 10px 0 0; }
 .final-deck .geometry-credit { font-size: 22px; color: var(--muted); }
-.throwaway-slide .large-statement { font-size: 51px !important; }
 .experiment-pipeline { display: grid; grid-template-columns: repeat(4, 1fr); gap: 36px; list-style: none; padding: 0; margin: auto 0; }
 .experiment-pipeline li { position: relative; border-top: 2px solid transparent; border-image: var(--accent-gradient) 1; padding-top: 20px; }
 .experiment-pipeline li:not(:last-child)::after { content: '→'; position: absolute; right: -29px; top: 18px; color: var(--muted); }
@@ -98,9 +97,19 @@ html:has(.final-deck), body:has(.final-deck) { background: #fff; color-scheme: l
 .run-stats p { font-size: 24px; }
 .run-stats strong { display: block; font-size: 45px; }
 .validation-comparison { grid-template-columns: .95fr 1fr; gap: 70px; }
+.comparison-figure { position: relative; width: 100%; min-height: 0; padding-left: 105px !important; }
+.comparison-figure .deck-image { display: block; height: auto; }
+.final-deck .comparison-label { position: absolute; left: 0; width: 95px; transform: translateY(-50%); font: 400 20px/1.4 'Sora', sans-serif; color: var(--muted); }
+.comparison-label--pre { top: 25%; }
+.comparison-label--new { top: 75%; }
 .validation-copy { display: flex; flex-direction: column; gap: 30px; }
 .validation-copy .large-statement { font-size: 51px !important; }
-.final-deck .comparison-order { font-size: 23px; color: var(--muted); }
+.next-steps { position: relative; flex: 1; min-height: 0; }
+.final-deck .next-steps p { position: absolute; z-index: 1; font: 500 62px/1.35 'Playfair Display', Georgia, serif; padding: .12em .2em; }
+.next-steps p:nth-child(1) { top: 0; left: 0; }
+.next-steps p:nth-child(2) { top: 190px; left: 340px; }
+.next-steps p:nth-child(3) { bottom: 0; right: 0; }
+.next-arrows { position: absolute; inset: 0; width: 100%; height: 100%; color: var(--accent); stroke: currentColor; stroke-width: 3; overflow: visible; }
 .gallery { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; flex: 1; min-height: 0; gap: 5px 42px; }
 .gallery figure { min-height: 0; position: relative; padding-bottom: 28px; }
 .gallery img { width: 100%; height: 100%; object-fit: contain; }
