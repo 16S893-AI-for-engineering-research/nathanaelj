@@ -3,6 +3,8 @@ import { Image } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import FinalSlide from '../../components/project/FinalSlide.astro';
 import FinalDeckControls from '../../components/project/FinalDeckControls.astro';
+import DevelopmentWorkflow from '../../components/project/DevelopmentWorkflow.astro';
+import CostPerTokenChart from '../../components/project/CostPerTokenChart.astro';
 import LightningProcessAnimation from '../../components/project/LightningProcessAnimation.astro';
 import { presentationGeometry } from '../../lib/presentationGeometry';
 import '../../styles/final-presentation.css';
@@ -14,6 +16,7 @@ import ttbw from '../../images/sim_results/TTBW_zoning.png';
 import initialArcs from '../../images/sim_results/RAM2_init_arcs.png';
 import zoningKey from '../../images/sim_results/zoning_key.png';
 import comparison from '../../images/sim_results/Comparing_results.png';
+import backlogScreenshot from '../../images/backlog.png';
 import literature1 from '../../images/init_literature/screenshot_1.png';
 import literature2 from '../../images/init_literature/screenshot_2.png';
 import literature3 from '../../images/init_literature/screenshot_3.png';
@@ -87,16 +90,12 @@ const mappingX = sweptX + widths[1] + 4;
         </div>
       </FinalSlide>
 
-      <FinalSlide title="The division of labor" class="labor-slide">
-        <h2>The division of labor</h2>
-        <div class="two-col labor-table">
-          <div><h3>Agents</h3><ul class="clean-list"><li>Implement algorithms and tests</li><li>Profile and revise GPU execution</li><li>Maintain diagnostics and documentation</li></ul></div>
-          <div><h3>Researcher</h3><ul class="clean-list"><li>Interpret the physical model</li><li>Challenge numerical assumptions</li><li>Inspect results and set priorities</li></ul></div>
-        </div>
-        <p class="profile-note"><strong>nono worker profile</strong> · Scoped filesystem access and SSH for remote GPU work.</p>
+      <FinalSlide title="Development setup" class="setup-slide">
+        <h2>Development setup</h2>
+        <DevelopmentWorkflow />
       </FinalSlide>
 
-      <FinalSlide title="Skills in the workflow">
+      <FinalSlide title="Skills in the workflow" workflow={['literature', 'build', 'test', 'review']}>
         <h2>Skills in the workflow</h2>
         <div class="skill-columns">
           {skillGroups.map(({ label, skills }) => <section>
@@ -108,7 +107,15 @@ const mappingX = sweptX + widths[1] + 4;
         </div>
       </FinalSlide>
 
-      <FinalSlide title="AI-accelerated debugging">
+      <FinalSlide title="Can it be trusted?" class="trust-slide" workflow={['plan', 'tasks', 'build', 'test', 'review']}>
+        <h2>Can it be trusted?</h2>
+        <figure class="backlog-capture">
+          <img src={backlogScreenshot.src} width={backlogScreenshot.width} height={backlogScreenshot.height} alt="Top crop of the actual backlog.md kanban board: To Do, In Progress, and Done columns, showing the literature skill, GPU framework spikes, and implementation tasks." />
+        </figure>
+        <p class="trust-caveat">The <code>TDD skill</code> checks behavior, but not physical validity.<br />V&amp;V is completed by validating results.</p>
+      </FinalSlide>
+
+      <FinalSlide title="AI-accelerated debugging" workflow={['review']}>
         <h2>AI-accelerated debugging</h2>
         <div class="two-col">
           <p class="large-statement">Missing polarity check<br />led to<br /><em>spurious results</em></p>
@@ -116,7 +123,7 @@ const mappingX = sweptX + widths[1] + 4;
         </div>
       </FinalSlide>
 
-      <FinalSlide title="Throwaway code made more ideas testable" class="throwaway-slide">
+      <FinalSlide title="Throwaway code made more ideas testable" class="throwaway-slide" workflow={['literature', 'plan', 'build']}>
         <h2>Throwaway code made more ideas testable</h2>
         <ol class="experiment-pipeline">
           <li><span class="step-number">01</span><h3>Idea</h3><p>Adaptive cut-cell<br />volume integration</p></li>
@@ -126,17 +133,7 @@ const mappingX = sweptX + widths[1] + 4;
         </ol>
       </FinalSlide>
 
-      <FinalSlide title="Make the computation fit the GPU">
-        <h2>Make the computation fit the GPU</h2>
-        <div class="columns">
-          <div><h3>Batch orientations</h3><p>Sized to free GPU memory.</p></div>
-          <div><h3>Batch lightning arcs</h3></div>
-          <div><h3>Keep intermediates</h3><p>Restart stages without repeating the entire pipeline.</p></div>
-        </div>
-        <p class="bottom-line">No longer a multi-week, hands-on activity…<br />agents accelerated code in just hours.</p>
-      </FinalSlide>
-
-      <FinalSlide title="One recorded run" class="recorded-run">
+      <FinalSlide title="One recorded run" class="recorded-run" workflow={['review']}>
         <h2>One recorded run</h2>
         <div><span class="metric">21.7 <span class="metric-unit">minutes · Conventional transport aircraft</span></span></div>
         <svg class="timing-chart" viewBox="0 0 1424 210" role="img" aria-label="Initial attachment: 896.8 seconds. Swept stroke: 400.2 seconds. Zone mapping: 4.1 seconds.">
@@ -157,7 +154,7 @@ const mappingX = sweptX + widths[1] + 4;
         <p class="bottom-line">Approximately 2.8× faster than the pre-AI implementation.</p>
       </FinalSlide>
 
-      <FinalSlide title="Validating results" class="validation-slide">
+      <FinalSlide title="Validating results" class="validation-slide" workflow={['review']}>
         <h2>Validating results</h2>
         <div class="two-col validation-comparison">
           <figure class="comparison-figure">
@@ -168,24 +165,19 @@ const mappingX = sweptX + widths[1] + 4;
         </div>
       </FinalSlide>
 
-      <FinalSlide title="The resulting surface zoning">
-        <h2>The resulting surface zoning</h2>
+      <FinalSlide title="One pipeline. Many airframes." class="zoning-showcase" workflow={['review']}>
+        <h2>One pipeline. Many airframes.</h2>
         <img class="zoning-key" src={zoningKey.src} width={zoningKey.width} height={zoningKey.height} alt="Key to the surface zoning colors." />
-        <figure class="hero-figure"><img class="deck-image" src={ram1.src} width="3840" height="2160" alt="Conventional transport aircraft surface zoning result, with distinct initial-attachment and swept-attachment regions." /><figcaption>Conventional transport aircraft</figcaption></figure>
-      </FinalSlide>
-
-      <FinalSlide title="Application to unconventional geometries">
-        <h2>Application to unconventional geometries</h2>
-        <img class="zoning-key" src={zoningKey.src} width={zoningKey.width} height={zoningKey.height} alt="Key to the surface zoning colors." />
-        <div class="gallery">
-          <figure><img src={ram2.src} width="3840" height="2160" alt="Mid-size transport aircraft zoning result." /><figcaption>Mid-size transport aircraft</figcaption></figure>
+        <div class="zoning-mosaic">
+          <figure class="zoning-feature"><img src={ram1.src} width="3840" height="2160" alt="Conventional transport aircraft surface zoning result." /><figcaption>Transport aircraft</figcaption></figure>
+          <figure><img src={ram2.src} width="3840" height="2160" alt="Mid-size transport aircraft zoning result." /><figcaption>Mid-size transport</figcaption></figure>
           <figure><img src={ram5.src} width="3840" height="2160" alt="Blended-wing body zoning result." /><figcaption>Blended-wing body</figcaption></figure>
-          <figure><img src={ram7.src} width="3840" height="2160" alt="Large transport aircraft zoning result." /><figcaption>Large transport aircraft</figcaption></figure>
+          <figure><img src={ram7.src} width="3840" height="2160" alt="Large transport aircraft zoning result." /><figcaption>Large transport</figcaption></figure>
           <figure><img src={ttbw.src} width="1920" height="1080" alt="Truss-braced wing aircraft zoning result." /><figcaption>Truss-braced wing</figcaption></figure>
         </div>
       </FinalSlide>
 
-      <FinalSlide title="Claude-generated geometries" class="geometry-slide">
+      <FinalSlide title="Claude-generated geometries" class="geometry-slide" workflow={[]}>
         <h2>Claude-generated geometries</h2>
         <p class="geometry-credit">Generated with Fable 5.2.</p>
         <div class="geometry-models">
@@ -196,7 +188,7 @@ const mappingX = sweptX + widths[1] + 4;
         </div>
       </FinalSlide>
 
-      <FinalSlide title="What the agents made possible">
+      <FinalSlide title="What the agents made possible" workflow={['build', 'test', 'review']}>
         <h2>What the agents made possible</h2>
         <div class="two-col">
           <p class="large-statement">A complete research<br />pipeline—and the tools<br /><em>to keep improving it.</em></p>
@@ -204,18 +196,38 @@ const mappingX = sweptX + widths[1] + 4;
         </div>
       </FinalSlide>
 
-      <FinalSlide title="What's next?" class="next-slide">
-        <h2>What's next?</h2>
-        <div class="next-steps">
-          <p>Integrate CFD</p>
-          <p>Integrate electrostatics</p>
-          <p><em>Complete the end-to-end<br />zoning workflow</em></p>
-          <svg class="next-arrows" viewBox="0 0 1424 600" fill="none" aria-hidden="true">
-            <defs><marker id="next-arrowhead" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 2 2 L 10 6 L 2 10" stroke="currentColor" stroke-width="1.5" /></marker></defs>
-            <path d="M 145 110 C 105 220, 235 240, 305 240" marker-end="url(#next-arrowhead)" />
-            <path d="M 600 310 C 560 410, 655 430, 720 430" marker-end="url(#next-arrowhead)" />
-          </svg>
+      <FinalSlide title="Gains & costs" class="gains-slide" workflow={['literature', 'plan', 'tasks', 'build', 'test', 'review']}>
+        <h2>Gains &amp; costs</h2>
+        <div class="gains-dashboard">
+          <section class="development-gain" aria-label="Old code: three years. Improved codebase with agents: two to three months.">
+            <div class="duration-comparison">
+              <div><span class="duration-label">Old code</span><span class="duration-value">3 years</span><span class="duration-track duration-track--old"></span></div>
+              <div><span class="duration-label">With agents</span><span class="duration-value">2–3 months</span><span class="duration-track duration-track--new"></span></div>
+            </div>
+            <p class="gain-caption">Better codebase · faster runs · more features</p>
+          </section>
+          <section class="usage-cost">
+            <div class="usage-metrics">
+              <div><h3>Agent credits</h3><p class="credit-value">≈$323</p></div>
+              <div><h3>Tokens used</h3><p class="token-value">Nearly 500M</p></div>
+            </div>
+            <CostPerTokenChart />
+          </section>
         </div>
+        <section class="effort-story" aria-label="Where my time went: most of it preparing literature and task instructions, then agent execution, then substantial evaluation, validation and debugging.">
+          <div class="effort-stages">
+            <div class="effort-human"><span>Most of my time</span><p>Literature &amp;<br />task instructions</p></div>
+            <span class="effort-arrow" aria-hidden="true">→</span>
+            <div class="effort-agent"><span>Agent execution</span><p>Build &amp; test</p></div>
+            <span class="effort-arrow" aria-hidden="true">→</span>
+            <div class="effort-human"><span>Substantial time</span><p>Evaluate, validate<br />&amp; debug</p></div>
+          </div>
+        </section>
+      </FinalSlide>
+
+      <FinalSlide title="One thing to adopt" class="adopt-slide">
+        <h2>One thing to adopt</h2>
+        <p class="adopt-statement">Try making <em>throwaway tools</em><br />that you would never<br />have attempted before...</p>
       </FinalSlide>
     </div>
     <FinalDeckControls />

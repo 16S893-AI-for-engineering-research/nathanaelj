@@ -1,0 +1,39 @@
+---
+import csv from '../../data/cost_per_token.csv?raw';
+// This CSV is a cumulative average, not the price of tokens bought on each day.
+const rows = csv.trim().split(/\r?\n/).slice(1).map(line => {
+  const [date, spend, tokens, cost] = line.split(',');
+  return { date, time: Date.parse(`${date}T00:00:00Z`), spend: Number(spend), tokens: Number(tokens), cost: Number(cost) };
+});
+if (!rows.length || rows.some(row => !Number.isFinite(row.time) || !Number.isFinite(row.cost))) {
+  throw new Error('Cost-per-token chart requires dated, finite CSV values.');
+}
+const first = rows[0];
+const last = rows[rows.length - 1];
+const plot = { left: 62, right: 614, top: 38, bottom: 186 };
+const maxCost = Math.ceil(Math.max(...rows.map(row => row.cost)) * 2) / 2;
+const x = (time: number) => plot.left + (time - first.time) / (last.time - first.time || 1) * (plot.right - plot.left);
+const y = (cost: number) => plot.bottom - cost / maxCost * (plot.bottom - plot.top);
+const points = rows.map(row => `${x(row.time).toFixed(2)},${y(row.cost).toFixed(2)}`).join(' ');
+const ticks = [0, 1, 2];
+const dates = ['2026-10-09', '2026-10-26', '2026-11-17'];
+const dateLabel = (date: string) => new Date(`${date}T00:00:00Z`).toLocaleDateString('en-US', { timeZone: 'UTC', month: 'short', day: 'numeric' });
+---
+<figure class="cost-token-figure">
+  <svg class="cost-token-chart" viewBox="0 0 650 242" role="img" aria-labelledby="cost-token-title cost-token-desc">
+    <title id="cost-token-title">Cost per token over time</title>
+    <desc id="cost-token-desc">Cumulative average cost per million tokens falls from ${first.cost.toFixed(2)} on {dateLabel(first.date)} to ${last.cost.toFixed(2)} on {dateLabel(last.date)}, 2026. Source: cost_per_token.csv.</desc>
+    <text class="cost-chart-heading" x="0" y="20">Cost per token <tspan class="cost-chart-unit">· $ / 1M tokens</tspan></text>
+    {ticks.map(tick => <g>
+      <line class="cost-chart-grid" x1={plot.left} x2={plot.right} y1={y(tick)} y2={y(tick)} />
+      <text class="cost-chart-tick" x={plot.left - 14} y={y(tick) + 6} text-anchor="end">${tick}</text>
+    </g>)}
+    <polyline class="cost-chart-line" points={points} />
+    {[first, last].map(row => <g>
+      <circle class="cost-chart-point" cx={x(row.time)} cy={y(row.cost)} r="4" />
+      <text class="cost-chart-value" x={x(row.time)} y={y(row.cost) - 12} text-anchor={row === first ? 'start' : 'end'}>${row.cost.toFixed(2)}</text>
+    </g>)}
+    {dates.map(date => <text class="cost-chart-tick" x={x(Date.parse(`${date}T00:00:00Z`))} y="213" text-anchor="middle">{dateLabel(date)}</text>)}
+    <text class="cost-chart-note" x="650" y="239" text-anchor="end">Cumulative average · 2026</text>
+  </svg>
+</figure>

@@ -1186,4 +1186,29 @@ export const devLogEntries: DevLogEntry[] = [
       ],
     },
   },
+
+
+  {
+    slug: 'slides-prep-2',
+    title: 'Finishing final presentation slides',
+    date: '2026-11-17',
+    summary:
+      'Finishing slides for final presentation',
+    models: ['gpt-6.1-sol'],
+    metrics: {
+      userMessages: 3,
+      assistantMessages: 48,
+      toolCalls: 66,
+      totalCostUsd: 0.7544,
+    },
+    description: {
+      keyChanges: [
+        'Modified slides based on in-class instructions',
+      ],
+      agentSuccesses: [
+      ],
+      agentFailures: [
+      ],
+    },
+  },
 ]; 

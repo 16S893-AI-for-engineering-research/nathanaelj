@@ -118,6 +118,72 @@ html:has(.final-deck), body:has(.final-deck) { background: #fff; color-scheme: l
 .geometry-models figure { display: flex; flex-direction: column; min-height: 0; }
 .geometry-models iframe { display: block; border: 0; width: 100%; flex: 1; min-height: 0; background: #fff; }
 .geometry-models figcaption { text-align: center; font-size: 27px; padding-top: 22px; }
+/* The same workflow anchors the setup slide and later slide mini-maps. */
+.setup-slide .slide-content { gap: 24px; }
+.workflow-phases rect { fill: #fafbf8; stroke: #e2e5dd; stroke-width: 1; }
+.workflow-phases text { fill: #62665f; font: 500 20px 'Sora', sans-serif; }
+.development-flowchart { width: 100%; flex: 1; min-height: 0; overflow: visible; }
+.sandbox-boundaries rect { fill: #fffaf2; stroke: #d49242; stroke-width: 1.5; stroke-dasharray: 6 5; }
+.sandbox-labels text { fill: #995507; font: 400 13px 'IBM Plex Mono', monospace; }
+.workflow-links { fill: none; stroke: #6a716b; stroke-width: 2; }
+.workflow-retry { stroke-dasharray: 5 4; }
+.workflow-node rect { fill: #fff; stroke: #b9bdb7; stroke-width: 1.5; }
+.workflow-node--agent rect { fill: #fff1dc; stroke: #d49242; }
+.workflow-node-title { fill: var(--ink); font: 500 21px 'Sora', sans-serif; letter-spacing: -.025em; }
+.workflow-node-detail, .workflow-transition { fill: var(--muted); font: 400 16px 'Sora', sans-serif; letter-spacing: -.02em; }
+.workflow-harness { fill: #995507; font: 500 16px 'IBM Plex Mono', monospace; }
+.workflow-minimap { position: absolute; top: 19px; right: 88px; display: flex; align-items: center; gap: 8px; }
+.minimap-stage { display: flex; flex-direction: column; color: var(--muted); font: 400 11px/1.45 'IBM Plex Mono', monospace; padding: 2px 6px; white-space: nowrap; }
+.minimap-phase { font-size: 9px; color: #777e73; }
+.minimap-stage.is-active { color: #864306; background: #fff1dc; box-shadow: inset 0 -1px #d57713; }
+.minimap-arrow { color: #a5aaa2; font-size: 13px; }
+.trust-slide .slide-content { gap: 42px; }
+.backlog-capture { margin-top: 26px !important; width: 100%; height: 430px; overflow: hidden; background: #000; }
+.backlog-capture img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center top; }
+.final-deck .trust-caveat { font-size: 22px; color: var(--muted); }
+.trust-caveat code { font: inherit; font-family: 'IBM Plex Mono', monospace; color: var(--accent); }
+.zoning-showcase .slide-content { gap: 28px; }
+.zoning-showcase h2 { padding-right: 130px; }
+.zoning-mosaic { display: grid; grid-template-columns: 1.55fr 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 24px 26px; flex: 1; min-height: 0; }
+.zoning-mosaic figure { position: relative; min-height: 0; padding-bottom: 34px; }
+.zoning-mosaic .zoning-feature { grid-row: 1 / 3; padding-right: 20px; padding-bottom: 48px; }
+.zoning-mosaic img { width: 100%; height: 100%; object-fit: contain; }
+.zoning-mosaic figcaption { position: absolute; bottom: 8px; left: 0; font-size: 20px; color: var(--muted); }
+.zoning-feature figcaption { font-size: 27px; color: var(--ink); bottom: 12px; }
+.gains-slide .slide-content { gap: 28px; }
+.gains-dashboard { display: grid; grid-template-columns: 1fr 1fr; gap: 70px; }
+.gains-dashboard h3 { font-size: 23px; color: var(--muted); }
+.duration-comparison { display: grid; gap: 22px; }
+.duration-comparison > div { display: grid; grid-template-columns: 175px 1fr; align-items: baseline; gap: 8px 24px; }
+.duration-label { font-size: 22px; color: var(--muted); }
+.duration-value { font: 500 48px/1.2 'Playfair Display', Georgia, serif; }
+.duration-track { display: block; grid-column: 2; height: 12px; }
+.duration-track--old { width: 100%; background: #c8ccc4; }
+/* Midpoint of 2–3 months, relative to the old 36 months. */
+.duration-track--new { width: calc(100% * 2.5 / 36); background: var(--accent-gradient); }
+.final-deck .gain-caption { font-size: 22px; color: #995507; margin-top: 24px; }
+.usage-cost { padding-left: 30px; border-left: 1px solid var(--rule); }
+.usage-metrics { display: grid; grid-template-columns: .85fr 1.15fr; gap: 26px; }
+.final-deck .credit-value, .final-deck .token-value { font: 500 57px/1.4 'Playfair Display', Georgia, serif; color: #b45f08; margin-top: 4px; letter-spacing: -.04em; white-space: nowrap; }
+.final-deck .token-value { font-size: 49px; padding-top: 7px; }
+.cost-token-figure { margin-top: 12px !important; }
+.cost-token-chart { display: block; width: 100%; height: auto; overflow: visible; }
+.cost-chart-heading { font: 500 19px 'Sora', sans-serif; fill: var(--ink); }
+.cost-chart-unit, .cost-chart-note { font: 400 14px 'IBM Plex Mono', monospace; fill: var(--muted); }
+.cost-chart-grid { stroke: #e3e6df; stroke-width: 1; }
+.cost-chart-tick { font: 400 16px 'IBM Plex Mono', monospace; fill: var(--muted); }
+.cost-chart-line { fill: none; stroke: #c07011; stroke-width: 3; stroke-linejoin: bevel; }
+.cost-chart-point { fill: #c07011; }
+.cost-chart-value { font: 500 17px 'IBM Plex Mono', monospace; fill: #995507; }
+.effort-story { margin-top: auto; }
+.effort-stages { display: grid; grid-template-columns: 1.2fr 60px .85fr 60px 1.2fr; gap: 20px; align-items: stretch; margin-top: 16px; }
+.effort-stages > div { padding: 14px 22px; border-top: 3px solid #d49242; background: #fff6e8; }
+.effort-stages > .effort-agent { background: #f1f4f0; border-color: #718c79; }
+.effort-stages span:not(.effort-arrow) { font: 400 16px/1.5 'IBM Plex Mono', monospace; color: var(--muted); }
+.effort-stages p { font-size: 27px; margin-top: 8px; }
+.effort-arrow { align-self: center; justify-self: center; font-size: 32px; color: var(--muted); }
+.adopt-slide .slide-content { gap: 0; }
+.final-deck .adopt-statement { margin: auto 0; padding: .15em .25em .15em 0; font: 500 77px/1.4 'Playfair Display', Georgia, serif; letter-spacing: -.035em; }
 .final-controls { position: absolute; bottom: 14px; left: 24px; right: 24px; display: flex; align-items: center; gap: 8px; transition: opacity .2s; z-index: 5; background: #fff; }
 .final-controls button, .final-controls a { white-space: nowrap; background: white; border: 1px solid transparent; padding: 7px 11px; font: 400 13px/1.5 'IBM Plex Mono', monospace; }
 .final-controls button:hover, .final-controls a:hover { border-color: var(--rule); color: var(--accent); }

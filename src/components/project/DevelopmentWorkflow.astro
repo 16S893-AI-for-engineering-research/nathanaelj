@@ -1,0 +1,93 @@
+---
+interface Props { compact?: boolean; active?: string[]; }
+const { compact = false, active = [] } = Astro.props;
+const stages = [
+  { id: 'literature', phase: 'Planning', label: 'Literature' },
+  { id: 'plan', phase: 'Planning', label: 'Backlog' },
+  { id: 'tasks', phase: 'Implementation', label: 'Review tasks' },
+  { id: 'build', phase: 'Implementation', label: 'Agents build' },
+  { id: 'test', phase: 'Implementation', label: 'TDD checks' },
+  { id: 'review', phase: 'Review', label: 'Testing' },
+];
+const planning = [
+  { x: 30, width: 240, label: 'Literature', detail: 'Papers & physical models', agent: false },
+  { x: 380, width: 260, label: 'Reference docs', detail: 'Literature → requirements', agent: true },
+  { x: 750, width: 280, label: 'My strategic prompts', detail: 'Plan & set priorities', agent: false },
+  { x: 1160, width: 240, label: 'Backlog tasks', detail: 'Acceptance criteria', agent: true },
+];
+---
+{compact ? (
+  <nav class="workflow-minimap" aria-label={`Development workflow. Focus: ${stages.filter(s => active.includes(s.id)).map(s => s.label).join(', ') || 'none'}`}>
+    {stages.map((stage, index) => <>
+      {index > 0 && <span class="minimap-arrow" aria-hidden="true">→</span>}
+      <span class:list={['minimap-stage', { 'is-active': active.includes(stage.id) }]}>
+        <span class="minimap-phase">{stage.phase}</span><span>{stage.label}</span>
+      </span>
+    </>)}
+  </nav>
+) : (
+  <svg class="development-flowchart" viewBox="-12 -8 1448 696" role="img" aria-labelledby="development-flow-title development-flow-desc">
+    <title id="development-flow-title">Development setup: planning, implementation, and review</title>
+    <desc id="development-flow-desc">Planning: literature becomes reference documents, and my strategic prompts create backlog tasks. Implementation: I review tasks, launch agents in pi using the TDD skill and sometimes sub-agents, then review and push commits through a human approval gate. A pi session in a nono sandbox creates more backlog tasks and returns to my task review. Review: execute large test simulations and alternate with debugging until satisfied. Highlighted agentic tasks use the pi harness within a nono sandbox.</desc>
+    <defs><marker id="workflow-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 1 1 L 9 5 L 1 9" fill="none" stroke="context-stroke" stroke-width="1.5" /></marker></defs>
+    <g class="workflow-phases">
+      <rect x="0" y="0" width="1424" height="180" />
+      <rect x="0" y="230" width="1424" height="260" />
+      <rect x="0" y="530" width="1424" height="150" />
+      <text x="20" y="30">Planning</text><text x="20" y="260">Implementation</text><text x="20" y="560">Review</text>
+    </g>
+    <g class="sandbox-boundaries">
+      <rect x="370" y="46" width="280" height="122" />
+      <rect x="1150" y="46" width="260" height="122" />
+      <rect x="380" y="276" width="510" height="120" />
+      <rect x="420" y="408" width="520" height="72" />
+    </g>
+    <g class="sandbox-labels"><text x="630" y="159" text-anchor="end">nono sandbox</text><text x="1390" y="159" text-anchor="end">nono sandbox</text><text x="870" y="266" text-anchor="end">nono sandbox</text></g>
+    <g class="workflow-links" marker-end="url(#workflow-arrow)">
+      <path d="M 270 104 H 370" /><path d="M 640 104 H 740" /><path d="M 1030 104 H 1150" />
+      <path d="M 1280 140 V 205 H 350 V 274 H 170 V 282" />
+      <path d="M 310 336 H 380" /><path d="M 880 336 H 1000" />
+      <path d="M 1130 380 V 444 H 940" />
+      <path d="M 430 444 H 170 V 390" />
+      <path d="M 1320 380 V 511 H 455 V 576" />
+      <path d="M 650 608 H 910" /><path d="M 920 645 H 660" />
+    </g>
+    {planning.map(node => <g class:list={['workflow-node', { 'workflow-node--agent': node.agent }]}>
+      <rect x={node.x} y="58" width={node.width} height="82" />
+      {node.agent && <text class="workflow-harness" x={node.x + node.width - 12} y="79" text-anchor="end">pi</text>}
+      <text class="workflow-node-title" x={node.x + node.width / 2} y="98" text-anchor="middle">{node.label}</text>
+      <text class="workflow-node-detail" x={node.x + node.width / 2} y="124" text-anchor="middle">{node.detail}</text>
+    </g>)}
+    <g class="workflow-node">
+      <rect x="30" y="292" width="280" height="88" />
+      <text class="workflow-node-title" x="170" y="328" text-anchor="middle">My task review</text>
+      <text class="workflow-node-detail" x="170" y="358" text-anchor="middle">Refine before launch</text>
+    </g>
+    <g class="workflow-node workflow-node--agent">
+      <rect x="390" y="286" width="490" height="100" />
+      <text class="workflow-harness" x="866" y="307" text-anchor="end">pi</text>
+      <text class="workflow-node-title" x="635" y="315" text-anchor="middle">Launch agents</text>
+      <text class="workflow-node-detail" x="635" y="345" text-anchor="middle">Sometimes uses sub-agents</text>
+      <text class="workflow-node-detail" x="635" y="370" text-anchor="middle">Use TDD skill</text>
+      <rect x="430" y="418" width="500" height="52" />
+      <text class="workflow-harness" x="916" y="439" text-anchor="end">pi</text>
+      <text class="workflow-node-title" x="680" y="441" text-anchor="middle">Create more backlog tasks</text>
+      <text class="workflow-node-detail" x="680" y="461" text-anchor="middle">nono sandbox</text>
+    </g>
+    <g class="workflow-node">
+      <rect x="1010" y="292" width="390" height="88" />
+      <text class="workflow-node-title" x="1205" y="328" text-anchor="middle">Review &amp; push commits</text>
+      <text class="workflow-node-detail" x="1205" y="358" text-anchor="middle">Human approval gate</text>
+      <rect x="260" y="586" width="390" height="74" />
+      <text class="workflow-node-title" x="455" y="616" text-anchor="middle">Test simulations</text>
+      <text class="workflow-node-detail" x="455" y="646" text-anchor="middle">Execute large test cases</text>
+    </g>
+    <g class="workflow-node workflow-node--agent">
+      <rect x="920" y="586" width="390" height="74" />
+      <text class="workflow-harness" x="1296" y="607" text-anchor="end">pi</text>
+      <text class="workflow-node-title" x="1115" y="616" text-anchor="middle">Debugging</text>
+      <text class="workflow-node-detail" x="1115" y="646" text-anchor="middle">Diagnostics &amp; fixes · nono sandbox</text>
+    </g>
+    <text class="workflow-transition" x="785" y="675" text-anchor="middle">Iterate until satisfied</text>
+  </svg>
+)}

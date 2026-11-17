@@ -1,10 +1,13 @@
 ---
+import DevelopmentWorkflow from './DevelopmentWorkflow.astro';
 interface Props {
   title: string;
   class?: string;
+  workflow?: string[];
 }
-const { title, class: className = '' } = Astro.props;
+const { title, class: className = '', workflow } = Astro.props;
 ---
 <section class:list={['final-slide', className]} data-slide data-title={title} aria-label={title}>
   <div class="slide-content"><slot /></div>
+  {workflow && <DevelopmentWorkflow compact active={workflow} />}
 </section>
