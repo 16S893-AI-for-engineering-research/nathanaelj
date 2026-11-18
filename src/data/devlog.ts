@@ -1211,4 +1211,31 @@ export const devLogEntries: DevLogEntry[] = [
       ],
     },
   },
+
+
+  {
+    slug: 'adding-debug-stuff',
+    title: 'Adding developer debug tools',
+    date: '2026-11-18',
+    summary:
+      'Adding several higher-fidelity inspection tools',
+    models: ['gpt-6.1-sol'],
+    metrics: {
+      userMessages: 311,
+      assistantMessages: 482,
+      toolCalls: 842,
+      totalCostUsd: 7.4885,
+    },
+    description: {
+      keyChanges: [
+        'Added tools to execute single-strike simulations and output much more data, to inspect behavior',
+        'Inspected behavior by testing on Concorde model; identified minor issue in swept stroke simulation',
+      ],
+      agentSuccesses: [
+      ],
+      agentFailures: [
+        'Swept stroke simulations fail to sweep with freestream velocity when outside the flowfield (this will only affect performance, not results, but it is not ideal)',
+      ],
+    },
+  },
 ]; 
