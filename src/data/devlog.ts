@@ -1221,7 +1221,7 @@ export const devLogEntries: DevLogEntry[] = [
       'Adding several higher-fidelity inspection tools',
     models: ['gpt-6.1-sol'],
     metrics: {
-      userMessages: 311,
+      userMessages: 11,
       assistantMessages: 482,
       toolCalls: 842,
       totalCostUsd: 7.4885,
@@ -1235,6 +1235,34 @@ export const devLogEntries: DevLogEntry[] = [
       ],
       agentFailures: [
         'Swept stroke simulations fail to sweep with freestream velocity when outside the flowfield (this will only affect performance, not results, but it is not ideal)',
+      ],
+    },
+  },
+
+
+  {
+    slug: 'debugging',
+    title: 'Using developer debug tools',
+    date: '2026-11-18',
+    summary:
+      'Inspecting results and fixing minor bugs',
+    models: ['gpt-6.1-sol'],
+    metrics: {
+      userMessages: 9,
+      assistantMessages: 237,
+      toolCalls: 290,
+      totalCostUsd: 4.3677,
+    },
+    description: {
+      keyChanges: [
+        'Fixed freestream velocity definition for points outside of flowfield',
+        'Added warnings related to exceeding `int32` **array bounds**',
+        'Improved **visualization** (`viz`) module formatting, so that figures are paper-ready',
+      ],
+      agentSuccesses: [
+      ],
+      agentFailures: [
+        'Agent kept repeatedly running the **full test suite** (which is slow and unnecessary) after making minor changes',
       ],
     },
   },
