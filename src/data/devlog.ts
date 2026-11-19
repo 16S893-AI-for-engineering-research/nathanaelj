@@ -1266,4 +1266,61 @@ export const devLogEntries: DevLogEntry[] = [
       ],
     },
   },
+
+
+  {
+    slug: 'full-workflow-1',
+    title: 'Brainstorming the end-to-end workflow',
+    date: '2026-11-18',
+    summary:
+      'Adding mesh generation, electrostatics, and CFD solver',
+    models: ['opus-5.5'],
+    metrics: {
+      userMessages: 0,
+      assistantMessages: 0,
+      toolCalls: 0,
+      totalCostUsd: 0,
+    },
+    description: {
+      keyChanges: [
+        '*Used lab `Claude` subscription, so that I could use Claude Code **plan mode**',
+        'Brainstormed and refined architecture for the end-to-end workflow',
+        'Populated `backlog` with decisions and tasks (one task with 21 sub-tasks)',
+      ],
+      agentSuccesses: [
+      ],
+      agentFailures: [
+      ],
+    },
+  },
+
+
+  {
+    slug: 'full-workflow-2',
+    title: 'Implementing the end-to-end workflow',
+    date: '2026-11-18',
+    summary:
+      'Starting the long list of sub-tasks',
+    models: ['gpt-6.1-sol'],
+    metrics: {
+      userMessages: 24,
+      assistantMessages: 1267,
+      toolCalls: 2533,
+      totalCostUsd: 18.4757,
+    },
+    description: {
+      keyChanges: [
+        'Implemented first-pass end-to-end workflow',
+        'First pass does not execute cleanly...',
+      ],
+      agentSuccesses: [
+        'Implemented many complex tasks in **parallel** using **sub-agents**, managing changes with git worktrees',
+      ],
+      agentFailures: [
+        'While implementing **infrastructure** changes, started running large and complex **test suites** (my computer got rather hot!) and had to be told to stop',
+        'When sub-agents implemented one sub-task, they sometimes created **tests** for things that should **fail** because of what is not yet implemented, but these tests would cause issues when we then tried to implement the missing feature!',
+        'Several bugs in first-pass implementation, to be resolved tomorrow...',
+      ],
+    },
+  },
 ]; 
