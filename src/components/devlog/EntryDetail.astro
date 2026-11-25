@@ -4,6 +4,7 @@
  * same markup powers both the modal on /dev-log and the standalone
  * /dev-log/<slug> page — one source of truth for entry presentation.
  */
+import { walkthroughs } from '@data/walkthroughs';
 import type { DevLogEntry } from '@lib/devlog';
 import { formatCost, formatCount, formatDateLong, renderInline } from '@lib/devlog';
 import DevLogIcon from './DevLogIcon.astro';
@@ -34,6 +35,8 @@ const sections = [
 ].filter((section) => section.items.length > 0);
 
 const Title = headingLevel;
+const SectionTitle = headingLevel === 'h1' ? 'h2' : 'h3';
+const entryWalkthroughs = walkthroughs.filter(({ devLogSlug }) => devLogSlug === entry.slug);
 ---
 
 <article class="dl-detail">
@@ -87,4 +90,19 @@ const Title = headingLevel;
       </ul>
     </section>
   ))}
+
+  {entryWalkthroughs.length > 0 && (
+    <section class="dl-section">
+      <div class="dl-section__head">
+        <span class="dl-section__marker"></span>
+        <SectionTitle class="dl-section__title">Walkthroughs</SectionTitle>
+        <span class="dl-section__count">{entryWalkthroughs.length}</span>
+      </div>
+      <ul class="dl-bullets">
+        {entryWalkthroughs.map(({ title, href }) => (
+          <li><a href={href} target="_blank" rel="noopener noreferrer">{title}</a></li>
+        ))}
+      </ul>
+    </section>
+  )}
 </article>

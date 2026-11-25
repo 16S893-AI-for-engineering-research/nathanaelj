@@ -1355,4 +1355,30 @@ export const devLogEntries: DevLogEntry[] = [
       ],
     },
   },
+
+
+  {
+    slug: 'mem-fix',
+    title: 'Fiddling',
+    date: '2026-11-25',
+    summary:
+      'Improving memory management and adding walkthrough to the portfolio',
+    models: ['gpt-6.2-sol'],
+    metrics: {
+      userMessages: 4,
+      assistantMessages: 149,
+      toolCalls: 211,
+      totalCostUsd: 2.4044,
+    },
+    description: {
+      keyChanges: [
+        'Implemented backlog task for reducing initial attachment memory requirement, and profiled',
+        'Updated portfolio with walkthrough pages',
+      ],
+      agentSuccesses: [
+      ],
+      agentFailures: [
+      ],
+    },
+  },
 ]; 
